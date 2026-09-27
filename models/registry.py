@@ -25,6 +25,13 @@ def build_teacher(enabled: bool = True, metadata_path: Optional[Path] = None) ->
     if not enabled:
         return UnavailableAdapter("teacher", "HEILO Teacher",
                                   "desativado (teacher_enabled=false)")
+    import os
+    if os.getenv("HEILO_TEACHER_BACKEND", "").lower() == "ollama":
+        try:
+            from heilo.models.teacher.ollama_adapter import OllamaTeacherAdapter
+            return OllamaTeacherAdapter()
+        except ImportError as e:
+            return UnavailableAdapter("teacher", "HEILO Teacher", f"adaptador do Ollama ausente: {e}")
     try:
         from heilo.models.teacher.adapter import TeacherAdapter
     except ImportError as e:

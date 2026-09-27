@@ -21,3 +21,5 @@ data/datasets/
 models/teacher/adapters/
 # lixo movido para revisão manual
 _to_delete/
+# saída do treino automático (log local)
+data/training/auto_treino_saida.txt

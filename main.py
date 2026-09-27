@@ -117,6 +117,47 @@ def run_professor(arquivo: str = "", limite: int = 0):
           "Nada entra no treino sem a sua aprovação.")
 
 
+def run_auto_treino(passos: int = 0, forcar: bool = False):
+    """Treino automático (sem ninguém olhando): só roda se houver exemplos APROVADOS novos
+    desde a última vez e no máximo 1× a cada 12 h. Treina uma CANDIDATA a partir da versão
+    ativa, avalia na mesma régua e só promove se melhorar. Nunca aprende com conversas não
+    revisadas."""
+    import hashlib
+    import json
+    import time
+    from heilo.config import DATA_DIR
+    from heilo.training.ciclos import CiclosSeed
+    from heilo.training.pipeline import TrainingPipeline
+    from heilo.training.records import agora
+    estado_arq = DATA_DIR / "training" / "auto_treino.json"
+    estado = json.loads(estado_arq.read_text(encoding="utf-8")) if estado_arq.exists() else {}
+    pipe = TrainingPipeline()
+    ids = sorted(r["id"] for r in pipe.approved())
+    assinatura = hashlib.sha256("\n".join(ids).encode()).hexdigest()[:16]
+    if not forcar and estado.get("assinatura") == assinatura:
+        print(f"Nada novo para aprender ({len(ids)} exemplos aprovados, iguais ao último treino).")
+        return
+    if not forcar and time.time() - estado.get("quando_ts", 0) < 12 * 3600:
+        print("Já treinei nas últimas 12 horas. Deixo para depois.")
+        return
+    ciclos = CiclosSeed(pipe)
+    reg = ciclos.registro()
+    ativa = next(v for v in reg["versoes"] if v["versao"] == reg["ativa"])
+    if not passos:   # modelo pequeno (v0.x) treina mais passos; grande (30 M+) menos, para caber na CPU
+        passos = 1500 if "v0." in ativa["versao"] else 400
+    print(f"Aprendendo com {len(ids)} exemplos aprovados (novos desde o último treino). "
+          f"Base: {ativa['versao']}, {passos} passos. Pode demorar; o PC fica mais lento.")
+    dec = ciclos.treinar_versao(passos=passos, origem="auto-treino (exemplos aprovados novos)")
+    registro = {"quando": agora(), "quando_ts": time.time(), "assinatura": assinatura,
+                "exemplos": len(ids), "versao": dec["versao"], "promovida": dec["promovida"],
+                "motivo": dec["motivo"]}
+    estado_arq.write_text(json.dumps(registro, ensure_ascii=False, indent=1), encoding="utf-8")
+    with open(DATA_DIR / "training" / "auto_treino.log", "a", encoding="utf-8") as f:
+        f.write(json.dumps(registro, ensure_ascii=False) + "\n")
+    print(f"{dec['versao']}: {'PROMOVIDA — virou a HEILO ativa' if dec['promovida'] else 'não promovida'} "
+          f"({dec['motivo']})")
+
+
 def run_regua():
     """Recalcula a sonda de todas as versões com a régua atual (usa as respostas salvas)."""
     from heilo.config import DATA_DIR
@@ -317,7 +358,7 @@ if __name__ == "__main__":
             "cli", "server", "demo", "demo_test", "demo_research",
             "demo_pipeline", "demo_pipeline_full",
             "dataset", "treinar", "aprender", "atualizar",
-            "revisar", "gerar", "professor", "regua", "metricas", "publicar", "independencia", "ciclo", "versoes", "promover",
+            "revisar", "gerar", "professor", "regua", "auto_treino", "metricas", "publicar", "independencia", "ciclo", "versoes", "promover",
         ],
     )
     parser.add_argument("--passos", type=int, default=2000, help="passos de treino do HEILO Seed")
@@ -327,6 +368,7 @@ if __name__ == "__main__":
     parser.add_argument("--base-n", type=int, default=20, help="exemplos por categoria por ciclo")
     parser.add_argument("--sem-professor", action="store_true", help="ciclo sem o Teacher")
     parser.add_argument("--limite", type=int, default=0, help="máximo de perguntas (modo professor)")
+    parser.add_argument("--forcar", action="store_true", help="auto_treino mesmo sem exemplos novos")
     parser.add_argument("--versao", default="", help="versão (modo promover)")
     parser.add_argument("--motivo", default="", help="motivo da promoção manual")
     parser.add_argument("--host", default="0.0.0.0")
@@ -348,6 +390,7 @@ if __name__ == "__main__":
         "gerar": lambda: run_gerar(args.arquivo),
         "professor": lambda: run_professor(args.arquivo, args.limite),
         "regua": run_regua,
+        "auto_treino": lambda: run_auto_treino(args.passos if args.passos != 2000 else 0, args.forcar),
         "metricas": run_metricas,
         "publicar": run_publicar,
         "independencia": run_independencia,

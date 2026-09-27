@@ -1,0 +1,14 @@
+{
+  "name": "HEILO Teacher (Ollama)",
+  "role": "teacher",
+  "provider": "external",
+  "ollama_model": "qwen3-vl:8b",
+  "url": "http://localhost:11434",
+  "origin": "Ollama (instalado no PC do Hugo) — Qwen Team (Alibaba Cloud)",
+  "license": "Apache-2.0",
+  "version": "8B",
+  "purpose": "training_teacher",
+  "status": "temporary",
+  "added": "2026-09-27",
+  "notes": "Professor temporário e externo. Só gera exemplos NÃO verificados para revisão; nunca vira os pesos da HEILO. Trocar o modelo: mude ollama_model (ou HEILO_OLLAMA_MODEL)."
+}

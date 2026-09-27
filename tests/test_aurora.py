@@ -92,3 +92,18 @@ def test_regua_palavra_inteira():
     c = {it["pergunta"]: it["criterios"] for it in load_sonda()}["Qual palavra-chave cria uma classe em Python?"]
     assert not acertou("Uma classe é um programa de computador.", c)
     assert acertou("Use a palavra-chave class.", c)
+
+
+def test_agenda_por_tempo(tmp_path):
+    tok = _tok()
+    pretrain.preparar_corpus(iter(["O Brasil é um país da América do Sul. " * 30] * 40), tok, tmp_path / "c",
+                             max_tokens=10**9, log=lambda s: None)
+    cfg = GPTConfig(block_size=32, n_layer=1, n_head=2, n_embd=32, dropout=0.0, arquitetura="moderna", n_kv_head=1)
+    r = pretrain.pretreinar(cfg, tok, tmp_path / "c", tmp_path / "ck.pt", passos=10**9, lote=2, aquecimento=2,
+                            avaliar_cada=10**9, salvar_cada=10**9, minutos_alvo=0.03, log=lambda s: None)
+    assert r["passo"] > 5                                  # parou pelo TEMPO, não pelos passos
+    st = torch.load(tmp_path / "ck.pt", weights_only=False)
+    assert st["minutos_agenda"] >= 0.03
+    r2 = pretrain.pretreinar(cfg, tok, tmp_path / "c", tmp_path / "ck.pt", passos=10**9, lote=2, aquecimento=2,
+                             avaliar_cada=10**9, salvar_cada=10**9, minutos_alvo=0.03, log=lambda s: None)
+    assert r2["passo"] == r["passo"]                       # já estava completo: não treina de novo

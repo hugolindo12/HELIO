@@ -289,6 +289,7 @@ function nomeModelo(m) {
   if (!m) return "";
   if (m === "comando") return "comando";
   if (m === "ferramenta") return "ferramenta";
+  if (m === "memoria") return "";
   if (/\(teste\)/.test(m)) return m;
   if (/seed/i.test(m)) return "HEILO Faísca";
   if (/teacher|qwen/i.test(m)) return "Teacher";

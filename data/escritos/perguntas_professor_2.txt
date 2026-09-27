@@ -1,0 +1,171 @@
+# Lote 2 para o Teacher do Ollama (qwen3-vl:8b). categoria|pergunta
+conversa|tô com sono no trabalho, alguma dica?
+conversa|como faço para não procrastinar?
+conversa|me dá uma ideia de presente para minha mãe
+conversa|o que fazer num domingo chuvoso?
+conversa|estou ansioso com uma reunião amanhã
+conversa|como organizo minhas finanças do mês?
+conversa|me dá uma dica para economizar dinheiro
+conversa|como faço uma boa apresentação no trabalho?
+conversa|como lidar com um colega difícil?
+conversa|me sugere um lanche rápido e saudável
+conversa|como posso dormir melhor?
+conversa|qual a melhor forma de aprender algo novo?
+conversa|me dá uma frase de motivação para segunda-feira
+conversa|como faço para beber mais água?
+conversa|estou feliz porque terminei um projeto grande
+conversa|tive um dia ótimo hoje
+conversa|me ajuda a planejar um fim de semana tranquilo
+conversa|como pedir aumento de salário?
+conversa|como me preparar para uma prova?
+conversa|o que levar numa viagem curta?
+conhecimento|qual é a capital da frança?
+conhecimento|qual é a capital do chile?
+conhecimento|qual é a capital da china?
+conhecimento|qual é a capital da austrália?
+conhecimento|qual é a capital do egito?
+conhecimento|qual é a capital de santa catarina?
+conhecimento|qual é a capital de pernambuco?
+conhecimento|qual é a capital do ceará?
+conhecimento|qual é a moeda dos estados unidos?
+conhecimento|qual é a moeda da europa?
+conhecimento|qual é o maior planeta do sistema solar?
+conhecimento|qual é a montanha mais alta do mundo?
+conhecimento|qual é o menor país do mundo?
+conhecimento|quem pintou a mona lisa?
+conhecimento|quem inventou a lâmpada?
+conhecimento|quem escreveu dom casmurro?
+conhecimento|o que é a via láctea?
+conhecimento|o que é um buraco negro?
+conhecimento|o que é a camada de ozônio?
+conhecimento|o que é a inflação?
+conhecimento|o que é o pib?
+conhecimento|o que é uma vacina?
+conhecimento|o que é o sistema imunológico?
+conhecimento|por que o mar é salgado?
+conhecimento|por que as folhas são verdes?
+conhecimento|o que é um arco-íris?
+conhecimento|como funciona um avião?
+conhecimento|como funciona uma geladeira?
+conhecimento|o que é o wi-fi?
+conhecimento|o que é bluetooth?
+conhecimento|o que é a nuvem na computação?
+conhecimento|o que é um banco de dados?
+conhecimento|o que é uma api?
+conhecimento|o que é html?
+conhecimento|o que é javascript?
+conhecimento|o que é c#?
+conhecimento|o que é uma senha forte?
+conhecimento|o que é phishing?
+conhecimento|o que é uma impressora 3d?
+conhecimento|o que é inox?
+conhecimento|o que é latão?
+conhecimento|o que é tratamento térmico?
+conhecimento|o que é têmpera no aço?
+conhecimento|o que é dureza de um material?
+conhecimento|o que é um paquímetro?
+conhecimento|o que é um micrômetro?
+conhecimento|o que é tolerância dimensional?
+conhecimento|o que é rugosidade?
+conhecimento|o que é um desenho técnico?
+conhecimento|o que é ergonomia?
+conhecimento|o que é nr-12?
+conhecimento|o que é um acidente de trabalho?
+conhecimento|o que é cipa?
+conhecimento|o que é o pdca?
+conhecimento|o que é oee?
+conhecimento|o que é um gargalo na produção?
+conhecimento|o que é just in time?
+conhecimento|o que é kanban?
+conhecimento|o que é ordem de produção?
+conhecimento|o que é estoque de segurança?
+python|como leio um arquivo csv em python?
+python|como escrevo um arquivo csv em python?
+python|como leio uma planilha excel em python?
+python|como faço um gráfico simples em python?
+python|como uso o módulo os?
+python|como pego argumentos da linha de comando?
+python|como faço um loop com índice e valor?
+python|como ordeno uma lista de dicionários por uma chave?
+python|como removo espaços extras de um texto?
+python|como substituo várias palavras num texto?
+python|como conto palavras de um texto?
+python|como verifico se uma lista está vazia?
+python|como pego o maior valor de um dicionário?
+python|como arredondo para duas casas decimais?
+python|como formato data e hora em python?
+python|como calculo a diferença entre duas datas?
+python|como faço uma pausa de 2 segundos em python?
+python|como crio uma classe simples em python?
+python|o que é um construtor em python?
+python|como leio um arquivo json?
+python|como salvo um dicionário em json?
+python|como tratar o erro de arquivo não encontrado?
+python|como executar um comando do sistema com python?
+python|como criar um ambiente virtual no windows?
+python|como instalar o pandas?
+python|como filtrar linhas num dataframe do pandas?
+python|como juntar duas listas em pares?
+python|o que é slicing com passo?
+python|como inverter um dicionário?
+python|como gerar números aleatórios entre 1 e 10?
+python|como validar se um e-mail tem arroba?
+python|como fazer um contador regressivo em python?
+python|como criar um botão no tkinter?
+python|como mostrar uma mensagem de alerta no tkinter?
+python|como ler um número digitado e validar?
+cnc|qual a diferença entre g90 e g91?
+cnc|qual a diferença entre g02 e g03?
+cnc|qual a diferença entre g41 e g42?
+cnc|o que é o g83?
+cnc|o que é o g84?
+cnc|o que é o g81?
+cnc|o que é o g43?
+cnc|o que é o g54?
+cnc|o que é o m06?
+cnc|o que é o m03?
+cnc|o que é o m05?
+cnc|o que é o m30?
+cnc|o que é avanço por rotação?
+cnc|o que é velocidade de corte?
+cnc|como calculo a rpm para uma fresa de 10 mm com vc 100?
+cnc|o que é uma pastilha de metal duro?
+cnc|o que é uma fresa de topo?
+cnc|o que é uma broca de centro?
+cnc|o que é um macho de rosca?
+cnc|o que é refrigeração na usinagem?
+cnc|por que a ferramenta quebra na usinagem?
+cnc|o que é vibração na usinagem?
+cnc|o que é sobremetal?
+cnc|o que é um ciclo de rosca no torno?
+cnc|o que é zero máquina?
+cnc|o que é um programa principal e um subprograma?
+cnc|o que é o fanuc?
+cnc|o que é o g17?
+cnc|o que é interpolação linear?
+cnc|como evitar colisão na máquina cnc?
+ferramentas|o que é o solidworks?
+ferramentas|o que é o autocad?
+ferramentas|o que é o edgecam?
+ferramentas|o que é uma planilha dinâmica no excel?
+ferramentas|o que é o procv no excel?
+ferramentas|como somar uma coluna no excel?
+ferramentas|o que é o sap gui?
+ferramentas|o que é uma transação no sap?
+ferramentas|o que é o github?
+ferramentas|o que é o git?
+ferramentas|o que é o vs code?
+ferramentas|o que é o blender?
+ferramentas|o que é uma engine?
+ferramentas|o que é o ollama?
+ferramentas|o que é um arquivo pdf?
+raciocinio|uma peça custa 35 reais. quanto custam 12 peças?
+raciocinio|um turno começa às 6h e dura 8 horas e 48 minutos. que horas termina?
+raciocinio|se 3 operadores fazem 90 peças, quantas peças cada um faz?
+raciocinio|um tanque tem 200 litros e gasta 25 por hora. quantas horas dura?
+raciocinio|um produto de 80 reais subiu 15%. quanto ficou?
+raciocinio|tenho 150 reais e gastei 47. quanto sobrou?
+raciocinio|uma barra de 2 metros é cortada em pedaços de 40 cm. quantos pedaços saem?
+raciocinio|quanto é 25% de 480?
+raciocinio|um carro faz 12 km por litro. quantos litros para 300 km?
+raciocinio|se uma máquina produz 45 peças por hora, quantas faz em 7 horas?

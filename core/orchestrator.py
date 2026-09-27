@@ -93,6 +93,8 @@ class Orchestrator:
             store=self.knowledge, retriever=self.retriever)
         self.training = training or TrainingPipeline(
             models=self.models, memory=self.memory_mgr, knowledge=self.knowledge_mgr)
+        from heilo.tools.memoria_verificada import MemoriaVerificada
+        self.memoria_verificada = MemoriaVerificada(self.training)
         self.tools = self._build_tools()
 
         agent_kwargs = dict(
@@ -237,6 +239,7 @@ class Orchestrator:
                 self.conversation.append(Message(role="assistant", content=ferramenta["content"]))
                 return ferramenta
 
+
         msg_l = user_message.lower().strip()
         if msg_l in ("continue", "continuar", "continue a tarefa anterior.", "continue a tarefa anterior"):
             if self._pending_task_id and self.last_task_log:
@@ -247,6 +250,17 @@ class Orchestrator:
             intent = "general"
         if intent == "conversation":
             return self._handle_conversational(user_message)
+        # Memória verificada: pergunta equivalente a um exemplo APROVADO → resposta verificada
+        if getattr(self, "memoria_verificada", None) is not None:
+            try:
+                lembrada = self.memoria_verificada.responder(user_message)
+            except Exception as e:  # nunca derruba a conversa
+                print(f"[HEILO Memória verificada] {e}")
+                lembrada = None
+            if lembrada is not None:
+                self.conversation.append(Message(role="assistant", content=lembrada["content"]))
+                return lembrada
+
         if intent == "pipeline_research_code_test":
             return self._handle_pipeline_research_code_test(user_message)
         if intent == "pipeline_research_code":

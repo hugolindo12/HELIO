@@ -150,8 +150,14 @@ def _perda_val(modelo, dados, T, B, dev, lotes=20, amp=False):
 def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int = 20000,
                lote: int = 32, lr: float = 6e-4, lr_min: float = 6e-5, aquecimento: int = 500,
                tempo_max_min: Optional[float] = None, avaliar_cada: int = 500,
-               salvar_cada: int = 1000, log: Log = print, acumular: int = 1) -> Dict:
+               salvar_cada: int = 1000, log: Log = print, acumular: int = 1,
+               minutos_alvo: Optional[float] = None) -> Dict:
     """Pré-treino com retomada: se `ckpt` existir, continua de onde parou.
+
+    minutos_alvo=M: a agenda da taxa de aprendizado segue o TEMPO (não uma estimativa
+    de passos): treina M minutos no total (somando retomadas) e termina com a taxa no
+    mínimo. Evita o erro da v2.0, em que a estimativa de velocidade errou e o treino
+    parou com 24 min em vez de 210.
 
     acumular=k: soma o gradiente de k micro-lotes antes de cada passo (lote efetivo
     = lote × k), para caber modelos maiores na memória da GPU."""
@@ -163,28 +169,34 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
     modelo.tokenizer = tok
     opt = torch.optim.AdamW(modelo.parameters(), lr=lr, betas=(0.9, 0.95), weight_decay=0.1)
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
-    passo, hist = 0, []
+    passo, hist, min_antes, inicio_agenda = 0, [], 0.0, 0
     ckpt = Path(ckpt)
     if ckpt.exists():
         st = torch.load(ckpt, map_location=dev, weights_only=False)
         modelo.load_state_dict(st["modelo"])
         opt.load_state_dict(st["opt"])
         passo, hist = st["passo"], st["hist"]
-        log(f"[pré-treino] retomando do passo {passo}")
+        min_antes = st.get("minutos_agenda", 0.0) if minutos_alvo else 0.0
+        inicio_agenda = st.get("inicio_agenda", passo) if minutos_alvo and "minutos_agenda" in st else passo
+        log(f"[pré-treino] retomando do passo {passo}" + (f" ({min_antes:.0f} min já feitos)" if minutos_alvo else ""))
     log(f"[pré-treino] {modelo.n_params()/1e6:.1f} M parâmetros | {len(tr):,} tokens de treino | "
         f"{dev} | lote {lote}x{cfg.block_size}")
 
     def lr_em(p):
-        if p < aquecimento:
-            return lr * (p + 1) / aquecimento
-        prog = min(1.0, (p - aquecimento) / max(1, passos - aquecimento))
+        if p - inicio_agenda < aquecimento:
+            return lr * (p - inicio_agenda + 1) / aquecimento
+        if minutos_alvo:
+            prog = min(1.0, (min_antes + (time.time() - inicio) / 60) / minutos_alvo)
+        else:
+            prog = min(1.0, (p - aquecimento) / max(1, passos - aquecimento))
         return lr_min + (lr - lr_min) * 0.5 * (1 + math.cos(math.pi * prog))
 
     def guardar():
         ckpt.parent.mkdir(parents=True, exist_ok=True)
         tmp = ckpt.with_suffix(".tmp")
         torch.save({"modelo": modelo.state_dict(), "opt": opt.state_dict(), "passo": passo,
-                    "hist": hist, "config": cfg.__dict__}, tmp)
+                    "hist": hist, "config": cfg.__dict__, "inicio_agenda": inicio_agenda,
+                    "minutos_agenda": min_antes + (time.time() - inicio) / 60}, tmp)
         tmp.replace(ckpt)
 
     inicio, media = time.time(), None
@@ -192,6 +204,9 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
     while passo < passos:
         if tempo_max_min and (time.time() - inicio) / 60 > tempo_max_min:
             log(f"[pré-treino] limite de tempo atingido no passo {passo}")
+            break
+        if minutos_alvo and min_antes + (time.time() - inicio) / 60 >= minutos_alvo:
+            log(f"[pré-treino] {minutos_alvo:.0f} min de treino completos no passo {passo}")
             break
         for g in opt.param_groups:
             g["lr"] = lr_em(passo)
