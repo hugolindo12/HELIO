@@ -1,5 +1,16 @@
 """
-HEILO Principal - Orchestrator
+HEILO Core — Orchestrator.
+
+Recebe mensagens, gerencia contexto e coordena os componentes:
+
+    Core ─┬─ ModelManager   → HEILO Seed | HEILO Teacher [opcional]   (core/model_manager.py)
+          ├─ MemoryManager  → memória local                            (memory/manager.py)
+          ├─ KnowledgeManager → conhecimento recuperável (RAG)         (knowledge/manager.py)
+          ├─ TrainingPipeline → dados → dataset → treino do Seed       (training/pipeline.py)
+          └─ agentes / ferramentas
+
+O Core não importa nenhuma biblioteca de modelo e não conhece o modelo externo
+por trás do Teacher.
 """
 from typing import Any, Dict, Optional, List
 from heilo.core.model_adapter import ModelAdapter, Message
@@ -38,6 +49,10 @@ class Orchestrator:
         self,
         model: Optional[ModelAdapter] = None,
         workspace: Optional[WorkspaceManager] = None,
+        models=None,
+        memory_manager=None,
+        knowledge_manager=None,
+        training=None,
     ):
         self.model = model or ModelAdapter()
         self.workspace = workspace or WorkspaceManager()
@@ -60,6 +75,18 @@ class Orchestrator:
         )
         from heilo.core.dialogue import ConversationalEngine
         self.dialogue = ConversationalEngine()
+        # ---- Componentes da plataforma (injetáveis para testes/cloud) ----
+        from heilo.core.model_manager import ModelManager
+        from heilo.memory.manager import MemoryManager
+        from heilo.knowledge.manager import KnowledgeManager
+        from heilo.training.pipeline import TrainingPipeline
+        self.models = models or ModelManager.from_config(config)
+        self.memory_mgr = memory_manager or MemoryManager(
+            enabled=getattr(config, "memory_log_conversations", True))
+        self.knowledge_mgr = knowledge_manager or KnowledgeManager(
+            store=self.knowledge, retriever=self.retriever)
+        self.training = training or TrainingPipeline(
+            models=self.models, memory=self.memory_mgr, knowledge=self.knowledge_mgr)
         self.tools = self._build_tools()
 
         agent_kwargs = dict(
@@ -144,6 +171,56 @@ class Orchestrator:
         self.code_agent.checkpoints = self.checkpoints
 
     def chat(self, user_message: str) -> Dict[str, Any]:
+        result = self._chat(user_message)
+        # HEILO Memory: registra a troca (memória local — NÃO treina nada)
+        if isinstance(result, dict) and result.get("content"):
+            try:
+                self.memory_mgr.record(
+                    user_message,
+                    result["content"],
+                    source=str(result.get("source", "")),
+                    kind=str(result.get("type", "message")),
+                    model=str(result.get("model", "")),
+                )
+            except OSError as e:
+                print(f"[HEILO Memory] não consegui salvar a conversa: {e}")
+        return result
+
+    def _historico_modelo(self) -> List[Dict[str, str]]:
+        return [
+            {"role": m.role, "content": m.content}
+            for m in self.conversation
+            if m.role in ("user", "assistant")
+        ]
+
+    def _responder_com_modelo(self):
+        """Pede ao ModelManager uma resposta. Retorna (texto, modelo) ou ("", "")."""
+        try:
+            r = self.models.generate(self._historico_modelo())
+            return r.text, r.model
+        except Exception as e:  # um modelo nunca derruba o Core
+            print(f"[HEILO Core] modelo: {e}")
+            return "", ""
+
+    # ---- ensino / aprendizado / avaliação ---------------------------
+    def ensinar(self, pergunta: str, resposta: str) -> Dict[str, Any]:
+        """/ensinar: registra exemplo supervisionado + conhecimento. Não altera pesos."""
+        return self.training.register_taught(pergunta, resposta)
+
+    def aprender(self) -> Dict[str, Any]:
+        """/aprender: Memory → seleção → validação → dataset. Não treina, não usa o
+        Teacher e não envia nada para o GitHub."""
+        return self.training.learn()
+
+    def comparar_modelos(self, texto: str) -> Dict[str, str]:
+        """Ferramenta de avaliação Seed × Teacher. Nenhum dos dois é tratado como verdade."""
+        hist = self._historico_modelo() + [{"role": "user", "content": texto}]
+        return self.models.compare(hist)
+
+    # compatibilidade com o nome antigo
+    comparar_cerebros = comparar_modelos
+
+    def _chat(self, user_message: str) -> Dict[str, Any]:
         self.conversation.append(Message(role="user", content=user_message))
 
         msg_l = user_message.lower().strip()
@@ -171,13 +248,18 @@ class Orchestrator:
                 self.conversation.append(Message(role="assistant", content=local["content"]))
                 return local
 
-        reply = self._general_reply(user_message)
+        reply, qual = self._responder_com_modelo()
+        source = f"model_{qual}"
+        if not reply:
+            reply = self._general_reply(user_message)
+            source = "llm_fallback"
         self.conversation.append(Message(role="assistant", content=reply))
         return {
             "type": "message",
             "content": reply,
             "agent": "HEILO",
-            "source": "llm_fallback",
+            "source": source,
+            "model": qual,
         }
 
     def _classify_intent(self, text: str) -> str:
@@ -250,13 +332,16 @@ class Orchestrator:
     def _handle_conversational(self, user_message: str) -> Dict[str, Any]:
         from heilo.core.dialogue import DialogueClassifier
         sub_intent = DialogueClassifier.classify(user_message) or "greeting"
-        tz = self.get_user_timezone()
-        reply = self.dialogue.respond(
-            intent=sub_intent,
-            message=user_message,
-            user_tz=tz,
-            history=[{"role": m.role, "content": m.content} for m in self.conversation],
-        )
+        reply, qual = self._responder_com_modelo()
+        source = f"model_{qual}" if reply else "conversational_brain"
+        if not reply:
+            tz = self.get_user_timezone()
+            reply = self.dialogue.respond(
+                intent=sub_intent,
+                message=user_message,
+                user_tz=tz,
+                history=[{"role": m.role, "content": m.content} for m in self.conversation],
+            )
         self.conversation.append(Message(role="assistant", content=reply))
         return {
             "type": "message",
@@ -264,7 +349,8 @@ class Orchestrator:
             "agent": "HEILO",
             "intent": "conversation",
             "sub_intent": sub_intent,
-            "source": "conversational_brain",
+            "source": source,
+            "model": qual,
         }
 
     def _handle_code_task(self, user_message: str) -> Dict[str, Any]:
@@ -898,6 +984,8 @@ class Orchestrator:
             "checkpoints": self.checkpoints.list_checkpoints(limit=5),
             "rag": self.retriever.info(),
             "mcp_servers": [s.__dict__ if hasattr(s, "__dict__") else str(s) for s in self.mcp.list_servers()],
+            "models": self.models.status(),
+            "memory": self.memory_mgr.stats(),
             "local_first": getattr(config, "local_first", True),
             "llm_fallback": getattr(config, "llm_fallback", True),
             "knowledge_threshold": getattr(config, "knowledge_confidence_threshold", 0.35),

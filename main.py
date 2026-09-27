@@ -13,12 +13,14 @@ from heilo.config import config, WORKSPACE_ROOT
 
 
 def run_cli():
+    from heilo.core import commands
     print("=" * 50)
-    print("  HEILO v0.3 – CODE + TEST + RESEARCH + PIPELINES")
+    print("  HEILO – Core + Seed + Memory + Knowledge (+ Teacher opcional)")
     print("=" * 50)
     orch = Orchestrator()
     print(f"Workspace: {orch.workspace.root}")
-    print(f"Model: {orch.model.cfg.provider}/{orch.model.cfg.model_name}")
+    print(commands.handle(orch, "/cerebro"))
+    print(commands.AJUDA)
     print("Digite 'sair' para encerrar.\n")
     while True:
         try:
@@ -30,6 +32,9 @@ def run_cli():
             continue
         if user.lower() in ("sair", "exit", "quit"):
             break
+        if user.startswith("/"):
+            print(commands.handle(orch, user) + "\n")
+            continue
         result = orch.chat(user)
         print(f"\n[{result.get('agent', 'HEILO')}]")
         print(result.get("content", result))
@@ -38,6 +43,77 @@ def run_cli():
             if ans in ("s", "sim", "y", "yes"):
                 print(orch.approve_permission(grant_session=True).get("content"))
         print()
+
+
+def _pipeline():
+    """TrainingPipeline sem subir o Orchestrator inteiro."""
+    from heilo.config import config
+    from heilo.core.model_manager import ModelManager
+    from heilo.knowledge.manager import KnowledgeManager
+    from heilo.memory.manager import MemoryManager
+    from heilo.training.pipeline import TrainingPipeline
+    return TrainingPipeline(models=ModelManager.from_config(config), memory=MemoryManager(),
+                            knowledge=KnowledgeManager())
+
+
+def run_aprender():
+    """Memory → seleção → validação → dataset. Não treina e não envia nada ao GitHub."""
+    import json
+    print(json.dumps(_pipeline().learn(), ensure_ascii=False, indent=2))
+
+
+def run_dataset():
+    import json
+    print(json.dumps(_pipeline().build_dataset(), ensure_ascii=False, indent=2))
+
+
+def run_treinar(passos: int = 2000, novo: bool = False):
+    """Treina o HEILO Seed com a última versão do dataset HEILO (passo explícito)."""
+    import json
+    print(json.dumps(_pipeline().train_seed(passos=passos, novo=novo), ensure_ascii=False, indent=2))
+
+
+def run_revisar():
+    from heilo.core import commands
+    print(commands.revisar(Orchestrator()))
+
+
+def run_gerar(arquivo: str = ""):
+    """Teacher gera exemplos (NÃO verificados) para as perguntas de um arquivo, 1 por linha."""
+    from heilo.training.pipeline import TeacherRequired
+    if not arquivo:
+        print("Uso: python -m heilo.main gerar --arquivo perguntas.txt")
+        return
+    perguntas = Path(arquivo).read_text(encoding="utf-8").splitlines()
+    try:
+        print(_pipeline().generate_with_teacher(perguntas, log=print))
+    except TeacherRequired as e:
+        print(e)
+
+
+def run_metricas():
+    import json
+    print(json.dumps(_pipeline().metrics(), ensure_ascii=False, indent=2))
+
+
+def run_publicar():
+    """Versiona no Git o que é apropriado (conhecimento, dados aprovados, métricas) e faz push.
+    Memória de conversas NÃO vai para o GitHub."""
+    from heilo.knowledge.git_sync import KnowledgeGitSync
+    r = KnowledgeGitSync().sync(message="heilo: conhecimento e dados aprovados", push=True)
+    print(r.get("push") or r.get("commit"))
+
+
+def run_independencia():
+    """HEILO Independence Test: cópia da HEILO sem internet, sem git e sem o Teacher."""
+    from heilo.independence import resumo, run_independence_test
+    print("\n".join(resumo(run_independence_test())))
+
+
+def run_atualizar():
+    """Baixa do GitHub código/dados/pesos publicados (ex.: Seed treinado no Colab)."""
+    from heilo.knowledge.git_sync import KnowledgeGitSync
+    print(KnowledgeGitSync()._run(["git", "pull", "--rebase", "--autostash"], timeout=300))
 
 
 def run_server(host: str = "0.0.0.0", port: int = 8000):
@@ -175,8 +251,13 @@ if __name__ == "__main__":
         choices=[
             "cli", "server", "demo", "demo_test", "demo_research",
             "demo_pipeline", "demo_pipeline_full",
+            "dataset", "treinar", "aprender", "atualizar",
+            "revisar", "gerar", "metricas", "publicar", "independencia",
         ],
     )
+    parser.add_argument("--passos", type=int, default=2000, help="passos de treino do HEILO Seed")
+    parser.add_argument("--novo", action="store_true", help="recomeça o HEILO Seed do zero")
+    parser.add_argument("--arquivo", default="", help="perguntas para o Teacher (modo gerar)")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
@@ -188,4 +269,13 @@ if __name__ == "__main__":
         "demo_research": run_demo_research,
         "demo_pipeline": run_demo_pipeline,
         "demo_pipeline_full": run_demo_pipeline_full,
+        "dataset": run_dataset,
+        "treinar": lambda: run_treinar(args.passos, args.novo),
+        "aprender": run_aprender,
+        "atualizar": run_atualizar,
+        "revisar": run_revisar,
+        "gerar": lambda: run_gerar(args.arquivo),
+        "metricas": run_metricas,
+        "publicar": run_publicar,
+        "independencia": run_independencia,
     }[args.mode]()

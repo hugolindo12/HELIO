@@ -1,0 +1,23 @@
+{
+  "version": "v0.1",
+  "checkpoint_file": "heilo_seed_v0.1.pt",
+  "parameters": 3317760,
+  "steps_trained": 3300,
+  "loss_history": [
+    {
+      "data": "2026-09-26 23:14",
+      "passos": 300,
+      "perda": 2.2585,
+      "exemplos": 87
+    },
+    {
+      "data": "2026-09-26 23:54",
+      "passos": 3000,
+      "perda": 0.0828,
+      "exemplos": 87
+    }
+  ],
+  "dataset": "curated_seed.jsonl (88 initial curated conversation examples)",
+  "date": "2026-09-26",
+  "notes": "Checkpoint inicial curado antes do treinamento com Teacher Qwen."
+}

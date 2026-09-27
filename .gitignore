@@ -7,3 +7,17 @@ logs/
 rag/data/**/*.npy
 workspace/**/.heilo/
 .env
+.env.*
+!.env.example
+# HEILO Memory: conversas são locais e privadas — GitHub não é memória
+memory/sessions/
+# HEILO Training: candidatos crus e datasets derivados (recriados por /aprender)
+data/raw/
+data/datasets/
+!data/datasets/evaluation/
+!data/datasets/evaluation/**
+*.tmp
+# HEILO Teacher: pesos baixados/treinados de modelo externo não vão para o repositório
+models/teacher/adapters/
+# lixo movido para revisão manual
+_to_delete/

@@ -116,7 +116,8 @@ class CheckpointManager:
                     restored.append(f"deleted:{snap.path}")
             else:
                 target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_text(snap.content, encoding="utf-8")
+                with open(target, "w", encoding="utf-8", newline="") as f:
+                    f.write(snap.content)
                 restored.append(f"restored:{snap.path}")
         self._active = None
         return restored

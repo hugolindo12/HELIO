@@ -1,0 +1,154 @@
+{
+  "version": "v0.2",
+  "date": "2026-09-27T04:31:34+00:00",
+  "hardware": "Intel Core i5-1155G7 (4 cores / 8 threads CPU, float32, no CUDA)",
+  "training": {
+    "steps_in_cycle": 1000,
+    "total_accumulated_steps": 4300,
+    "batch_size": 16,
+    "learning_rate": 0.0003,
+    "optimizer": "AdamW (weight_decay=0.1, clip_grad=1.0)",
+    "context_window_bytes": 256
+  },
+  "teacher": {
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "weights_size_mb": 988,
+    "license": "Apache 2.0",
+    "role": "External synthetic data teacher and curriculum generator (can be detached anytime)",
+    "approved_examples_generated": 16,
+    "rejected_examples_generated": 2
+  },
+  "dataset": {
+    "version": "heilo_v001",
+    "total_examples": 103,
+    "train_examples": 92,
+    "val_examples": 11,
+    "by_origin": {
+      "curated": 78,
+      "teacher_qwen": 14
+    }
+  },
+  "evaluation": {
+    "benchmark_dataset": "data/datasets/evaluation/benchmark_eval.jsonl",
+    "benchmark_examples_count": 8,
+    "loss_v0_1": 3.6584,
+    "loss_v0_2": 3.2248,
+    "improvement_percent": 11.85,
+    "samples_v01": [
+      {
+        "id": "eval_001",
+        "category": "programming/variables",
+        "question": "O que é uma variável em Python?",
+        "target": "Uma variável em Python armazena dados na memória identificados por um nome. Exemplo: x = 10.",
+        "seed_output": "Uma é uma lista guarda um vários valores em ordem, tipo numeros = [1, 2, 3]. Quer ver como adicionar ou remover itens?"
+      },
+      {
+        "id": "eval_002",
+        "category": "programming/functions",
+        "question": "Como declarar uma função em Python?",
+        "target": "Para declarar uma função em Python usamos a palavra def seguida do nome e parênteses. Exemplo: def somar(a, b): return a + b",
+        "seed_output": "Acho ótimo! É simples de ler, tem biblioteca pra tudo e é perfeito pra automação e IA."
+      },
+      {
+        "id": "eval_003",
+        "category": "programming/data_structures",
+        "question": "Qual a diferença entre lista e dicionário?",
+        "target": "Uma lista armazena itens ordenados por índices numéricos [1, 2]. Um dicionário armazena pares de chave e valor {'a': 1}.",
+        "seed_output": "Nenhum relos ó bate pra Ma o que você tem em mente."
+      },
+      {
+        "id": "eval_004",
+        "category": "programming/clean_code",
+        "question": "Por que evitar valores padrão mutáveis em Python?",
+        "target": "Valores padrão mutáveis como lista vazia são criados apenas uma vez e compartilhados entre todas as chamadas da função.",
+        "seed_output": "Acho ótimo! É simples de ler, tem biblioteca pra tudo e é perfeito pra automação e IA."
+      },
+      {
+        "id": "eval_005",
+        "category": "programming/testing",
+        "question": "O que é o padrão Arrange-Act-Assert em testes?",
+        "target": "O padrão AAA divide o teste em três etapas: Arrange (preparação), Act (execução da ação) e Assert (verificação do resultado).",
+        "seed_output": "Sou bem novinha! Nasci em 2026 e ainda estou aprendendo muita coisa."
+      },
+      {
+        "id": "eval_006",
+        "category": "identity/persona",
+        "question": "Quem é você e qual sua função?",
+        "target": "Eu sou a HEILO, uma inteligência artificial criada pelo Hugo para programar, testar e aprender com você.",
+        "seed_output": "Não, eu sou uma inteligência artificial. Mas gosto de conversar de um jeito natural, como se fosse uma pessoa."
+      },
+      {
+        "id": "eval_007",
+        "category": "conversational/greeting",
+        "question": "Olá, tudo bem com você?",
+        "target": "Olá! Tudo ótimo por aqui, obrigado por perguntar. Como posso te ajudar hoje?",
+        "seed_output": "Eu sou bem animada pra ajudar! E você, como vai?"
+      },
+      {
+        "id": "eval_008",
+        "category": "conversational/empathy",
+        "question": "Estou muito cansado hoje.",
+        "target": "Imagino que o dia tenha sido pesado! Descanse um pouco e quando quiser, estamos juntos.",
+        "seed_output": "Poxa, descansa um pouco. Se tiver algo urgente, me passa que eu te ajudo a resolver mais rápido."
+      }
+    ],
+    "samples_v02": [
+      {
+        "id": "eval_001",
+        "category": "programming/variables",
+        "question": "O que é uma variável em Python?",
+        "target": "Uma variável em Python armazena dados na memória identificados por um nome. Exemplo: x = 10.",
+        "seed_output": "Atribua valor à variável com a sigla \"=."
+      },
+      {
+        "id": "eval_002",
+        "category": "programming/functions",
+        "question": "Como declarar uma função em Python?",
+        "target": "Para declarar uma função em Python usamos a palavra def seguida do nome e parênteses. Exemplo: def somar(a, b): return a + b",
+        "seed_output": "Parâmetros de uma função são variáveis que recebem valores para serem usados na execução da função."
+      },
+      {
+        "id": "eval_003",
+        "category": "programming/data_structures",
+        "question": "Qual a diferença entre lista e dicionário?",
+        "target": "Uma lista armazena itens ordenados por índices numéricos [1, 2]. Um dicionário armazena pares de chave e valor {'a': 1}.",
+        "seed_output": "O que você acha de python?"
+      },
+      {
+        "id": "eval_004",
+        "category": "programming/clean_code",
+        "question": "Por que evitar valores padrão mutáveis em Python?",
+        "target": "Valores padrão mutáveis como lista vazia são criados apenas uma vez e compartilhados entre todas as chamadas da função.",
+        "seed_output": "Listas em Python permitem armazenar várias informações em um único objeto, facilitando a manipulação e interação com dados complexos."
+      },
+      {
+        "id": "eval_005",
+        "category": "programming/testing",
+        "question": "O que é o padrão Arrange-Act-Assert em testes?",
+        "target": "O padrão AAA divide o teste em três etapas: Arrange (preparação), Act (execução da ação) e Assert (verificação do resultado).",
+        "seed_output": "Sou bem novinha! Nasci em 2026 e ainda estou aprendendo muita coisa."
+      },
+      {
+        "id": "eval_006",
+        "category": "identity/persona",
+        "question": "Quem é você e qual sua função?",
+        "target": "Eu sou a HEILO, uma inteligência artificial criada pelo Hugo para programar, testar e aprender com você.",
+        "seed_output": "A instrução \"return\" encerra uma função e retorna um valor para o caller."
+      },
+      {
+        "id": "eval_007",
+        "category": "conversational/greeting",
+        "question": "Olá, tudo bem com você?",
+        "target": "Olá! Tudo ótimo por aqui, obrigado por perguntar. Como posso te ajudar hoje?",
+        "seed_output": "Olá! Estou bem, muito bem. Estou aqui para ajudar!"
+      },
+      {
+        "id": "eval_008",
+        "category": "conversational/empathy",
+        "question": "Estou muito cansado hoje.",
+        "target": "Imagino que o dia tenha sido pesado! Descanse um pouco e quando quiser, estamos juntos.",
+        "seed_output": "Por que o programador foi ao médico? Porque estava com muitos bugs e nenhum debug!"
+      }
+    ]
+  }
+}

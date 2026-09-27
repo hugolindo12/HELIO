@@ -1,0 +1,17 @@
+{
+  "name": "HEILO Teacher",
+  "role": "teacher",
+  "provider": "external",
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "base_model_family": "Qwen2.5",
+  "version": "0.5B-Instruct",
+  "origin": "Hugging Face Hub — Qwen Team (Alibaba Cloud)",
+  "license": "Apache-2.0",
+  "license_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/blob/main/LICENSE",
+  "adapter": "LoRA (opcional)",
+  "adapter_dir": "adapters/heilo_lora",
+  "purpose": "training_teacher",
+  "status": "temporary",
+  "added": "2026-09-27",
+  "notes": "Modelo externo, sujeito à própria licença. Não é a HEILO: é um professor temporário para gerar exemplos, ajudar avaliação e acelerar a evolução do HEILO Seed. Pode ser desativado (HEILO_TEACHER_ENABLED=false) ou removido apagando a pasta models/teacher/."
+}

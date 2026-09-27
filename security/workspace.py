@@ -89,12 +89,16 @@ class WorkspaceManager:
 
     def read_text(self, path: str, encoding: str = "utf-8") -> str:
         p = self.resolve(path, must_exist=True)
-        return p.read_text(encoding=encoding, errors="replace")
+        # newline="" preserva \r\n (sem tradução universal de quebras de linha)
+        with open(p, "r", encoding=encoding, errors="replace", newline="") as f:
+            return f.read()
 
     def write_text(self, path: str, content: str, encoding: str = "utf-8") -> Path:
         p = self.resolve(path)
         p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_text(content, encoding=encoding)
+        # newline="" grava as quebras exatamente como estão (sem converter \n -> \r\n no Windows)
+        with open(p, "w", encoding=encoding, newline="") as f:
+            f.write(content)
         return p
 
     def exists(self, path: str) -> bool:

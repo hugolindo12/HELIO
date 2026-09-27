@@ -1,0 +1,10 @@
+{
+  "version": "v0.2",
+  "checkpoint_file": "heilo_seed_v0.2.pt",
+  "config_file": "config.json",
+  "metrics_file": "metrics.json",
+  "report_file": "training_report.md",
+  "parent_version": "v0.1",
+  "total_steps": 4300,
+  "created_at": "2026-09-27T04:31:34+00:00"
+}

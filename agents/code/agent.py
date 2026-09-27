@@ -246,10 +246,21 @@ Rules:
             # FINAL report
             if "FINAL:" in content.upper() or content.strip().startswith("FINAL"):
                 final_result = content
-                status = "success"
-                phase = CyclePhase.FINISH
-                if self.checkpoints:
-                    self.checkpoints.commit()
+                # O relatório FINAL não garante sucesso: se o último teste
+                # executado falhou, a tarefa terminou como "failed".
+                last_test_failed = bool(task_log.tests) and not task_log.tests[-1].get("success", False)
+                if last_test_failed:
+                    status = "failed"
+                    phase = CyclePhase.ABORT
+                    # Só desfaz se ainda houver checkpoint ativo (o rollback
+                    # automático pós-teste pode já ter restaurado os arquivos).
+                    if self.checkpoints and self.checkpoints._active is not None:
+                        self.checkpoints.rollback()
+                else:
+                    status = "success"
+                    phase = CyclePhase.FINISH
+                    if self.checkpoints:
+                        self.checkpoints.commit()
                 break
 
             if not tool_calls and phase == CyclePhase.UNDERSTAND:

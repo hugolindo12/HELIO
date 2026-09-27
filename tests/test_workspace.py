@@ -84,3 +84,13 @@ class TestWorkspaceManager:
         assert res.success is True
         content = p.read_bytes()
         assert b"line1_fixed\r\nline2_fixed" in content
+
+
+def test_edit_file_preserves_lf(tmp_path):
+    from heilo.security.workspace import WorkspaceManager
+    from heilo.tools.filesystem import EditFileTool
+    ws = WorkspaceManager(tmp_path)
+    p = ws.resolve("lf_sample.py")
+    p.write_bytes(b"a\nb\n")
+    assert EditFileTool(ws).execute("lf_sample.py", old_string="a", new_string="x").success
+    assert p.read_bytes() == b"x\nb\n"

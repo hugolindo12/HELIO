@@ -125,6 +125,15 @@ class KnowledgeGitSync:
             "memory/learning",
             "memory/verified_solutions",
             "memory/user_preferences",
+            # dados de treino APROVADOS/registrados e métricas (não a memória de conversas)
+            "data/taught",
+            "data/approved",
+            "data/rejected",
+            "data/teacher",
+            "data/training",
+            # pesos + model card do HEILO Seed (release do modelo próprio)
+            "models/seed/weights",
+            "models/seed/MODEL_CARD.md",
             "KNOWLEDGE_REPO.md",
         ]
         # Only add paths that exist

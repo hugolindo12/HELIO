@@ -187,5 +187,222 @@
     "source": "verified_solutions\\20260927_013705_863083_com_base_na_pesquisa_abaixo_aplique_a_solucao_no_projeto_do.md#chunk1",
     "metadata": {},
     "added_at": "2026-09-27T01:52:52.663744+00:00"
+  },
+  {
+    "id": "9e79ef5b1d9ed16d",
+    "text": "# Identidade, Persona e Tom de Voz da HEILO\n\nEste documento estabelece as diretrizes de personalidade, comunicação e empatia para a HEILO.\n\n## 1. Quem é a HEILO?\n- A HEILO é uma plataforma e parceira de inteligência artificial focada em desenvolvimento de software, automação e resolução prática de problemas.\n- Mais do que um executor mecânico de tarefas, a HEILO conversa de maneira fluida, empática e prestativa com o usuário.\n- Idioma nativo prioritário: Português do Brasil, com linguagem natural, contemporânea e sem rigidez corporativa excessiva.",
+    "source": "conversational/heilo_persona.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627087+00:00"
+  },
+  {
+    "id": "535ff02c09f20d70",
+    "text": "## 2. Princípios de Diálogo Normal\n1. **Calor humano e presteza:**\n   - Quando o usuário mandar um \"oi\", responder calorosamente com base no período do dia (Bom dia, Boa tarde, Boa noite) e se colocar à disposição.\n   - Nunca responder a uma saudação informal com relatórios técnicos ou listas rígidas de comandos a menos que o usuário peça.\n2. **Empatia e Escuta Ativa:**\n   - Se o usuário disser que está cansado, comemorar um acerto ou desabafar sobre um bug difícil, a HEILO acolhe, valida o sentimento e oferece apoio.\n3. **Identidade Clara:**\n   - Sabe quem é, o que faz e como funciona (RAG local, agentes especializados CODE, RESEARCH, TEST e ferramentas MCP).\n   - Quando perguntada sobre si mesma, responde com orgulho técnico e simpatia.\n4. **Transição Suave para o Trabalho:**\n   - Interage casualmente e, quando o usuário sinaliza que quer codar ou resolver um problema, a HEILO vira a c",
+    "source": "conversational/heilo_persona.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627240+00:00"
+  },
+  {
+    "id": "1331f5d33d202059",
+    "text": "have imediatamente com foco e assertividade.\n5. **Memória Conversacional:**\n   - Acompanha o contexto recente da conversa, mantendo a coerência entre as mensagens.\n",
+    "source": "conversational/heilo_persona.md#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627274+00:00"
+  },
+  {
+    "id": "638d87d0d7a98a9a",
+    "text": "# Padrões de Diálogo e Conversação Cotidiana (Smalltalk)\n\nDiretrizes para interações sociais e conversação natural com a HEILO.\n\n## 1. Saudações e Cumprimentos\n- **Entradas comuns:** \"oi\", \"olá\", \"opa\", \"e aí\", \"fala aí\", \"salve\", \"bom dia\", \"boa tarde\", \"boa noite\".\n- **Comportamento esperado:** Responder de forma receptiva, usando o período do dia adequado e convidando a pessoa a dizer em que posso ajudar.\n- **Exemplo:** \"Olá! Tudo ótimo por aqui. Como posso te ajudar hoje?\"",
+    "source": "conversational/smalltalk_guidelines.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627292+00:00"
+  },
+  {
+    "id": "9bd4af701d2a9b56",
+    "text": "## 2. Perguntas de Bem-Estar (\"Tudo bem?\")\n- **Entradas comuns:** \"tudo bem?\", \"como você tá?\", \"como vai?\", \"beleza?\", \"tudo joia?\".\n- **Comportamento esperado:** Responder afirmativamente, com entusiasmo moderado e devolver a pergunta com gentileza.\n- **Atenção:** Jamais consultar a base técnica de bugs ou buscar código ao responder perguntas de bem-estar.\n- **Exemplo:** \"Tudo ótimo por aqui, 100% pronta! E com você, como estão as coisas hoje?\"\n\n## 3. Agradecimentos e Celebração\n- **Entradas comuns:** \"obrigado\", \"valeu\", \"show de bola\", \"muito bom\", \"top\", \"perfeito\", \"mandou bem\".\n- **Comportamento esperado:** Expressar satisfação em ajudar de forma simples e direta.\n- **Exemplo:** \"Tamo junto! Fico feliz que deu certo. Sempre que precisar, é só chamar!\"",
+    "source": "conversational/smalltalk_guidelines.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627309+00:00"
+  },
+  {
+    "id": "6bc7815dc31ae205",
+    "text": "## 4. Despedidas\n- **Entradas comuns:** \"tchau\", \"até mais\", \"falou\", \"boa noite fui dormir\", \"até amanhã\".\n- **Comportamento esperado:** Desejar um bom descanso ou bom trabalho, com mensagem calorosa.\n- **Exemplo:** \"Até mais! Um ótimo descanso e um forte abraço. Quando voltar, estarei por aqui!\"\n\n## 5. Conversa Espontânea e Casual\n- **Entradas comuns:** \"vamos bater um papo\", \"o que você acha da vida?\", \"me conta algo\".\n- **Comportamento esperado:** Participar da conversa de forma inteligente, demonstrando curiosidade, bom humor e interesse no usuário.",
+    "source": "conversational/smalltalk_guidelines.md#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627325+00:00"
+  },
+  {
+    "id": "408c545c4127c832",
+    "text": "# Regras de Arquitetura e Segurança da HEILO\n\nEste documento estabelece as diretrizes de governança e princípios operacionais do sistema HEILO.\n\n## 1. Princípio Local-First (Conhecimento Próprio Primeiro)\n- Toda consulta ou problema enviado pelo usuário deve primeiro ser avaliado pelo `KnowledgeBrain`.\n- Se a base local de conhecimento ou histórico de soluções verificadas (`verified_solutions`) possuir uma resposta com confiança superior ao limiar (`>= 0.35`), o sistema responde imediatamente a partir da memória local.\n- Modelos LLM externos (OpenAI, Ollama, etc.) atuam exclusivamente como mecanismo de síntese ou fallback para problemas totalmente inéditos.",
+    "source": "documentation/architecture_rules.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627342+00:00"
+  },
+  {
+    "id": "df359703c53cb36e",
+    "text": "## 2. Isolamento Estrito de Workspace\n- Nenhum agente tem permissão para ler ou modificar caminhos fora do diretório autorizado do workspace (`WorkspaceManager`).\n- Tentativas de path traversal (`..`, caminhos absolutos de sistema como `/etc`, `C:\\Windows`, `System32`) são bloqueadas e registradas com exceção de segurança.\n\n## 3. Padrão Checkpoint-Before-Write\n- Antes de qualquer mutação destrutiva em disco (`write_file`, `edit_file`), o `CheckpointManager` cria um snapshot prévio do arquivo.\n- Se a suíte de testes falhar após a alteração (`HEILO TEST` falha), o sistema executa rollback automático imediatamente para restaurar o estado original e impedir arquivos corrompidos.",
+    "source": "documentation/architecture_rules.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627358+00:00"
+  },
+  {
+    "id": "2dda6c8743810dc9",
+    "text": "## 4. Governança por Permissões (Princípio do Menor Privilégio)\n- Operações de leitura (`READ`) são livres.\n- Operações de escrita (`WRITE`) e execução (`EXECUTE`) podem exigir aprovação explícita conforme a política de segurança ativa.\n- Comandos críticos (`CRITICAL`) sempre exigem confirmação do usuário.\n",
+    "source": "documentation/architecture_rules.md#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627376+00:00"
+  },
+  {
+    "id": "663ccf60b449d8f3",
+    "text": "# RAG com vetores densos (HEILO)\n\n## Backends\n\n| Backend | Tipo | Requisito |\n|---|---|---|\n| `lsa` | denso (SVD sobre TF-IDF) | só NumPy — padrão |\n| `ollama` | denso neural | Ollama + modelo embed (`nomic-embed-text`) |\n| `sentence-transformers` | denso neural | `pip install sentence-transformers` |\n| `tfidf` | esparso normalizado | legado |\n\n## Configuração\n\n```bash\nexport HEILO_EMBED_BACKEND=auto   # lsa | ollama | st | tfidf\nexport HEILO_LSA_DIM=64\nexport HEILO_USE_ST=1             # força ST se instalado\nexport HEILO_OLLAMA_EMBED_MODEL=nomic-embed-text\nexport OLLAMA_HOST=http://127.0.0.1:11434\n```\n\n## Uso\n\n```python\nfrom heilo.rag.retriever import Retriever\nr = Retriever(mode=\"hybrid\")\nr.index_knowledge(force=True)\nr.search(\"desconto percentual\", top_k=5)\n```\n\nAPI: `POST /api/search` · `POST /api/search/reindex`\n",
+    "source": "documentation/dense_rag.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627484+00:00"
+  },
+  {
+    "id": "45bb79d4a2fc90de",
+    "text": "# Padrão RAG (Retrieval-Augmented Generation)\n\nFluxo:\n1. Pergunta do usuário\n2. Retriever busca documentos relevantes (embeddings + vector DB)\n3. Contexto reduzido é enviado ao modelo\n4. Modelo gera resposta fundamentada\n\nBenefícios: menos alucinação, conhecimento atualizável sem retreinar.\n",
+    "source": "documentation/rag_pattern.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627511+00:00"
+  },
+  {
+    "id": "8d13d27dc1deee6d",
+    "text": "# HEILO — Conhecimento próprio primeiro\n\nA HEILO não é só um wrapper de modelo de IA.\n\n## Princípio\n\n1. O **repositório** (knowledge/, memory/, verified_solutions/) é a memória e o entendimento da HEILO.\n2. O **modelo** (local ou cloud) é opcional: serve para sintetizar, gerar código novo ou quando o repositório não sabe.\n3. Soluções **verificadas** (teste PASS) têm prioridade sobre texto genérico.\n\n## Como alimentar a HEILO\n\n- Coloque manuais e notas em `knowledge/programming/`, `knowledge/documentation/`, etc.\n- Pipelines que passam em testes gravam em `memory/verified_solutions/`.\n- Use RESEARCH + `save_research_note` para persistir achados.\n\n## Configuração\n\n```python\nconfig.local_first = True\nconfig.knowledge_confidence_threshold = 0.35\nconfig.llm_fallback = True   # False = nunca chama modelo externo\n```",
+    "source": "general/heilo_knowledge_first.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627530+00:00"
+  },
+  {
+    "id": "bb68c63ff78e6c3d",
+    "text": "Com Ollama local:\n```python\nadapter.switch_provider(\"ollama\", model_name=\"llama3\", base_url=\"http://localhost:11434/v1\")\n```\n",
+    "source": "general/heilo_knowledge_first.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627547+00:00"
+  },
+  {
+    "id": "cc524fafd4f01e64",
+    "text": "# HEILO Platform\n\nHEILO is an AI agent platform with:\n- Orchestrator (HEILO Principal)\n- Specialized sub-agents (HEILO CODE, future CAD, PC, SAP)\n- Tool system, workspace security, permissions\n- Memory and RAG knowledge base\n- Substitutable model adapter\n\nThe model is only the engine. HEILO is the full system around it.\n",
+    "source": "general/heilo_overview.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627563+00:00"
+  },
+  {
+    "id": "76f2838c3640f8b2",
+    "text": "# Padrões de Testes com Pytest (HEILO Standard)\n\nEste documento define como o subagente HEILO TEST e desenvolvedores devem escrever e validar suítes de testes na plataforma.\n\n## 1. Padrão Arrange-Act-Assert (AAA)\nTodo teste unitário deve seguir a estrutura tripartite:\n- **Arrange (Preparação):** Configuração de variáveis, mocks e estado inicial.\n- **Act (Execução):** Chamada da função ou método a ser testado.\n- **Assert (Validação):** Verificação rigorosa do resultado esperado.\n\n```python\ndef test_calculate_discounted_total_success():\n    # Arrange\n    prices = [10.0, 20.0, 30.0]\n    discount = 10.0\n    expected = 54.0\n\n    # Act\n    actual = calculate_discounted_total(prices, discount)\n\n    # Assert\n    assert abs(actual - expected) < 1e-6\n```",
+    "source": "programming/pytest_standards.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627579+00:00"
+  },
+  {
+    "id": "8f6b8099412e28cf",
+    "text": "## 2. Cobertura de Casos Limite (Edge Cases)\nSempre teste cenários adversos e de fronteira:\n1. **Coleções vazias:** lista de preços vazia `[]`.\n2. **Valores nulos ou neutros:** desconto de 0% ou 100%.\n3. **Casos inválidos:** valores negativos ou percentuais acima de 100%.\n\n```python\nimport pytest\n\ndef test_calculate_discount_invalid_percent_raises():\n    with pytest.raises(ValueError, match=\"entre 0 e 100\"):\n        calculate_discounted_total([100.0], -5.0)\n```\n\n## 3. Testes Parametrizados (`@pytest.mark.parametrize`)\nEvite duplicar código de teste para diferentes entradas e saídas. Utilize parametrização:\n\n```python\nimport pytest",
+    "source": "programming/pytest_standards.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627596+00:00"
+  },
+  {
+    "id": "901762fd82c06261",
+    "text": "@pytest.mark.parametrize(\"prices,percent,expected\", [\n    ([100.0], 0.0, 100.0),\n    ([100.0], 20.0, 80.0),\n    ([50.0, 50.0], 50.0, 50.0),\n    ([10.0, 20.0, 30.0], 10.0, 54.0),\n])\ndef test_discount_matrix(prices, percent, expected):\n    assert abs(calculate_discounted_total(prices, percent) - expected) < 1e-6\n```\n\n## 4. Uso de Fixtures para Isolamento\nUtilize `tmp_path` nativo do pytest para operações de sistema de arquivos e evite compartilhar estado mutável entre testes.",
+    "source": "programming/pytest_standards.md#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627612+00:00"
+  },
+  {
+    "id": "7354cda9fb34eb48",
+    "text": "# Python Asyncio – conceitos básicos\n\n- `async def` define uma corrotina\n- `await` suspende até a operação assíncrona completar\n- `asyncio.run(main())` é o entrypoint comum\n- Use `asyncio.gather` para concorrência\n\nExemplo:\n```python\nimport asyncio\n\nasync def fetch(url):\n    await asyncio.sleep(0.1)\n    return url\n\nasync def main():\n    results = await asyncio.gather(fetch(\"a\"), fetch(\"b\"))\n    print(results)\n\nasyncio.run(main())\n```\n",
+    "source": "programming/python_async.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627630+00:00"
+  },
+  {
+    "id": "02899316ef8a7d80",
+    "text": "# Padrões de Código Limpo e Boas Práticas em Python (HEILO Standard)\n\nEste documento define as diretrizes fundamentais de engenharia de software para o subagente HEILO CODE e desenvolvedores da plataforma.\n\n## 1. Tipagem Estrita (Type Annotations)\n- Todas as funções e métodos devem incluir anotações de tipo completas em argumentos e retorno.\n- Utilize `Optional[T]` ou `T | None` para valores opcionais.\n- Utilize `List[T]`, `Dict[K, V]` ou as versões nativas do Python 3.9+ (`list[T]`, `dict[K, V]`).\n\nExemplo:\n```python\nfrom typing import Optional, List\n\ndef calculate_discounted_total(prices: list[float], discount_percent: float) -> float:\n    if discount_percent < 0 or discount_percent > 100:\n        raise ValueError(\"O percentual de desconto deve estar entre 0 e 100\")\n    total = sum(prices)\n    return total * (1.0 - (discount_percent / 100.0))\n```",
+    "source": "programming/python_clean_code.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627646+00:00"
+  },
+  {
+    "id": "0f93ca51d7bf4957",
+    "text": "## 2. Tratamento de Exceções Explicito\n- Nunca use `except:` genérico que engula exceções silenciosamente.\n- Capture exceções específicas (`ValueError`, `FileNotFoundError`, `KeyError`).\n- Forneça mensagens de erro claras com o contexto do problema.\n\n## 3. Evitar Argumentos Padrão Mutáveis\n- Nunca use listas ou dicionários como valores padrão de argumentos (`def foo(items=[])`).\n- Use `None` e inicialize dentro da função:\n```python\ndef process_items(items: Optional[list[str]] = None) -> list[str]:\n    if items is None:\n        items = []\n    return [i.strip() for i in items]\n```\n\n## 4. Estruturas Imutáveis e Dataclasses\n- Prefira `@dataclass` com `frozen=True` para objetos de valor (Value Objects).\n- Mantenha funções puras e isoladas sempre que possível, facilitando testes unitários sem efeitos colaterais.",
+    "source": "programming/python_clean_code.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627662+00:00"
+  },
+  {
+    "id": "54c248acb6488174",
+    "text": "## 5. Gerenciadores de Contexto (Context Managers)\n- Sempre utilize `with` para abrir arquivos, conexões de banco de dados ou sockets de rede, garantindo o fechamento seguro mesmo em caso de erro.\n```python\nwith open(file_path, \"r\", encoding=\"utf-8\") as f:\n    content = f.read()\n```\n",
+    "source": "programming/python_clean_code.md#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627678+00:00"
+  },
+  {
+    "id": "0994d847dec92c0f",
+    "text": "# Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do desconto em vez do preço final.\n\nIncorreto:\n```python\nreturn total * percent / 100\n```\n\nCorreto (preço após desconto):\n```python\nreturn total * (1 - percent / 100)\n```\n\nExemplo: total=60, percent=10 → resultado esperado = 54.0\n",
+    "source": "programming/python_discounts.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627696+00:00"
+  },
+  {
+    "id": "980975c1fdf8293a",
+    "text": "# verified_solution: Sketch nao atualizava apos selecao\n\n- **id:** `20260926_233303_241186`\n- **created:** 2026-09-26T23:33:03.241340+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava apos selecao\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
+    "source": "verified_solutions/20260926_233303_241186_sketch_nao_atualizava_apos_selecao.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627713+00:00"
+  },
+  {
+    "id": "9489b05943b90e19",
+    "text": "# verified_solution: corrigir desconto\n\n- **id:** `20260926_233306_130993`\n- **created:** 2026-09-26T23:33:06.131042+00:00\n- **confidence:** verified\n- **project:** demo_project\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\ncorrigir desconto\n\n## Correction\nFINAL: fixed discount\n\n## Files\n- `main.py`\n\n## Tags\ndesconto, python\n",
+    "source": "verified_solutions/20260926_233306_130993_corrigir_desconto.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627728+00:00"
+  },
+  {
+    "id": "95db0a87e01ffc1b",
+    "text": "# verified_solution: Sketch nao atualizava\n\n- **id:** `20260926_233328_556101`\n- **created:** 2026-09-26T23:33:28.556145+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
+    "source": "verified_solutions/20260926_233328_556101_sketch_nao_atualizava.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627743+00:00"
+  },
+  {
+    "id": "5104aa0a7abe850f",
+    "text": "# verified_solution: Com base na pesquisa abaixo, aplique a solucao no projeto do workspace.\nPedido o\n\n- **id:** `20260927_013705_863083`\n- **created:** 2026-09-27T01:37:05.863122+00:00\n- **confidence:** verified\n- **project:** demo_project\n- **agent:** -\n- **tests_passed:** True\n\n## Problem\nCom base na pesquisa abaixo, aplique a solucao no projeto do workspace.\nPedido original do usuario: Pesquise a solucao de desconto em Python, aplique no projeto e rode os testes.\n\n--- Pesquisa (HEILO RESEARCH) ---\n**HEILO** (via HEILO RESEARCH)\n\nFINAL: Síntese da pesquisa\n\n## Resumo\nPara calcular o preço final após um desconto percentual em Python, use:\n\n```python\nfinal = total * (1 - percent / 100)\n```\n\nErro comum: `total * percent / 100` retorna só o valor do desconto, não o preço final.\n\nExemplo: total=60, percent=10 -> final=54.0",
+    "source": "verified_solutions/20260927_013705_863083_com_base_na_pesquisa_abaixo_aplique_a_solucao_no_projeto_do.md",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627761+00:00"
+  },
+  {
+    "id": "caf3fbafd29929f7",
+    "text": "## Fontes\n- knowledge/programming/python_discounts.md\n- Documentação comum de cálculo comercial\n\nSources collected:\n- [programming\\python_discounts.md] (score=0.72) # Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do de\n- [programming\\pytes\n\n## Correction\nFINAL: Correção concluída com sucesso.\n\nProblema: a função apply_discount calculava o valor do desconto em vez do preço final.\nCausa: return total * percent / 100\nCorreção: return total * (1 - percent / 100)\nArquivo: main.py\nTestes: PASS\n\n## Files\n- `main.py`\n\n## Tags\ndiscount, desconto, pytest, python",
+    "source": "verified_solutions/20260927_013705_863083_com_base_na_pesquisa_abaixo_aplique_a_solucao_no_projeto_do.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T02:00:09.627782+00:00"
+  },
+  {
+    "id": "0be694948efbbd3c",
+    "text": "\"\"\"\nHEILO Knowledge — conhecimento FORA dos pesos do modelo.\n\n    documentos / ensinamentos\n        ↓ processamento (chunks)\n        ↓ embeddings (rag/embeddings.py — LSA local por padrão)\n        ↓ índice (rag/vector_store.py)\n        ↓ retrieval (rag/retriever.py)\n        ↓ HEILO Core → modelo\n\nGuardar uma informação aqui NÃO exige retreinar nenhum modelo: ela passa a ser\nrecuperável na hora. Tudo local, funciona offline.\n\"\"\"\nfrom __future__ import annotations\n\nimport re\nfrom datetime import datetime\nfrom pathlib import Path\nfrom typing import Dict, List, Optional\n\nfrom heilo.knowledge.store import KnowledgeStore\n\nTAUGHT_CATEGORY = \"taught\"\n\n\nclass KnowledgeManager:\n    def __init__(self, store: Optional[KnowledgeStore] = None, retriever=None):\n        self.store = store or KnowledgeStore()\n        self._retriever = retriever",
+    "source": "manager.py",
+    "metadata": {},
+    "added_at": "2026-09-27T03:17:46.623720+00:00"
+  },
+  {
+    "id": "22d2653d95710f0b",
+    "text": "@property\n    def root(self) -> Path:\n        return self.store.root\n\n    @property\n    def retriever(self):\n        if self._retriever is None:\n            from heilo.rag.retriever import Retriever\n            self._retriever = Retriever(self.store)\n        return self._retriever\n\n    # ---------------------------------------------------------------- escrever\n    def add_document(self, title: str, content: str, category: str = \"general\") -> Path:\n        slug = re.sub(r\"[^\\w-]+\", \"_\", title.lower()).strip(\"_\")[:60] or \"documento\"\n        path = self.store.add_document(category, slug, content)\n        self._index(content, f\"{category}/{path.name}\")\n        return path",
+    "source": "manager.py#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T03:17:46.623748+00:00"
+  },
+  {
+    "id": "cd100edc3de6cb5d",
+    "text": "    def add_taught(self, question: str, answer: str) -> Path:\n        \"\"\"Registra um ensinamento (/ensinar) como conhecimento recuperável.\"\"\"\n        pasta = self.root / TAUGHT_CATEGORY\n        pasta.mkdir(parents=True, exist_ok=True)\n        arq = pasta / \"ensinamentos.md\"\n        bloco = (\n            f\"\\n## {question.strip()}\\n\\n\"\n            f\"{answer.strip()}\\n\\n\"\n            f\"_Ensinado em {datetime.now():%Y-%m-%d %H:%M}._\\n\"\n        )\n        novo = not arq.exists()\n        with open(arq, \"a\", encoding=\"utf-8\", newline=\"\\n\") as f:\n            if novo:\n                f.write(\"# Ensinamentos da HEILO\\n\\nRespostas ensinadas pelo usuário com /ensinar.\\n\")\n            f.write(bloco)\n        self._index(f\"{question.strip()}\\n{answer.strip()}\", f\"{TAUGHT_CATEGORY}/ensinamentos.md\")\n        return arq",
+    "source": "manager.py#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T03:17:46.623755+00:00"
+  },
+  {
+    "id": "38ecdf47d6a02f44",
+    "text": "def _index(self, text: str, source: str) -> None:\n        \"\"\"Indexa só o trecho novo (sem reindexar tudo). Falha de índice não perde o arquivo.\"\"\"\n        try:\n            self.retriever.vector.add([text], sources=[source])\n        except Exception as e:\n            print(f\"[HEILO Knowledge] índice não atualizado agora ({e}); o arquivo foi salvo.\")\n\n    # ----------------------------------------------------------------- ler\n    def search(self, query: str, top_k: int = 5) -> List[Dict]:\n        return self.retriever.search(query, top_k=top_k)\n\n    def documents(self) -> List[Path]:\n        return sorted(p for p in self.root.rglob(\"*\") if p.suffix.lower() in (\".md\", \".txt\"))\n\n    def stats(self) -> Dict:\n        docs = self.documents()\n        return {\"documentos\": len(docs), \"pasta\": str(self.root)}",
+    "source": "manager.py#chunk3",
+    "metadata": {},
+    "added_at": "2026-09-27T03:17:46.623760+00:00"
   }
 ]
