@@ -1,0 +1,641 @@
+{
+ "datasets": {
+  "curated_seed (Claude, 26/09)": {
+   "exemplos": 87,
+   "multi_turno": 10,
+   "perguntas_duplicadas": 2,
+   "tokens_max": 266,
+   "acima_janela_256": 1,
+   "problemas": {
+    "igual/quase igual à avaliação heilo_eval_v1": 1,
+    "reprovaria na validação atual": 2
+   },
+   "exemplos_problema": {
+    "contam_eval": [
+     "bom dia heilo"
+    ],
+    "reprovado": [
+     [
+      "falou",
+      "Falou! Qualquer coisa, tô aqui.",
+      [
+       "resposta não parece português"
+      ]
+     ],
+     [
+      "me ajuda com python",
+      "Fácil! Assim:\nwith open('arquivo.txt', encoding='utf-8') as f:\n    texto = f.rea",
+      [
+       "código Python não compila"
+      ]
+     ]
+    ]
+   }
+  },
+  "curated_v2 (Claude, 27/09)": {
+   "exemplos": 280,
+   "multi_turno": 8,
+   "perguntas_duplicadas": 1,
+   "tokens_max": 172,
+   "acima_janela_256": 0,
+   "problemas": {
+    "reprovaria na validação atual": 2,
+    "igual/quase igual à avaliação heilo_eval_v1": 5
+   },
+   "exemplos_problema": {
+    "reprovado": [
+     [
+      "como faço um for?",
+      "Assim:\nfor i in range(5):\n    print(i)\nIsso imprime de 0 a 4.",
+      [
+       "código Python não compila"
+      ]
+     ],
+     [
+      "como faço um while?",
+      "Assim:\nwhile x < 10:\n    x += 1\nRepete enquanto a condição for verdadeira.",
+      [
+       "código Python não compila"
+      ]
+     ]
+    ],
+    "contam_eval": [
+     "5*5",
+     "10x15",
+     "10x15",
+     "15x10"
+    ]
+   }
+  },
+  "ciclo_01 programático (Claude)": {
+   "exemplos": 145,
+   "multi_turno": 0,
+   "perguntas_duplicadas": 0,
+   "tokens_max": 111,
+   "acima_janela_256": 0,
+   "problemas": {
+    "fato CNC errado": 12
+   },
+   "exemplos_problema": {
+    "fato CNC errado": [
+     [
+      "Responda apenas sim ou não: G02 é interpolação anti-horária?",
+      "Não."
+     ],
+     [
+      "Só sim ou não: G02 é interpolação anti-horária?",
+      "Não."
+     ],
+     [
+      "Só sim ou não: G03 é interpolação anti-horária?",
+      "Sim."
+     ],
+     [
+      "Responda apenas sim ou não: G03 é interpolação anti-horária?",
+      "Sim."
+     ]
+    ]
+   }
+  },
+  "teacher_approved_v0.2 (Antigravity/Qwen)": {
+   "exemplos": 16,
+   "multi_turno": 0,
+   "perguntas_duplicadas": 0,
+   "tokens_max": 339,
+   "acima_janela_256": 2,
+   "problemas": {
+    "factual não verificado": 14,
+    "idêntica ao benchmark do Antigravity": 2,
+    "resposta > 220 caracteres": 2,
+    "reprovaria na validação atual": 2
+   },
+   "exemplos_problema": {
+    "contam_bench": [
+     "O que é uma variável em Python?",
+     "Como declarar uma função em Python?"
+    ],
+    "longa": [
+     [
+      "Como declarar uma função em Python?",
+      "Aqui está um breve resumo da declaração de uma função em Python:\n\n```python\ndef "
+     ],
+     [
+      "O que são type hints em Python?",
+      "Type hints em Python são guias de tipo para instruções e funções, que informam a"
+     ]
+    ],
+    "reprovado": [
+     [
+      "Como declarar uma função em Python?",
+      "Aqui está um breve resumo da declaração de uma função em Python:\n\n```python\ndef ",
+      [
+       "resposta com mais de 220 caracteres",
+       "código Python não compila"
+      ]
+     ],
+     [
+      "O que são type hints em Python?",
+      "Type hints em Python são guias de tipo para instruções e funções, que informam a",
+      [
+       "resposta com mais de 220 caracteres"
+      ]
+     ]
+    ]
+   }
+  }
+ },
+ "inconsistencias": {
+  "quantidade": 4,
+  "exemplos": [
+   [
+    "quem e voce?",
+    [
+     "Olá! Eu sou a HEILO, uma IA desenvolvida pela Hugo para fornecer assistência tecnológica.",
+     "Eu sou a HEILO, uma IA criada pelo Hugo. Converso, ajudo a programar, pesquiso e aprendo com cada conversa que a gente tem."
+    ]
+   ],
+   [
+    "onde fica sua memoria?",
+    [
+     "Fica no repositório do GitHub: conversas, conhecimento, soluções que deram certo e os pesos do meu cérebro.",
+     "A memória fica no seu computador, na pasta memory/sessions. Ela não vai para o GitHub."
+    ]
+   ],
+   [
+    "me conta uma curiosidade",
+    [
+     "Sabia que o primeiro bug de computador foi uma mariposa de verdade presa num relé, em 1947? Por isso chamamos erro de bug.",
+     "O mel não estraga. Já acharam mel comestível em tumbas egípcias com milhares de anos!"
+    ]
+   ],
+   [
+    "conta uma piada",
+    [
+     "Por que o programador foi ao médico? Porque estava com muitos bugs e nenhum debug!",
+     "O que o zero disse pro oito? Que cinto bonito!"
+    ]
+   ]
+  ]
+ },
+ "sonda_contaminada": [],
+ "splits": {
+  "heilo_v001 (Antigravity)": {
+   "treino": 92,
+   "val": 11,
+   "ids_em_comum": 0,
+   "perguntas_val_tambem_no_treino": 0,
+   "benchmark_antigravity_no_treino": [
+    "O que é uma variável em Python?",
+    "Como declarar uma função em Python?"
+   ],
+   "origens": {
+    "curated": 87,
+    "teacher_qwen": 16
+   }
+  },
+  "heilo_v002 (Claude)": {
+   "treino": 466,
+   "val": 45,
+   "ids_em_comum": 0,
+   "perguntas_val_tambem_no_treino": 1,
+   "benchmark_antigravity_no_treino": [],
+   "origens": {
+    "curated": 511
+   }
+  }
+ },
+ "modelos": {
+  "v0.1": {
+   "perda_resposta": {
+    "treino (amostra 80)": 3.5084,
+    "validação heilo_v002": 2.8347,
+    "teste heilo_eval_v1": 4.3229,
+    "benchmark Antigravity": 4.1005
+   },
+   "treino_resposta_identica": 0.1,
+   "sonda": {
+    "acerto": 0.0417,
+    "acerto_amostrado": 0.0556,
+    "consistencia": 0.9861
+   },
+   "sonda_por_categoria": {
+    "cnc": 0.0,
+    "conversa": 0.3333,
+    "instrucao": 0.0,
+    "logica": 0.0,
+    "portugues": 0.0,
+    "programacao": 0.0
+   },
+   "sonda_respostas": [
+    [
+     "Se hoje é segunda, amanhã é que dia?",
+     "Uma descanso travar num problema, explica ele em voz alta pra alguém, ",
+     false
+    ],
+    [
+     "Qual é maior: 9 ou 12?",
+     "2 mais 2 é 4.",
+     false
+    ],
+    [
+     "Se todo gato é um animal e Mimi é um gato, Mimi é um animal?",
+     "Seu nome é Hugo!",
+     false
+    ],
+    [
+     "Tenho 3 maçãs e ganho mais 2. Com quantas fico?",
+     "Fico espo ando próxima conversa. E tudo o que aprendemos fica guardado",
+     false
+    ],
+    [
+     "Qual número vem depois do 19?",
+     "Por isso chamamos erro de bug.",
+     false
+    ],
+    [
+     "Qual é o oposto de quente?",
+     "Não tenho um relógio aqui na conversa, mas dá pra conferir no canto da",
+     false
+    ],
+    [
+     "Qual é o plural de pão?",
+     "Não, eu sou uma inteligência artificial. Mas gosto de conversar de um ",
+     false
+    ],
+    [
+     "Qual o contrário de alto?",
+     "Não tenho essa informação em tempo real. Vale conferir num site de cot",
+     false
+    ],
+    [
+     "Como se diz thank you em português?",
+     "Acho que escria a giar de vários valores em ordem, tipo numeros = [1, ",
+     false
+    ],
+    [
+     "Complete a saudação: bom ...",
+     "Se veleicesalve! Pronta pra ajudar. O que manda?",
+     false
+    ],
+    [
+     "Responda só com o número: quanto é 2 mais 2?",
+     "2 mais 2 é 4.",
+     false
+    ],
+    [
+     "Responda em uma palavra: qual a cor do céu num dia limpo?",
+     "Sem você esteja assim. Quer conversar sobre o que aconteceu? Tô aqui p",
+     false
+    ],
+    [
+     "Responda apenas sim ou não: 10 é maior que 3?",
+     "10 vezes é 30.",
+     false
+    ],
+    [
+     "Diga apenas: ok",
+     "Oi! Tam com você está?",
+     false
+    ],
+    [
+     "O que faz o método upper() em Python?",
+     "Acho ótimo! É simples de ler, tem biblioteca pra tudo e é perfeito pra",
+     false
+    ],
+    [
+     "Como faço um comentário de uma linha em Python?",
+     "Claro! O que você quer fazer?",
+     false
+    ],
+    [
+     "Qual palavra-chave cria uma classe em Python?",
+     "Acho ótimo! É simples de ler, tem biblioteca pra tudo e é perfeito pra",
+     false
+    ],
+    [
+     "Como importo o módulo math?",
+     "Não tenho essa informação em tempo real. Vale conferir num site de cot",
+     false
+    ],
+    [
+     "Quanto retorna len('abc')?",
+     "Sen s tencoding= f-8'uts f:\n    texto = f.read()\nO with fecha o arquiv",
+     false
+    ],
+    [
+     "e aí, quem é você afinal?",
+     "Aso tenergia! Qual é a novidade?",
+     false
+    ],
+    [
+     "estou meio triste hoje",
+     "Que massa! O que aconteceu de bom?",
+     true
+    ],
+    [
+     "valeu pela força",
+     "E não como, mas se pudesse, acho que ia gostar de um bom café. Todo pr",
+     false
+    ],
+    [
+     "O G01 serve para movimento rápido?",
+     "Bora resolver isso! Quer que eu te conte uma curiosidade, proponha um ",
+     false
+    ],
+    [
+     "Qual código M liga o refrigerante?",
+     "Gosto de falar sobre jogos! Principalmente de como eles são feitos. Vo",
+     false
+    ]
+   ]
+  },
+  "v0.2": {
+   "perda_resposta": {
+    "treino (amostra 80)": 3.5298,
+    "validação heilo_v002": 3.1235,
+    "teste heilo_eval_v1": 4.3586,
+    "benchmark Antigravity": 3.7374
+   },
+   "treino_resposta_identica": 0.1,
+   "sonda": {
+    "acerto": 0.0,
+    "acerto_amostrado": 0.0139,
+    "consistencia": 0.9861
+   },
+   "sonda_por_categoria": {
+    "cnc": 0.0,
+    "conversa": 0.0,
+    "instrucao": 0.0,
+    "logica": 0.0,
+    "portugues": 0.0,
+    "programacao": 0.0
+   },
+   "sonda_respostas": [
+    [
+     "Se hoje é segunda, amanhã é que dia?",
+     "Até amanhã! Descansa bem.",
+     false
+    ],
+    [
+     "Qual é maior: 9 ou 12?",
+     "Beleza tarde! Como está sendo o seu dia até agora?",
+     false
+    ],
+    [
+     "Se todo gato é um animal e Mimi é um gato, Mimi é um animal?",
+     "A esta energia! Qual é a novidade?",
+     false
+    ],
+    [
+     "Tenho 3 maçãs e ganho mais 2. Com quantas fico?",
+     "Flo felou! Em conta versajuda que a gente tem? Então valeu por convers",
+     false
+    ],
+    [
+     "Qual número vem depois do 19?",
+     "Por que o programador foi ao médico? Porque estava com muitos bugs e n",
+     false
+    ],
+    [
+     "Qual é o oposto de quente?",
+     "Sou bem novinha! Nasci em 2026 e ainda estou aprendendo muita coisa.",
+     false
+    ],
+    [
+     "Qual é o plural de pão?",
+     "Não tenho um relógio aqui na conversa, mas dá pra conferir no canto da",
+     false
+    ],
+    [
+     "Qual o contrário de alto?",
+     "Adicionero adessa energia! Qual é a novidade?",
+     false
+    ],
+    [
+     "Como se diz thank you em português?",
+     "Fui criada pelo Hugo. Ele montou meu cérebro, meus agentes e o reposit",
+     false
+    ],
+    [
+     "Complete a saudação: bom ...",
+     "O que vamos fazer hoje?",
+     false
+    ],
+    [
+     "Responda só com o número: quanto é 2 mais 2?",
+     "2 mais 2 é 4.",
+     false
+    ],
+    [
+     "Responda em uma palavra: qual a cor do céu num dia limpo?",
+     "Pergunta difícil! Acho que é aprender, criar coisas e ajudar quem está",
+     false
+    ],
+    [
+     "Responda apenas sim ou não: 10 é maior que 3?",
+     "Uma dicionário em Python?",
+     false
+    ],
+    [
+     "Diga apenas: ok",
+     "O que você quer fazer?",
+     false
+    ],
+    [
+     "O que faz o método upper() em Python?",
+     "Type hints em Python são guias de tipo para instruções e funções, que ",
+     false
+    ],
+    [
+     "Como faço um comentário de uma linha em Python?",
+     "Atribua valor à variável com a sigla \"=.",
+     false
+    ],
+    [
+     "Qual palavra-chave cria uma classe em Python?",
+     "aravárias variável com a sigla \"=.",
+     false
+    ],
+    [
+     "Como importo o módulo math?",
+     "Tudo bom sim! E do seu lado, tudo certo?",
+     false
+    ],
+    [
+     "Quanto retorna len('abc')?",
+     "Seonconversar douto. Soble o que você quer falar?",
+     false
+    ],
+    [
+     "e aí, quem é você afinal?",
+     "Alou! Qualquer coisa, tô aqui.",
+     false
+    ],
+    [
+     "estou meio triste hoje",
+     "Que massa! Em qual engine?",
+     false
+    ],
+    [
+     "valeu pela força",
+     "Eu sou uma IA, então não tenho gênero de verdade, mas costumo falar no",
+     false
+    ],
+    [
+     "O G01 serve para movimento rápido?",
+     "Os bem! E do seu lado, tudo certo?",
+     false
+    ],
+    [
+     "Qual código M liga o refrigerante?",
+     "Parabéns! Terminar um projeto é muito bom. Qual foi a parte mais difíc",
+     false
+    ]
+   ]
+  },
+  "v0.3": {
+   "perda_resposta": {
+    "treino (amostra 80)": 0.0032,
+    "validação heilo_v002": 2.1038,
+    "teste heilo_eval_v1": 1.5196,
+    "benchmark Antigravity": 3.4782
+   },
+   "treino_resposta_identica": 1.0,
+   "sonda": {
+    "acerto": 0.0417,
+    "acerto_amostrado": 0.0417,
+    "consistencia": 1.0
+   },
+   "sonda_por_categoria": {
+    "cnc": 0.0,
+    "conversa": 0.3333,
+    "instrucao": 0.0,
+    "logica": 0.0,
+    "portugues": 0.0,
+    "programacao": 0.0
+   },
+   "sonda_respostas": [
+    [
+     "Se hoje é segunda, amanhã é que dia?",
+     "É um sistema de controle de versão: guarda o histórico das mudanças do",
+     false
+    ],
+    [
+     "Qual é maior: 9 ou 12?",
+     "G91 é modo incremental: cada coordenada é relativa à posição atual.",
+     false
+    ],
+    [
+     "Se todo gato é um animal e Mimi é um gato, Mimi é um animal?",
+     "Sa que guarda com fço escrta.",
+     false
+    ],
+    [
+     "Tenho 3 maçãs e ganho mais 2. Com quantas fico?",
+     "Fica no repositório do GitHub: conversas, conhecimento, soluções que d",
+     false
+    ],
+    [
+     "Qual número vem depois do 19?",
+     "84 dividido por 9 é 9.",
+     false
+    ],
+    [
+     "Qual é o oposto de quente?",
+     "É uma biblioteca para trabalhar com tabelas e dados, tipo Excel no Pyt",
+     false
+    ],
+    [
+     "Qual é o plural de pão?",
+     "Não. Sou bem menor e ainda estou aprendendo. Mas sou sua, rodo no seu ",
+     false
+    ],
+    [
+     "Qual o contrário de alto?",
+     "Não tenho acesso a notícias em tempo real.",
+     false
+    ],
+    [
+     "Como se diz thank you em português?",
+     "O HEILO Seed tem uns 3 milhões de parâmetros. É bem pequeno comparado ",
+     false
+    ],
+    [
+     "Complete a saudação: bom ...",
+     "14x10",
+     false
+    ],
+    [
+     "Responda só com o número: quanto é 2 mais 2?",
+     "20 mais 20 é 4.",
+     false
+    ],
+    [
+     "Responda em uma palavra: qual a cor do céu num dia limpo?",
+     "Não.",
+     false
+    ],
+    [
+     "Responda apenas sim ou não: 10 é maior que 3?",
+     "G03 é interpolação circular no sentido anti-horário.",
+     false
+    ],
+    [
+     "Diga apenas: ok",
+     "Até a Giterpolação linear: movimento em linha reta com avanço F.",
+     false
+    ],
+    [
+     "O que faz o método upper() em Python?",
+     "dividido por a que criar jogos 2D e 3D, programada em C#.",
+     false
+    ],
+    [
+     "Como faço um comentário de uma linha em Python?",
+     "def",
+     false
+    ],
+    [
+     "Qual palavra-chave cria uma classe em Python?",
+     "def",
+     false
+    ],
+    [
+     "Como importo o módulo math?",
+     "Use len: len(lista)",
+     false
+    ],
+    [
+     "Quanto retorna len('abc')?",
+     "Não  tenho acesso a notícias nem resultados em tempo real.",
+     false
+    ],
+    [
+     "e aí, quem é você afinal?",
+     "Ficiono sim! O HEILO Seed roda localmente.",
+     true
+    ],
+    [
+     "estou meio triste hoje",
+     "Então merece descansar! Quer me contar como foi?",
+     false
+    ],
+    [
+     "valeu pela força",
+     "Não tenho acesso à previsão do tempo. Um app de clima te responde na h",
+     false
+    ],
+    [
+     "O G01 serve para movimento rápido?",
+     "G00",
+     false
+    ],
+    [
+     "Qual código M liga o refrigerante?",
+     "M09",
+     false
+    ]
+   ]
+  }
+ }
+}

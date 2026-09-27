@@ -68,9 +68,17 @@ def run_dataset():
 
 
 def run_treinar(passos: int = 2000, novo: bool = False):
-    """Treina o HEILO Seed com a última versão do dataset HEILO (passo explícito)."""
+    """Treina uma versão nova do HEILO Seed numa pasta própria, avalia e só promove se melhorar.
+    (--novo recomeça do zero: só use se quiser descartar o aprendizado atual.)"""
     import json
-    print(json.dumps(_pipeline().train_seed(passos=passos, novo=novo), ensure_ascii=False, indent=2))
+    from heilo.training.ciclos import CiclosSeed
+    from heilo.training.pipeline import TrainingPipeline
+    pipe = TrainingPipeline()
+    if novo:
+        print(json.dumps(pipe.train_seed(passos=passos, novo=True), ensure_ascii=False, indent=2))
+        return
+    dec = CiclosSeed(pipe).treinar_versao(passos=passos, origem="python -m heilo.main treinar")
+    print(f"{dec['versao']}: {'PROMOVIDA' if dec['promovida'] else 'não promovida'} ({dec['motivo']})")
 
 
 def run_revisar():
@@ -108,6 +116,38 @@ def run_independencia():
     """HEILO Independence Test: cópia da HEILO sem internet, sem git e sem o Teacher."""
     from heilo.independence import resumo, run_independence_test
     print("\n".join(resumo(run_independence_test())))
+
+
+def run_ciclo(max_ciclos: int = 4, passos: int = 2500, base_n: int = 20,
+              sem_professor: bool = False):
+    """Ciclos automáticos: Teacher gera dados → validação → treino → avaliação → promoção."""
+    from heilo.config import config
+    from heilo.core.model_manager import ModelManager
+    from heilo.training.ciclos import CiclosSeed
+    from heilo.training.pipeline import TrainingPipeline
+    models = ModelManager.from_config(config)
+    pipe = TrainingPipeline(models=models)
+    ciclos = CiclosSeed(pipe, models=models)
+    rel = ciclos.executar(max_ciclos=max_ciclos, passos=passos, base_n=base_n,
+                          usar_professor=not sem_professor)
+    print(ciclos.escrever_relatorio(rel).read_text(encoding="utf-8"))
+
+
+def run_versoes():
+    from heilo.training.ciclos import CiclosSeed
+    from heilo.training.pipeline import TrainingPipeline
+    print(CiclosSeed(TrainingPipeline(), log=lambda *_: None).escrever_relatorio().read_text(encoding="utf-8"))
+
+
+def run_promover(versao: str, motivo: str):
+    """Promove manualmente uma versão já avaliada (fica registrado quem/por quê)."""
+    from heilo.training.ciclos import CiclosSeed
+    from heilo.training.pipeline import TrainingPipeline
+    if not versao:
+        print("Uso: python -m heilo.main promover --versao v1.0 --motivo \"...\"")
+        return
+    v = CiclosSeed(TrainingPipeline()).promover_manual(versao, motivo or "decisão do usuário")
+    print(f"{v['versao']} agora é a versão ativa.")
 
 
 def run_atualizar():
@@ -252,12 +292,17 @@ if __name__ == "__main__":
             "cli", "server", "demo", "demo_test", "demo_research",
             "demo_pipeline", "demo_pipeline_full",
             "dataset", "treinar", "aprender", "atualizar",
-            "revisar", "gerar", "metricas", "publicar", "independencia",
+            "revisar", "gerar", "metricas", "publicar", "independencia", "ciclo", "versoes", "promover",
         ],
     )
     parser.add_argument("--passos", type=int, default=2000, help="passos de treino do HEILO Seed")
     parser.add_argument("--novo", action="store_true", help="recomeça o HEILO Seed do zero")
     parser.add_argument("--arquivo", default="", help="perguntas para o Teacher (modo gerar)")
+    parser.add_argument("--max-ciclos", type=int, default=4, help="ciclos de treino (modo ciclo)")
+    parser.add_argument("--base-n", type=int, default=20, help="exemplos por categoria por ciclo")
+    parser.add_argument("--sem-professor", action="store_true", help="ciclo sem o Teacher")
+    parser.add_argument("--versao", default="", help="versão (modo promover)")
+    parser.add_argument("--motivo", default="", help="motivo da promoção manual")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
@@ -278,4 +323,8 @@ if __name__ == "__main__":
         "metricas": run_metricas,
         "publicar": run_publicar,
         "independencia": run_independencia,
+        "ciclo": lambda: run_ciclo(args.max_ciclos, args.passos if args.passos != 2000 else 2500,
+                                   args.base_n, args.sem_professor),
+        "versoes": run_versoes,
+        "promover": lambda: run_promover(args.versao, args.motivo),
     }[args.mode]()

@@ -8,6 +8,7 @@ tzdata>=2024.1
 
 # --- HEILO Seed (modelo próprio) ---
 torch>=2.1
+tokenizers>=0.15      # tokenizer BPE próprio do Seed v1.x
 
 # --- HEILO Teacher (OPCIONAL — modelo externo temporário) ---
 # Instale só se for usar o Teacher. A HEILO funciona sem estes pacotes.

@@ -22,7 +22,7 @@ import random
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 try:
     import torch
@@ -36,32 +36,35 @@ except ImportError:  # o resto da HEILO funciona sem torch
     TORCH_OK = False
 
 from heilo.models.seed import SEED_WEIGHTS
+from heilo.models.seed.tokenizer import BYTE, from_dict as tokenizer_from_dict
 
 # ----------------------------------------------------------------- tokenizer
-USUARIO, HEILO, FIM, DOC = 256, 257, 258, 259
-VOCAB_SIZE = 260
-_TAG = {"user": USUARIO, "assistant": HEILO}
+# Constantes do tokenizer em bytes (v0.x). Modelos com BPE (v1.x) usam o
+# tokenizer salvo no próprio checkpoint — todas as funções aceitam `tok`.
+USUARIO, HEILO, FIM, DOC = BYTE.usuario, BYTE.heilo, BYTE.fim, BYTE.doc
+VOCAB_SIZE = BYTE.vocab_size
 
 
-def encode(texto: str) -> List[int]:
-    return list(texto.encode("utf-8"))
+def encode(texto: str, tok=BYTE) -> List[int]:
+    return tok.encode(texto)
 
 
-def decode(ids: List[int]) -> str:
-    return bytes(i for i in ids if i < 256).decode("utf-8", errors="ignore")
+def decode(ids: List[int], tok=BYTE) -> str:
+    return tok.decode(ids)
 
 
-def encode_chat(messages: List[Dict], fechar_ultimo: bool = True) -> List[int]:
+def encode_chat(messages: List[Dict], fechar_ultimo: bool = True, tok=BYTE) -> List[int]:
     """<USUARIO>oi<FIM><HEILO>Oi! Tudo bem?<FIM>..."""
+    tags = {"user": tok.usuario, "assistant": tok.heilo}
     ids: List[int] = []
     for i, m in enumerate(messages):
-        tag = _TAG.get(m.get("role"))
+        tag = tags.get(m.get("role"))
         if tag is None:
             continue
         ids.append(tag)
-        ids += encode(m.get("content", ""))
+        ids += tok.encode(m.get("content", ""))
         if fechar_ultimo or i < len(messages) - 1:
-            ids.append(FIM)
+            ids.append(tok.fim)
     return ids
 
 
@@ -169,11 +172,18 @@ def _dispositivo() -> str:
     return "cuda" if TORCH_OK and torch.cuda.is_available() else "cpu"
 
 
-def salvar(modelo, info: Dict, arquivo: Path = None) -> Path:
+def salvar(modelo, info: Dict, arquivo: Path = None, meia_precisao: bool = False) -> Path:
     arquivo = Path(arquivo or SEED_WEIGHTS)
     arquivo.parent.mkdir(parents=True, exist_ok=True)
     tmp = arquivo.with_suffix(".tmp")
-    torch.save({"config": asdict(modelo.cfg), "modelo": modelo.state_dict(), "info": info}, tmp)
+    estado = modelo.state_dict()
+    if meia_precisao:   # metade do tamanho em disco; volta a float32 ao carregar
+        estado = {k: (v.half() if v.is_floating_point() else v) for k, v in estado.items()}
+    tok = getattr(modelo, "tokenizer", BYTE)
+    ck = {"config": asdict(modelo.cfg), "modelo": estado, "info": info}
+    if tok.to_dict():
+        ck["tokenizer"] = tok.to_dict()
+    torch.save(ck, tmp)
     tmp.replace(arquivo)
     return arquivo
 
@@ -186,24 +196,26 @@ def carregar(arquivo: Path = None, dispositivo: str = None):
     dispositivo = dispositivo or _dispositivo()
     ck = torch.load(arquivo, map_location=dispositivo, weights_only=False)
     modelo = MiniGPT(GPTConfig(**ck["config"])).to(dispositivo)
-    modelo.load_state_dict(ck["modelo"])
+    modelo.load_state_dict({k: v.float() if v.is_floating_point() else v
+                            for k, v in ck["modelo"].items()})
+    modelo.tokenizer = tokenizer_from_dict(ck.get("tokenizer"))
     modelo.eval()
     return modelo, ck.get("info", {})
 
 
 # ------------------------------------------------------------------- treino
 def montar_fluxo(dataset: List[Dict], corpus: str = "", repetir_chat: int = 1,
-                 semente: int = 0) -> List[int]:
+                 semente: int = 0, tok=BYTE) -> List[int]:
     """Transforma dataset + documentos num fluxo único de tokens."""
     rnd = random.Random(semente)
     pedacos: List[List[int]] = []
     for _ in range(max(1, repetir_chat)):
         for ex in dataset:
-            pedacos.append(encode_chat(ex["messages"]))
+            pedacos.append(encode_chat(ex["messages"], tok=tok))
     for doc in (corpus or "").split("\n\n"):
         doc = doc.strip()
         if len(doc) > 20:
-            pedacos.append([DOC] + encode(doc) + [FIM])
+            pedacos.append([tok.doc] + tok.encode(doc) + [tok.fim])
     rnd.shuffle(pedacos)
     fluxo: List[int] = []
     for p in pedacos:
@@ -216,7 +228,7 @@ def treinar(passos: int = 2000, lote: int = 16, lr: float = 3e-4, novo: bool = F
             dataset_file: Path = None, corpus_file: Path = None,
             repetir_chat: int = 4, log_cada: int = 100, salvar_cada: int = 500,
             semente: int = 1337, log=print,
-            avaliacao: Optional[List[Dict]] = None) -> Dict:
+            avaliacao: Optional[List[Dict]] = None, tok=None) -> Dict:
     """Treina (ou continua treinando) o HEILO Seed com um dataset HEILO."""
     if not TORCH_OK:
         raise RuntimeError("PyTorch não está instalado. Rode: pip install torch")
@@ -235,16 +247,20 @@ def treinar(passos: int = 2000, lote: int = 16, lr: float = 3e-4, novo: bool = F
     if not dataset and not corpus:
         raise RuntimeError("Dataset vazio. Rode antes: python -m heilo.main aprender")
 
-    fluxo = montar_fluxo(dataset, corpus, repetir_chat=repetir_chat, semente=semente)
-    dados = torch.tensor(fluxo, dtype=torch.long)
-
     modelo, info = (None, {}) if novo else carregar(arquivo, dispositivo)
     if modelo is None:
-        modelo = MiniGPT(config or GPTConfig()).to(dispositivo)
+        tok = tok or BYTE
+        cfg = config or GPTConfig()
+        cfg.vocab_size = tok.vocab_size
+        modelo = MiniGPT(cfg).to(dispositivo)
+        modelo.tokenizer = tok
         info = {"passos_totais": 0, "historico": []}
         log(f"[HEILO Seed] Modelo NOVO (do zero): {modelo.n_params()/1e6:.2f}M parâmetros")
     else:
         log(f"[HEILO Seed] Continuando treino: {info.get('passos_totais', 0)} passos já feitos")
+    tok = modelo.tokenizer
+    fluxo = montar_fluxo(dataset, corpus, repetir_chat=repetir_chat, semente=semente, tok=tok)
+    dados = torch.tensor(fluxo, dtype=torch.long)
 
     T = modelo.cfg.block_size
     if len(dados) <= T + 1:  # dataset minúsculo: repete até caber uma janela
@@ -311,7 +327,7 @@ def avaliar(modelo, exemplos: List[Dict]) -> Optional[float]:
     T = modelo.cfg.block_size
     perdas = []
     for ex in exemplos:
-        ids = encode_chat(ex["messages"])[-(T + 1):]
+        ids = encode_chat(ex["messages"], tok=getattr(modelo, "tokenizer", BYTE))[-(T + 1):]
         if len(ids) < 2:
             continue
         x = torch.tensor([ids[:-1]], device=dev)
@@ -320,6 +336,32 @@ def avaliar(modelo, exemplos: List[Dict]) -> Optional[float]:
         perdas.append(F.cross_entropy(logits[0], y[0]).item())
     modelo.train()
     return sum(perdas) / len(perdas) if perdas else None
+
+
+@torch.no_grad() if TORCH_OK else (lambda f: f)
+def perda_condicional(modelo, pergunta: str, resposta: str) -> Optional[Tuple[float, int]]:
+    """Perda (cross-entropy, soma) dos tokens da RESPOSTA + <FIM>, condicionada à pergunta.
+
+    Base da perplexidade: exp(soma / n_tokens). Mede quão bem o modelo prevê
+    a resposta de referência — sem depender de amostragem.
+    """
+    if not TORCH_OK:
+        return None
+    tok = getattr(modelo, "tokenizer", BYTE)
+    prefixo = encode_chat([{"role": "user", "content": pergunta}], tok=tok) + [tok.heilo]
+    alvo = tok.encode(resposta) + [tok.fim]
+    ids = (prefixo + alvo)[-(modelo.cfg.block_size + 1):]
+    n_alvo = min(len(alvo), len(ids) - 1)
+    was_training = modelo.training
+    modelo.eval()
+    dev = next(modelo.parameters()).device
+    x = torch.tensor([ids[:-1]], device=dev)
+    y = torch.tensor([ids[1:]], device=dev)
+    logits, _ = modelo(x)
+    perdas = F.cross_entropy(logits[0], y[0], reduction="none")[-n_alvo:]
+    if was_training:
+        modelo.train()
+    return float(perdas.sum().item()), int(n_alvo)
 
 
 # ---------------------------------------------------------------- conversa
@@ -334,14 +376,27 @@ class MiniGPTChat:
         return self.modelo is not None
 
     def responder(self, messages: List[Dict], temperatura: float = 0.7,
-                  max_novos: int = 240) -> str:
+                  max_novos: int = 240, top_k: int = 40) -> str:
         if not self.pronto:
             return ""
         conversa = [m for m in messages if m.get("role") in ("user", "assistant")][-8:]
-        ids = encode_chat(conversa) + [HEILO]
-        # garante espaço para a resposta dentro da janela
         bloco = self.modelo.cfg.block_size
         limite = max(bloco // 2, bloco - 64)  # sempre sobra espaço para a resposta
-        ids = ids[-limite:]
-        novos = self.modelo.gerar(ids, max_novos=max_novos, temperatura=temperatura)
-        return decode(novos).strip()
+        # monta o contexto de trás para frente, com MENSAGENS INTEIRAS (não corta no meio)
+        tok = getattr(self.modelo, "tokenizer", BYTE)
+        ids: List[int] = [tok.heilo]
+        for m in reversed(conversa):
+            pedaco = encode_chat([m], tok=tok)
+            if len(ids) + len(pedaco) > limite:
+                if len(ids) == 1:   # a última mensagem sozinha não cabe: mantém o fim dela com a tag
+                    tag = pedaco[:1]
+                    ids = tag + pedaco[1:][-(limite - 2):] + ids
+                break
+            ids = pedaco + ids
+        novos = self.modelo.gerar(ids, max_novos=max_novos, temperatura=temperatura, top_k=top_k,
+                                  parar_em=(tok.fim, tok.usuario))
+        return tok.decode(novos).strip()
+
+    def perda_resposta(self, pergunta: str, resposta: str) -> Optional[Tuple[float, int]]:
+        """(soma da perda, nº de tokens) SÓ nos tokens da resposta, dado a pergunta."""
+        return perda_condicional(self.modelo, pergunta, resposta) if self.pronto else None

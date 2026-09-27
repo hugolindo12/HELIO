@@ -1,0 +1,1 @@
+{"ts": "2026-09-27T04:42:59+00:00", "modelo": "HEILO Seed", "dataset_version": 2, "passos": 2500, "passos_totais": 5800, "perda_treino": 0.1233, "perda_validacao": 1.5983, "exemplos_treino": 466, "exemplos_validacao": 45, "por_origem": {"curated": 466}, "teacher_examples_used": 0, "pesos": "heilo_seed_v0.3.pt", "versao_seed": "v0.3"}

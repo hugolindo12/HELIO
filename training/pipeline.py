@@ -84,9 +84,22 @@ class TrainingPipeline:
         return self.root / "training" / "comparisons.jsonl"
 
     # ------------------------------------------------------------- leitura
-    def approved(self) -> List[Dict]:
-        """Todos os exemplos aprovados (approved/*.jsonl), normalizados e sem duplicatas."""
-        vistos, out = set(), []
+    @property
+    def quarantine_file(self) -> Path:
+        return self.root / "review" / "quarentena.jsonl"
+
+    def quarantined(self) -> Dict[str, Dict]:
+        """Exemplos que estão em approved/ mas foram SUSPENSOS (ex.: aprovados sem
+        verificação por outra ferramenta). Não entram no treino até revisão humana."""
+        return {r["id"]: r for r in read_jsonl(self.quarantine_file)}
+
+    def quarantine(self, ids: List[str], motivo: str) -> int:
+        atuais = self.quarantined()
+        novos = [{"id": i, "motivo": motivo, "data": agora()} for i in ids if i not in atuais]
+        return append_jsonl(self.quarantine_file, novos) if novos else 0
+
+    def _todos_aprovados(self) -> List[Dict]:
+        vistos, out = {}, []
         for arq in sorted((self.root / "approved").glob("*.jsonl")):
             for r in read_jsonl(arq):
                 if not r.get("messages"):
@@ -94,10 +107,20 @@ class TrainingPipeline:
                 r.setdefault("id", example_id(r["messages"]))
                 r.setdefault("origin", "curated")
                 if r["id"] in vistos:
+                    # uma aprovação humana posterior vale mais que a anterior
+                    if str(r.get("approved_by", "")).startswith("usuario"):
+                        out[vistos[r["id"]]] = r
                     continue
-                vistos.add(r["id"])
+                vistos[r["id"]] = len(out)
                 out.append(r)
         return out
+
+    def approved(self) -> List[Dict]:
+        """Exemplos aprovados (approved/*.jsonl), sem duplicatas e sem os suspensos
+        (quarentena), a não ser que o usuário tenha aprovado depois."""
+        q = self.quarantined()
+        return [r for r in self._todos_aprovados()
+                if r["id"] not in q or str(r.get("approved_by", "")).startswith("usuario")]
 
     def rejected(self) -> List[Dict]:
         return read_jsonl(self.rejected_file)
@@ -108,7 +131,9 @@ class TrainingPipeline:
     def pending(self) -> List[Dict]:
         """Candidatos (Memory + Teacher) ainda sem decisão."""
         decididos, vistos, out = self._decididos(), set(), []
-        for r in read_jsonl(self.raw_file) + read_jsonl(self.teacher_file):
+        q = self.quarantined()
+        suspensos = [r for r in self._todos_aprovados() if r["id"] in q]
+        for r in read_jsonl(self.raw_file) + read_jsonl(self.teacher_file) + suspensos:
             if r["id"] in decididos or r["id"] in vistos:
                 continue
             vistos.add(r["id"])
@@ -284,7 +309,9 @@ class TrainingPipeline:
 
         por_origem: Dict[str, int] = {}
         for e in treino:
-            por_origem[e.get("origin", "curated")] = por_origem.get(e.get("origin", "curated"), 0) + 1
+            o = e.get("origin", "curated")
+            o = "teacher" if str(o).startswith("teacher") else o
+            por_origem[o] = por_origem.get(o, 0) + 1
         manifest = {
             "version": num,
             "created": agora(),
@@ -318,7 +345,8 @@ class TrainingPipeline:
 
     # ------------------------------------------------------------- treino
     def train_seed(self, passos: int = 2000, novo: bool = False, lote: int = 16,
-                   log: Callable[[str], None] = print, **kw) -> Dict:
+                   log: Callable[[str], None] = print, pesos: Optional[Path] = None,
+                   **kw) -> Dict:
         """Treina o HEILO Seed com a última versão do dataset (passo explícito)."""
         from heilo.models.seed import SEED_WEIGHTS, gpt
 
@@ -328,7 +356,7 @@ class TrainingPipeline:
         pasta = self.root / "datasets"
         val = read_jsonl(pasta / manifest["val_file"])
         corpus = pasta / manifest["corpus_file"] if manifest.get("corpus_file") else None
-        pesos = Path(self.seed_weights or SEED_WEIGHTS)
+        pesos = Path(pesos or self.seed_weights or SEED_WEIGHTS)
         r = gpt.treinar(passos=passos, lote=lote, novo=novo, arquivo=pesos,
                         dataset_file=pasta / manifest["train_file"], corpus_file=corpus,
                         avaliacao=val, log=log, **kw)
@@ -344,6 +372,7 @@ class TrainingPipeline:
             "exemplos_validacao": manifest["val_examples"],
             "por_origem": manifest["por_origem"],
             "teacher_examples_used": manifest["teacher_examples"],
+            "pesos": pesos.name,
         }
         append_jsonl(self.runs_file, [run])
         if self.models is not None:
@@ -372,7 +401,9 @@ class TrainingPipeline:
                 vered[c["verdict"]] = vered.get(c["verdict"], 0) + 1
 
         def conta(rows, origem):
-            return sum(1 for r in rows if r.get("origin") == origem)
+            return sum(1 for r in rows
+                       if (str(r.get("origin", "")).startswith("teacher") if origem == "teacher"
+                           else r.get("origin") == origem))
 
         return {
             "teacher": {

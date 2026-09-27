@@ -124,7 +124,8 @@ pip install -r heilo/requirements.txt
 python -m heilo.main cli             # conversar
 python -m heilo.main aprender        # memória → validação → dataset
 python -m heilo.main revisar         # revisar candidatos
-python -m heilo.main treinar         # treinar o HEILO Seed (--passos 3000, --novo)
+python -m heilo.main treinar         # treina uma versão candidata do Seed, avalia e só promove se melhorar
+python -m heilo.main versoes         # tabela de versões e métricas
 python -m heilo.main gerar --arquivo perguntas.txt   # Teacher gera exemplos (opcional)
 python -m heilo.main metricas        # dependência do Teacher × evolução do Seed
 python -m heilo.main independencia   # HEILO Independence Test
@@ -172,12 +173,12 @@ Valores inválidos não quebram a HEILO: ela usa o padrão e mostra um aviso.
 ```
 heilo/
 ├── core/          orchestrator, model_manager, commands, persona, model_adapter (LLM dos agentes)
-├── models/        base.py, registry.py, seed/, teacher/ [OPCIONAL]
+├── models/        base.py, registry.py, seed/ (weights/ = ativa, versions/v0.N/), teacher/ [OPCIONAL]
 ├── memory/        manager.py (memória local), store.py, learning.py
 ├── knowledge/     manager.py, store.py, taught/, documentos
 ├── rag/           embeddings, vector_store, retriever
 ├── training/      pipeline.py, validation.py, records.py, distillation/, colab/
-├── data/          raw/ teacher/ taught/ approved/ rejected/ datasets/ training/
+├── data/          raw/ teacher/ taught/ approved/ rejected/ datasets/ training/ eval/ (avaliações congeladas)
 ├── agents/        code, test, research (PC/CAD/SAP: futuro)
 ├── cloud/         preparado
 ├── tools/ security/ mcp/ ui/ workspace/

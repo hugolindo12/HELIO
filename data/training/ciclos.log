@@ -1,0 +1,42 @@
+[01:10:08] Avaliação v0.1: acerto 0.104 | perplexidade 75.403 | instruções 0.0 | generalização 0.05 | consistência 0.9851
+[01:10:08] === Ciclo 1 | ativa v0.1 | categorias mais fracas: cnc (0%), ferramentas (0%), instrucao (0%), matematica (0%)
+[01:10:09] Dados do ciclo 1: {'gerados': 146, 'teacher_chamadas': 0, 'aprovados': 145, 'revisao': 0, 'rejeitados': 0, 'por_origem': {'programatico': {'aprovados': 145, 'revisao': 0, 'rejeitados': 0}}}
+[01:10:09] Treinando v0.2 a partir de v0.1 com dataset v1 (466 exemplos, 2500 passos)...
+[01:10:09] [HEILO Seed] Continuando treino: 3300 passos já feitos
+[01:10:09] [HEILO Seed] 466 exemplos de chat, 132,296 tokens, dispositivo=cpu
+[01:10:11]   passo 1/2500  perda=2.626  (1s)
+[01:11:32]   passo 100/2500  perda=1.218  (82s)
+[01:12:48]   passo 200/2500  perda=0.802  (158s)
+[01:14:10]   passo 300/2500  perda=0.606  (240s)
+[01:15:38]   passo 400/2500  perda=0.486  (328s)
+[01:17:02]   passo 500/2500  perda=0.411  (412s)
+[01:18:26]   passo 600/2500  perda=0.350  (496s)
+[01:19:42]   passo 700/2500  perda=0.317  (572s)
+[01:20:57]   passo 800/2500  perda=0.295  (647s)
+[01:22:12]   passo 900/2500  perda=0.274  (722s)
+[01:23:27]   passo 1000/2500  perda=0.251  (797s)
+[01:24:43]   passo 1100/2500  perda=0.233  (873s)
+[01:26:00]   passo 1200/2500  perda=0.216  (950s)
+[01:27:17]   passo 1300/2500  perda=0.198  (1027s)
+[01:28:31]   passo 1400/2500  perda=0.188  (1101s)
+[01:29:50]   passo 1500/2500  perda=0.180  (1180s)
+[01:31:04]   passo 1600/2500  perda=0.171  (1254s)
+[01:32:18]   passo 1700/2500  perda=0.158  (1328s)
+[01:33:35]   passo 1800/2500  perda=0.150  (1405s)
+[01:34:55]   passo 1900/2500  perda=0.146  (1485s)
+[01:36:13]   passo 2000/2500  perda=0.140  (1563s)
+[01:37:33]   passo 2100/2500  perda=0.135  (1642s)
+[01:38:51]   passo 2200/2500  perda=0.130  (1721s)
+[01:40:12]   passo 2300/2500  perda=0.128  (1802s)
+[01:41:32]   passo 2400/2500  perda=0.127  (1882s)
+[01:42:58]   passo 2500/2500  perda=0.123  (1968s)
+[01:42:59] [HEILO Seed] Salvo em /home/claude/work/heilo/models/seed/versions/heilo_seed_v0.2.pt (perda final 0.123, validação 1.598)
+[01:44:02] Avaliação v0.2: acerto 0.298 | perplexidade 4.57 | instruções 0.1667 | generalização 0.2 | consistência 0.9602
+[01:44:02] PROMOVIDA v0.2 (+13 itens certos). Ela é a nova versão ativa.
+[01:48:07] Avaliação v0.1: acerto 0.090 | perplexidade 75.403 | instruções 0.0 | generalização 0.05 | consistência 0.9851
+[01:49:00] Avaliação v0.2: acerto 0.269 | perplexidade 4.57 | instruções 0.1667 | generalização 0.2 | consistência 0.9602
+[01:52:01] Avaliação outro_agente_v0.2: acerto 0.060 | perplexidade 78.146 | instruções 0.0 | generalização 0.05 | consistência 0.9801
+[01:57:08] === Ciclo 1 | ativa v0.3 | categorias mais fracas: cnc (17%), instrucao (17%), matematica (17%), python (17%)
+[01:57:18] Teacher (Qwen/Qwen2.5-0.5B-Instruct) gerando exemplos...
+[02:03:46]   Teacher: 10/114 respostas
+[02:04:34]   Teacher: 20/114 respostas

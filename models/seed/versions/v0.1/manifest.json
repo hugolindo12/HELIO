@@ -1,23 +1,89 @@
 {
-  "version": "v0.1",
-  "checkpoint_file": "heilo_seed_v0.1.pt",
-  "parameters": 3317760,
-  "steps_trained": 3300,
-  "loss_history": [
-    {
-      "data": "2026-09-26 23:14",
-      "passos": 300,
-      "perda": 2.2585,
-      "exemplos": 87
+  "versao": "v0.1",
+  "arquivo": "v0.1/heilo_seed.pt",
+  "criada": "2026-09-27T04:10:08+00:00",
+  "status": "anterior",
+  "pai": null,
+  "ciclo": 0,
+  "dataset_version": null,
+  "origem": "modelo existente (base)",
+  "eval": {
+    "acerto": 0.0896,
+    "acerto_amostrado": 0.0995,
+    "consistencia": 0.9851,
+    "perda": 4.3229,
+    "perplexidade": 75.403,
+    "seguir_instrucoes": 0.0,
+    "generalizacao": 0.05,
+    "parafrase": 0.122,
+    "por_categoria": {
+      "cnc": {
+        "acerto": 0.0,
+        "itens": 12
+      },
+      "conversa": {
+        "acerto": 0.4,
+        "itens": 10
+      },
+      "ferramentas": {
+        "acerto": 0.0,
+        "itens": 4
+      },
+      "honestidade": {
+        "acerto": 0.4,
+        "itens": 5
+      },
+      "identidade": {
+        "acerto": 0.0,
+        "itens": 6
+      },
+      "instrucao": {
+        "acerto": 0.0,
+        "itens": 6
+      },
+      "matematica": {
+        "acerto": 0.0,
+        "itens": 12
+      },
+      "python": {
+        "acerto": 0.0,
+        "itens": 12
+      }
     },
-    {
-      "data": "2026-09-26 23:54",
-      "passos": 3000,
-      "perda": 0.0828,
-      "exemplos": 87
-    }
-  ],
-  "dataset": "curated_seed.jsonl (88 initial curated conversation examples)",
-  "date": "2026-09-26",
-  "notes": "Checkpoint inicial curado antes do treinamento com Teacher Qwen."
+    "itens": 67,
+    "sonda": {
+      "itens": 24,
+      "acerto": 0.0417,
+      "acerto_amostrado": 0.0417,
+      "consistencia": 0.9722,
+      "por_categoria": {
+        "cnc": {
+          "acerto": 0.0,
+          "itens": 2
+        },
+        "conversa": {
+          "acerto": 0.3333,
+          "itens": 3
+        },
+        "instrucao": {
+          "acerto": 0.0,
+          "itens": 4
+        },
+        "logica": {
+          "acerto": 0.0,
+          "itens": 6
+        },
+        "portugues": {
+          "acerto": 0.0,
+          "itens": 4
+        },
+        "programacao": {
+          "acerto": 0.0,
+          "itens": 5
+        }
+      }
+    },
+    "perda_por_caractere": 4.4448,
+    "tokenizer": "byte"
+  }
 }
