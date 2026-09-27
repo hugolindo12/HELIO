@@ -1,0 +1,148 @@
+{
+  "problemas": 20,
+  "pass@1": 0.0,
+  "pass@6": 0.0,
+  "codigo_valido": 0.89,
+  "detalhes": [
+    {
+      "problema": "soma",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def soma(a, b):\n    \"\"\"Retorna a soma de a e b.\"\"\"\n\n"
+    },
+    {
+      "problema": "eh_par",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def eh_par(n):\n    \"\"\"Retorna True se n for par.\"\"\"\n\n"
+    },
+    {
+      "problema": "maior",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def maior(lista):\n    \"\"\"Retorna o maior número da lista.\"\"\"\n\n"
+    },
+    {
+      "problema": "inverter",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def inverter(texto):\n    \"\"\"Retorna o texto de trás para frente.\"\"\"\n\n"
+    },
+    {
+      "problema": "somar_lista",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def somar_lista(numeros):\n    \"\"\"Soma todos os números da lista.\"\"\"\n\n"
+    },
+    {
+      "problema": "fatorial",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def fatorial(n):\n    \"\"\"Retorna n! (fatorial de n).\"\"\"\n\n"
+    },
+    {
+      "problema": "contar_vogais",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def contar_vogais(texto):\n    \"\"\"Conta quantas vogais (aeiou) existem no texto.\"\"\"\n\n"
+    },
+    {
+      "problema": "quadrados",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def quadrados(n):\n    \"\"\"Retorna a lista [0, 1, 4, ...] com os quadrados de 0 até n-1.\"\"\"\n\n"
+    },
+    {
+      "problema": "media",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def media(valores):\n    \"\"\"Retorna a média aritmética da lista.\"\"\"\n\n"
+    },
+    {
+      "problema": "maiusculas",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def maiusculas(texto):\n    \"\"\"Retorna o texto em letras maiúsculas.\"\"\"\n\n"
+    },
+    {
+      "problema": "filtrar_pares",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def filtrar_pares(numeros):\n    \"\"\"Retorna só os números pares da lista.\"\"\"\n\n"
+    },
+    {
+      "problema": "add",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def add(x, y):\n    \"\"\"Return the sum of x and y.\"\"\"\n\n"
+    },
+    {
+      "problema": "is_empty",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def is_empty(items):\n    \"\"\"Return True if the list is empty.\"\"\"\n\n"
+    },
+    {
+      "problema": "first",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def first(items):\n    \"\"\"Return the first element of the list.\"\"\"\n\n"
+    },
+    {
+      "problema": "count_words",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def count_words(text):\n    \"\"\"Return the number of words in text.\"\"\"\n\n"
+    },
+    {
+      "problema": "minimo",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def minimo(a, b):\n    \"\"\"Retorna o menor entre a e b.\"\"\"\n\n"
+    },
+    {
+      "problema": "dobro_lista",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def dobro_lista(numeros):\n    \"\"\"Retorna uma lista com o dobro de cada número.\"\"\"\n\n"
+    },
+    {
+      "problema": "ler_arquivo",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def ler_arquivo(caminho):\n    \"\"\"Lê e retorna todo o conteúdo de um arquivo de texto.\"\"\"\n\n"
+    },
+    {
+      "problema": "chaves_ordenadas",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def chaves_ordenadas(d):\n    \"\"\"Retorna as chaves do dicionário em ordem alfabética.\"\"\"\n\n"
+    },
+    {
+      "problema": "mm_para_pol",
+      "passou_greedy": false,
+      "passou_em_6": false,
+      "valido": true,
+      "codigo": "def mm_para_pol(mm):\n    \"\"\"Converte milímetros para polegadas (1 pol = 25.4 mm).\"\"\"\n\n"
+    }
+  ]
+}
