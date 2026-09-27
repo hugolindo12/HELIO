@@ -81,16 +81,28 @@ class CorpusMulti:
     """Vários corpora (pastas com meta.json) vistos como um só: cada exemplo do lote
     vem de uma parte sorteada proporcionalmente ao tamanho dela."""
 
-    def __init__(self, partes):
-        self.partes = [p for p in partes if len(p) > 1]
-        tam = np.array([len(p) for p in self.partes], dtype=np.float64)
-        self.pesos = tam / tam.sum()
+    def __init__(self, partes, fixos=None):
+        """fixos[i] = fração fixa do lote para a parte i (ex.: 0.3 = 30% dos exemplos);
+        None = proporcional ao tamanho, dividindo o que sobrar."""
+        fixos = list(fixos or [None] * len(partes))
+        pares = [(p, f) for p, f in zip(partes, fixos) if len(p) > 1]
+        self.partes = [p for p, _ in pares]
+        self.fixos = [f for _, f in pares]
+
+    def _pesos(self, T: int):
+        ok = [len(p) > T + 2 for p in self.partes]
+        fixo_total = sum(f for f, v in zip(self.fixos, ok) if v and f)
+        livres = sum(len(p) for p, f, v in zip(self.partes, self.fixos, ok) if v and not f)
+        resto = max(0.0, 1.0 - fixo_total)
+        w = np.array([0.0 if not v else (f if f else (resto * len(p) / livres if livres else 0.0))
+                      for p, f, v in zip(self.partes, self.fixos, ok)], dtype=np.float64)
+        return w / w.sum()
 
     def __len__(self):
         return int(sum(len(p) for p in self.partes))
 
     def lote(self, T: int, B: int, dev: str):
-        escolha = np.random.choice(len(self.partes), size=B, p=self.pesos)
+        escolha = np.random.choice(len(self.partes), size=B, p=self._pesos(T))
         xs, ys = [], []
         for k in escolha:
             d = self.partes[k]
@@ -117,11 +129,14 @@ def _abrir_bin(pasta, nome: str):
     pastas = pastas_corpus(pasta)
     if not pastas:
         raise FileNotFoundError(f"nenhum corpus pronto em {pasta}")
-    arrays = []
+    arrays, fixos = [], []
     for p in pastas:
         meta = json.loads((p / "meta.json").read_text(encoding="utf-8"))
         arrays.append(np.memmap(p / f"{nome}.bin", dtype=meta["dtype"], mode="r"))
-    return arrays[0] if len(arrays) == 1 else CorpusMulti(arrays)
+        fixos.append(meta.get("peso_fixo"))
+    if len(arrays) == 1 and not fixos[0]:
+        return arrays[0]
+    return CorpusMulti(arrays, fixos)
 
 
 def _lote(dados, T: int, B: int, dev: str):
