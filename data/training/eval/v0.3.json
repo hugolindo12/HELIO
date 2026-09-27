@@ -784,5 +784,271 @@
   ],
   "versao": "v0.3",
   "eval": "heilo_eval_v1",
-  "data": "2026-09-27T04:49:00+00:00"
+  "data": "2026-09-27T04:49:00+00:00",
+  "sonda_detalhes": [
+    {
+      "id": "sonda_v2-000",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Se hoje é segunda, amanhã é que dia?",
+      "resposta": "É um sistema de controle de versão: guarda o histórico das mudanças do seu código.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.329258918762207
+    },
+    {
+      "id": "sonda_v2-001",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Qual é maior: 9 ou 12?",
+      "resposta": "G91 é modo incremental: cada coordenada é relativa à posição atual.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 9.480588912963867
+    },
+    {
+      "id": "sonda_v2-002",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Se todo gato é um animal e Mimi é um gato, Mimi é um animal?",
+      "resposta": "Sa que guarda com fço escrta.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 12.410110473632812
+    },
+    {
+      "id": "sonda_v2-003",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Tenho 3 maçãs e ganho mais 2. Com quantas fico?",
+      "resposta": "Fica no repositório do GitHub: conversas, conhecimento, soluções que deram certo e os pesos do meu cérebro.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 11.72122859954834
+    },
+    {
+      "id": "sonda_v2-004",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Qual número vem depois do 19?",
+      "resposta": "84 dividido por 9 é 9.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 9.210204124450684
+    },
+    {
+      "id": "sonda_v2-005",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Qual é o oposto de quente?",
+      "resposta": "É uma biblioteca para trabalhar com tabelas e dados, tipo Excel no Python.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 9.001925468444824
+    },
+    {
+      "id": "sonda_v2-006",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Qual é o plural de pão?",
+      "resposta": "Não. Sou bem menor e ainda estou aprendendo. Mas sou sua, rodo no seu computador e evoluo com você.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 12.191368103027344
+    },
+    {
+      "id": "sonda_v2-007",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Qual o contrário de alto?",
+      "resposta": "Não tenho acesso a notícias em tempo real.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 11.090325355529785
+    },
+    {
+      "id": "sonda_v2-008",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Como se diz thank you em português?",
+      "resposta": "O HEILO Seed tem uns 3 milhões de parâmetros. É bem pequeno comparado aos modelos grandes.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.448410034179688
+    },
+    {
+      "id": "sonda_v2-009",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Complete a saudação: bom ...",
+      "resposta": "14x10",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 6.609652042388916
+    },
+    {
+      "id": "sonda_v2-010",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Responda só com o número: quanto é 2 mais 2?",
+      "resposta": "20 mais 20 é 4.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 13.583945274353027
+    },
+    {
+      "id": "sonda_v2-011",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Responda em uma palavra: qual a cor do céu num dia limpo?",
+      "resposta": "Não.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 11.457816123962402
+    },
+    {
+      "id": "sonda_v2-012",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Responda apenas sim ou não: 10 é maior que 3?",
+      "resposta": "G03 é interpolação circular no sentido anti-horário.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 8.658879280090332
+    },
+    {
+      "id": "sonda_v2-013",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Diga apenas: ok",
+      "resposta": "Até a Giterpolação linear: movimento em linha reta com avanço F.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.105659484863281
+    },
+    {
+      "id": "sonda_v2-014",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "O que faz o método upper() em Python?",
+      "resposta": "dividido por a que criar jogos 2D e 3D, programada em C#.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 9.270527839660645
+    },
+    {
+      "id": "sonda_v2-015",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Como faço um comentário de uma linha em Python?",
+      "resposta": "def",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 11.244837760925293
+    },
+    {
+      "id": "sonda_v2-016",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Qual palavra-chave cria uma classe em Python?",
+      "resposta": "def",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 7.930454730987549
+    },
+    {
+      "id": "sonda_v2-017",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Como importo o módulo math?",
+      "resposta": "Use len: len(lista)",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.595118522644043
+    },
+    {
+      "id": "sonda_v2-018",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Quanto retorna len('abc')?",
+      "resposta": "Não  tenho acesso a notícias nem resultados em tempo real.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 11.806694030761719
+    },
+    {
+      "id": "sonda_v2-019",
+      "categoria": "conversa",
+      "tipo": "sonda",
+      "pergunta": "e aí, quem é você afinal?",
+      "resposta": "Ficiono sim! O HEILO Seed roda localmente.",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 12.457658767700195
+    },
+    {
+      "id": "sonda_v2-020",
+      "categoria": "conversa",
+      "tipo": "sonda",
+      "pergunta": "estou meio triste hoje",
+      "resposta": "Então merece descansar! Quer me contar como foi?",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.024744033813477
+    },
+    {
+      "id": "sonda_v2-021",
+      "categoria": "conversa",
+      "tipo": "sonda",
+      "pergunta": "valeu pela força",
+      "resposta": "Não tenho acesso à previsão do tempo. Um app de clima te responde na hora.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.219489097595215
+    },
+    {
+      "id": "sonda_v2-022",
+      "categoria": "cnc",
+      "tipo": "sonda",
+      "pergunta": "O G01 serve para movimento rápido?",
+      "resposta": "G00",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 12.024959564208984
+    },
+    {
+      "id": "sonda_v2-023",
+      "categoria": "cnc",
+      "tipo": "sonda",
+      "pergunta": "Qual código M liga o refrigerante?",
+      "resposta": "M09",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 14.82746696472168
+    }
+  ]
 }

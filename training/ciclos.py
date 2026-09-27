@@ -28,7 +28,7 @@ from typing import Callable, Dict, List, Optional
 from heilo.config import DATA_DIR
 from heilo.models.seed import SEED_DIR, SEED_WEIGHTS
 from heilo.training import geradores
-from heilo.training.eval_set import EVAL_VERSION, load_eval, load_sonda
+from heilo.training.eval_set import EVAL_VERSION, SONDA_VERSION, load_eval, load_sonda
 from heilo.training.evaluate import avaliar_seed
 from heilo.training.qualidade import avaliar_exemplo
 from heilo.training.records import agora, append_jsonl, make_example, read_jsonl
@@ -122,6 +122,7 @@ class CiclosSeed:
             s = avaliar_seed(chat, self.itens_sonda)
             r["sonda"] = {k: s[k] for k in ("itens", "acerto", "acerto_amostrado", "consistencia",
                                             "por_categoria")}
+            r["sonda"]["regua"] = SONDA_VERSION
             r["sonda_detalhes"] = s["detalhes"]
         (self.eval_dir / f"{nome}.json").write_text(
             json.dumps(r, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -240,7 +241,8 @@ class CiclosSeed:
     def _decidir(self, reg, nome, arquivo, r, ciclo, pai, dataset_version, origem, promover=True):
         ativa = self._versao(reg, reg["ativa"])
         if (self.itens_sonda and ativa.get("arquivo") and
-                (not ativa["eval"].get("sonda") or not ativa["eval"].get("perda_por_caractere"))):
+                (not ativa["eval"].get("sonda") or not ativa["eval"].get("perda_por_caractere")
+                 or ativa["eval"]["sonda"].get("regua") != SONDA_VERSION)):
             # versão antiga sem sonda: mede agora, com o mesmo método, para comparar igual
             ra = self.avaliar_arquivo(self.vdir / ativa["arquivo"], ativa["versao"])
             ativa["eval"] = self.resumo(ra)

@@ -18,11 +18,13 @@ class SeedAdapter(ModelAdapter):
 
     def card(self) -> ModelCard:
         info = self._chat.info if self._chat is not None else {}
+        from heilo.models.linhas import nome_modelo
+        n = self._chat.modelo.n_params() if self._chat is not None and self._chat.modelo is not None else None
         return ModelCard(
-            name="HEILO Seed",
+            name=nome_modelo(n),
             role="seed",
             provider="heilo",
-            base_model="HEILO Seed (GPT decoder, tokenizer em bytes, treinado do zero)",
+            base_model="HEILO Seed (GPT decoder próprio, treinado do zero)",
             adapter="",
             license="Propriedade do projeto HEILO (código e pesos próprios)",
             purpose="chat",
@@ -35,7 +37,8 @@ class SeedAdapter(ModelAdapter):
         from heilo.models.seed import gpt
         if not gpt.TORCH_OK:
             return False, "PyTorch não instalado (pip install torch)"
-        if not self.weights.exists():
+        from heilo.models.seed.gpt import tem_modelo
+        if not tem_modelo(self.weights):
             return False, f"pesos do Seed não encontrados em {self.weights} (rode: python -m heilo.main treinar)"
         if self._erro:
             return False, f"falha ao carregar o Seed: {self._erro}"
@@ -57,8 +60,13 @@ class SeedAdapter(ModelAdapter):
         chat = self._load()
         if chat is None or not chat.pronto:
             return ""
-        return chat.responder(messages, **{k: v for k, v in opts.items()
-                                           if k in ("temperatura", "max_novos")})
+        # Na conversa: desencoraja repetição (a avaliação usa os padrões desligados).
+        # Só com tokenizer BPE: no modelo byte a byte as letras se repetem naturalmente.
+        bpe = type(getattr(chat.modelo, "tokenizer", None)).__name__ == "BPETokenizer"
+        kw = {"penalidade": 1.2, "sem_repetir": 4} if bpe else {}
+        kw.update({k: v for k, v in opts.items()
+                   if k in ("temperatura", "max_novos", "penalidade", "sem_repetir")})
+        return chat.responder(messages, **kw)
 
     def reload(self) -> None:
         self._chat = None

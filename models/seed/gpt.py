@@ -77,6 +77,11 @@ class GPTConfig:
     n_embd: int = 256
     dropout: float = 0.1
     vocab_size: int = VOCAB_SIZE
+    # "gpt2" (v0.x/v1.x) ou "moderna" (v2.x, técnicas do estilo Gemma: RoPE, RMSNorm,
+    # GeGLU, GQA e QK-norm). Checkpoints antigos não têm o campo → "gpt2".
+    arquitetura: str = "gpt2"
+    n_kv_head: int = 0            # GQA: nº de cabeças de chave/valor (0 = igual a n_head)
+    rope_base: float = 10000.0
 
 
 if TORCH_OK:
@@ -110,18 +115,96 @@ if TORCH_OK:
             x = x + self.proj(y)
             return x + self.mlp(self.ln2(x))
 
+    # ---------------------------------------------- arquitetura "moderna" (v2.x)
+    class RMSNorm(nn.Module):
+        """Normalização pela raiz da média dos quadrados (mais simples e estável que LayerNorm)."""
+
+        def __init__(self, d: int, eps: float = 1e-6):
+            super().__init__()
+            self.eps = eps
+            self.peso = nn.Parameter(torch.ones(d))
+
+        def forward(self, x):
+            x32 = x.float()
+            x32 = x32 * torch.rsqrt(x32.pow(2).mean(-1, keepdim=True) + self.eps)
+            return (x32 * self.peso.float()).type_as(x)
+
+    def _rope_tabelas(T: int, hd: int, base: float, dev):
+        inv = 1.0 / (base ** (torch.arange(0, hd, 2, device=dev).float() / hd))
+        ang = torch.outer(torch.arange(T, device=dev).float(), inv)       # (T, hd/2)
+        return torch.cos(ang), torch.sin(ang)
+
+    def _rope(x, cos, sin):
+        """RoPE: gira pares de dimensões conforme a posição (x: B, H, T, hd)."""
+        x1, x2 = x[..., 0::2], x[..., 1::2]
+        c, s_ = cos[None, None].to(x.dtype), sin[None, None].to(x.dtype)
+        return torch.stack((x1 * c - x2 * s_, x1 * s_ + x2 * c), dim=-1).flatten(-2)
+
+    class BlocoModerno(nn.Module):
+        def __init__(self, c: GPTConfig):
+            super().__init__()
+            self.n_head = c.n_head
+            self.n_kv = c.n_kv_head or c.n_head
+            assert c.n_head % self.n_kv == 0, "n_head precisa ser múltiplo de n_kv_head"
+            self.hd = c.n_embd // c.n_head
+            self.norm1 = RMSNorm(c.n_embd)
+            self.q = nn.Linear(c.n_embd, c.n_head * self.hd, bias=False)
+            self.kv = nn.Linear(c.n_embd, 2 * self.n_kv * self.hd, bias=False)
+            self.o = nn.Linear(c.n_head * self.hd, c.n_embd, bias=False)
+            self.q_norm, self.k_norm = RMSNorm(self.hd), RMSNorm(self.hd)   # QK-norm
+            self.norm2 = RMSNorm(c.n_embd)
+            oculto = int(round(c.n_embd * 8 / 3 / 64)) * 64                  # GeGLU ~ mesmo nº de parâmetros
+            self.porta = nn.Linear(c.n_embd, oculto, bias=False)
+            self.cima = nn.Linear(c.n_embd, oculto, bias=False)
+            self.baixo = nn.Linear(oculto, c.n_embd, bias=False)
+            self.dropout = c.dropout
+            self.drop = nn.Dropout(c.dropout)
+
+        def forward(self, x, cos, sin):
+            B, T, C = x.shape
+            h = self.norm1(x)
+            q = self.q(h).view(B, T, self.n_head, self.hd).transpose(1, 2)
+            k, v = self.kv(h).view(B, T, 2, self.n_kv, self.hd).unbind(2)
+            k, v = k.transpose(1, 2), v.transpose(1, 2)
+            q, k = _rope(self.q_norm(q), cos, sin), _rope(self.k_norm(k), cos, sin)
+            if self.n_kv != self.n_head:                                    # GQA
+                rep = self.n_head // self.n_kv
+                k, v = k.repeat_interleave(rep, dim=1), v.repeat_interleave(rep, dim=1)
+            y = F.scaled_dot_product_attention(q, k, v, is_causal=True,
+                                               dropout_p=self.dropout if self.training else 0.0)
+            x = x + self.o(y.transpose(1, 2).contiguous().view(B, T, C))
+            h = self.norm2(x)
+            return x + self.drop(self.baixo(F.gelu(self.porta(h), approximate="tanh") * self.cima(h)))
+
     class MiniGPT(nn.Module):
         def __init__(self, c: GPTConfig):
             super().__init__()
             self.cfg = c
+            self.moderna = c.arquitetura == "moderna"
             self.tok = nn.Embedding(c.vocab_size, c.n_embd)
-            self.pos = nn.Embedding(c.block_size, c.n_embd)
             self.drop = nn.Dropout(c.dropout)
-            self.blocos = nn.ModuleList([Bloco(c) for _ in range(c.n_layer)])
-            self.ln = nn.LayerNorm(c.n_embd)
+            if self.moderna:
+                self.blocos = nn.ModuleList([BlocoModerno(c) for _ in range(c.n_layer)])
+                self.ln = RMSNorm(c.n_embd)
+                self._rope_cache = None
+            else:
+                self.pos = nn.Embedding(c.block_size, c.n_embd)
+                self.blocos = nn.ModuleList([Bloco(c) for _ in range(c.n_layer)])
+                self.ln = nn.LayerNorm(c.n_embd)
             self.head = nn.Linear(c.n_embd, c.vocab_size, bias=False)
             self.head.weight = self.tok.weight  # weight tying
             self.apply(self._init)
+            if self.moderna:   # projeções de saída menores: treino mais estável com muitas camadas
+                for b in self.blocos:
+                    for w in (b.o.weight, b.baixo.weight):
+                        nn.init.normal_(w, mean=0.0, std=0.02 / math.sqrt(2 * c.n_layer))
+
+        def _rope_para(self, T, dev):
+            if self._rope_cache is None or self._rope_cache[0].size(0) < T or self._rope_cache[0].device != dev:
+                hd = self.cfg.n_embd // self.cfg.n_head
+                self._rope_cache = _rope_tabelas(max(T, self.cfg.block_size), hd, self.cfg.rope_base, dev)
+            cos, sin = self._rope_cache
+            return cos[:T], sin[:T]
 
         @staticmethod
         def _init(m):
@@ -132,10 +215,16 @@ if TORCH_OK:
 
         def forward(self, idx, alvo=None):
             B, T = idx.shape
-            pos = torch.arange(T, device=idx.device)
-            x = self.drop(self.tok(idx) + self.pos(pos))
-            for b in self.blocos:
-                x = b(x)
+            if self.moderna:
+                cos, sin = self._rope_para(T, idx.device)
+                x = self.drop(self.tok(idx))
+                for b in self.blocos:
+                    x = b(x, cos, sin)
+            else:
+                pos = torch.arange(T, device=idx.device)
+                x = self.drop(self.tok(idx) + self.pos(pos))
+                for b in self.blocos:
+                    x = b(x)
             logits = self.head(self.ln(x))
             loss = None
             if alvo is not None:
@@ -147,14 +236,29 @@ if TORCH_OK:
 
         @torch.no_grad()
         def gerar(self, ids: List[int], max_novos: int = 200, temperatura: float = 0.8,
-                  top_k: int = 40, parar_em=(FIM, USUARIO)) -> List[int]:
+                  top_k: int = 40, parar_em=(FIM, USUARIO), penalidade: float = 1.0,
+                  sem_repetir: int = 0) -> List[int]:
+            """penalidade > 1 desencoraja repetir tokens já gerados; sem_repetir=n proíbe
+            repetir um n-grama já gerado ("a soma de a soma de a soma..."). Padrões = 1.0/0
+            (desligados) para a avaliação continuar comparável entre versões."""
             self.eval()
             dev = next(self.parameters()).device
             x = torch.tensor([ids[-self.cfg.block_size:]], dtype=torch.long, device=dev)
             novos: List[int] = []
             for _ in range(max_novos):
                 logits, _ = self(x[:, -self.cfg.block_size:])
-                logits = logits[:, -1, :] / max(temperatura, 1e-4)
+                logits = logits[:, -1, :]
+                if penalidade != 1.0 and novos:
+                    usados = torch.tensor(sorted(set(novos)), device=dev)
+                    lv = logits[0, usados]
+                    logits[0, usados] = torch.where(lv > 0, lv / penalidade, lv * penalidade)
+                if sem_repetir and len(novos) >= sem_repetir:
+                    pref = tuple(novos[-(sem_repetir - 1):]) if sem_repetir > 1 else ()
+                    proibidos = {novos[i + sem_repetir - 1] for i in range(len(novos) - sem_repetir + 1)
+                                 if tuple(novos[i:i + sem_repetir - 1]) == pref}
+                    if proibidos:
+                        logits[0, list(proibidos)] = -float("inf")
+                logits = logits / max(temperatura, 1e-4)
                 if top_k:
                     v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
                     logits[logits < v[:, [-1]]] = -float("inf")
@@ -188,9 +292,74 @@ def salvar(modelo, info: Dict, arquivo: Path = None, meia_precisao: bool = False
     return arquivo
 
 
+# ------------------------------------------------ arquivos grandes em partes
+# O GitHub não aceita arquivos > 100 MB. Modelos maiores (ex.: HEILO Aurora, ~300 MB)
+# vão para o repositório em partes de 90 MB + um manifesto com o sha256; o PC remonta
+# o .pt na primeira vez que for usado (e de novo se as partes mudarem).
+TAMANHO_PARTE = 90 * 1024 * 1024
+
+
+def _manifesto_partes(arquivo: Path) -> Path:
+    return Path(str(arquivo) + ".partes.json")
+
+
+def tem_modelo(arquivo: Path) -> bool:
+    arquivo = Path(arquivo)
+    return arquivo.exists() or _manifesto_partes(arquivo).exists()
+
+
+def dividir_em_partes(arquivo: Path, tamanho: int = TAMANHO_PARTE) -> Dict:
+    import hashlib
+    import json as _json
+    arquivo = Path(arquivo)
+    for velha in arquivo.parent.glob(arquivo.name + ".parte*"):
+        velha.unlink()
+    h, partes = hashlib.sha256(), []
+    with open(arquivo, "rb") as f:
+        while True:
+            bloco = f.read(tamanho)
+            if not bloco:
+                break
+            h.update(bloco)
+            nome = f"{arquivo.name}.parte{len(partes):03d}"
+            (arquivo.parent / nome).write_bytes(bloco)
+            partes.append(nome)
+    man = {"arquivo": arquivo.name, "bytes": arquivo.stat().st_size, "sha256": h.hexdigest(), "partes": partes}
+    _manifesto_partes(arquivo).write_text(_json.dumps(man, indent=1), encoding="utf-8")
+    return man
+
+
+def montar_partes(arquivo: Path) -> bool:
+    """Remonta o .pt a partir das partes, se houver manifesto e o .pt estiver ausente/desatualizado."""
+    import hashlib
+    import json as _json
+    arquivo = Path(arquivo)
+    mp = _manifesto_partes(arquivo)
+    if not mp.exists():
+        return arquivo.exists()
+    man = _json.loads(mp.read_text(encoding="utf-8"))
+    marca = Path(str(arquivo) + ".montado")
+    if arquivo.exists() and marca.exists() and marca.read_text().strip() == man["sha256"]:
+        return True
+    h, tmp = hashlib.sha256(), arquivo.with_suffix(".montando")
+    with open(tmp, "wb") as out:
+        for nome in man["partes"]:
+            bloco = (arquivo.parent / nome).read_bytes()
+            h.update(bloco)
+            out.write(bloco)
+    if h.hexdigest() != man["sha256"]:
+        tmp.unlink()
+        raise ValueError(f"partes de {arquivo.name} corrompidas (sha256 não confere)")
+    tmp.replace(arquivo)
+    marca.write_text(man["sha256"])
+    return True
+
+
 def carregar(arquivo: Path = None, dispositivo: str = None):
     """Retorna (modelo, info) ou (None, {}) se ainda não existe cérebro treinado."""
     arquivo = Path(arquivo or SEED_WEIGHTS)
+    if TORCH_OK and _manifesto_partes(arquivo).exists():
+        montar_partes(arquivo)
     if not TORCH_OK or not arquivo.exists():
         return None, {}
     dispositivo = dispositivo or _dispositivo()
@@ -376,7 +545,8 @@ class MiniGPTChat:
         return self.modelo is not None
 
     def responder(self, messages: List[Dict], temperatura: float = 0.7,
-                  max_novos: int = 240, top_k: int = 40) -> str:
+                  max_novos: int = 240, top_k: int = 40, penalidade: float = 1.0,
+                  sem_repetir: int = 0) -> str:
         if not self.pronto:
             return ""
         conversa = [m for m in messages if m.get("role") in ("user", "assistant")][-8:]
@@ -394,7 +564,8 @@ class MiniGPTChat:
                 break
             ids = pedaco + ids
         novos = self.modelo.gerar(ids, max_novos=max_novos, temperatura=temperatura, top_k=top_k,
-                                  parar_em=(tok.fim, tok.usuario))
+                                  parar_em=(tok.fim, tok.usuario), penalidade=penalidade,
+                                  sem_repetir=sem_repetir)
         return tok.decode(novos).strip()
 
     def perda_resposta(self, pergunta: str, resposta: str) -> Optional[Tuple[float, int]]:

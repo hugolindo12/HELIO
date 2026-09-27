@@ -11,11 +11,13 @@ workspace/**/.heilo/
 !.env.example
 # HEILO Memory: conversas são locais e privadas — GitHub não é memória
 memory/sessions/
+# HEILO Dia a Dia: lembretes, notas e listas pessoais — nunca vão para o GitHub
+memory/pessoal/
 # HEILO Training: candidatos crus e datasets derivados (recriados por /aprender)
 data/raw/
 data/datasets/
 *.tmp
 # HEILO Teacher: pesos baixados/treinados de modelo externo não vão para o repositório
 models/teacher/adapters/
-# versões do HEILO Seed ficam locais (só a ativa em weights/ é versionada)
-models/seed/versions/
+# lixo movido para revisão manual
+_to_delete/

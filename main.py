@@ -99,6 +99,31 @@ def run_gerar(arquivo: str = ""):
         print(e)
 
 
+def run_professor(arquivo: str = "", limite: int = 0):
+    """HEILO Teacher responde a lista de perguntas → validação → PENDENTE de revisão."""
+    from heilo.config import config
+    from heilo.core.model_manager import ModelManager
+    from heilo.training.pipeline import TeacherRequired, TrainingPipeline
+    from heilo.training.professor import gerar_com_professor
+    models = ModelManager.from_config(config)
+    try:
+        r = gerar_com_professor(TrainingPipeline(models=models), models,
+                                arquivo=Path(arquivo) if arquivo else None, limite=limite)
+    except TeacherRequired as e:
+        print(e)
+        return
+    print(r)
+    print("Pronto. Revise na interface (abrir_heilo.bat → Revisar aprendizados). "
+          "Nada entra no treino sem a sua aprovação.")
+
+
+def run_regua():
+    """Recalcula a sonda de todas as versões com a régua atual (usa as respostas salvas)."""
+    from heilo.config import DATA_DIR
+    from heilo.training.eval_set import reavaliar_sonda_salva
+    reavaliar_sonda_salva(DATA_DIR / "training" / "eval", DATA_DIR / "training" / "versions.json")
+
+
 def run_metricas():
     import json
     print(json.dumps(_pipeline().metrics(), ensure_ascii=False, indent=2))
@@ -292,7 +317,7 @@ if __name__ == "__main__":
             "cli", "server", "demo", "demo_test", "demo_research",
             "demo_pipeline", "demo_pipeline_full",
             "dataset", "treinar", "aprender", "atualizar",
-            "revisar", "gerar", "metricas", "publicar", "independencia", "ciclo", "versoes", "promover",
+            "revisar", "gerar", "professor", "regua", "metricas", "publicar", "independencia", "ciclo", "versoes", "promover",
         ],
     )
     parser.add_argument("--passos", type=int, default=2000, help="passos de treino do HEILO Seed")
@@ -301,6 +326,7 @@ if __name__ == "__main__":
     parser.add_argument("--max-ciclos", type=int, default=4, help="ciclos de treino (modo ciclo)")
     parser.add_argument("--base-n", type=int, default=20, help="exemplos por categoria por ciclo")
     parser.add_argument("--sem-professor", action="store_true", help="ciclo sem o Teacher")
+    parser.add_argument("--limite", type=int, default=0, help="máximo de perguntas (modo professor)")
     parser.add_argument("--versao", default="", help="versão (modo promover)")
     parser.add_argument("--motivo", default="", help="motivo da promoção manual")
     parser.add_argument("--host", default="0.0.0.0")
@@ -320,6 +346,8 @@ if __name__ == "__main__":
         "atualizar": run_atualizar,
         "revisar": run_revisar,
         "gerar": lambda: run_gerar(args.arquivo),
+        "professor": lambda: run_professor(args.arquivo, args.limite),
+        "regua": run_regua,
         "metricas": run_metricas,
         "publicar": run_publicar,
         "independencia": run_independencia,

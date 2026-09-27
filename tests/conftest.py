@@ -8,6 +8,9 @@ import os
 
 os.environ["HEILO_BRAIN_MODE"] = "off"
 os.environ["HEILO_MEMORY_LOG"] = "false"
+# lembretes/notas/listas dos testes nunca vão para a pasta pessoal real
+import tempfile  # noqa: E402
+os.environ["HEILO_PESSOAL_DIR"] = tempfile.mkdtemp(prefix="heilo_pessoal_teste_")
 
 import pytest  # noqa: E402
 

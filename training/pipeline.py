@@ -51,7 +51,7 @@ class TrainingPipeline:
         self.memory = memory          # MemoryManager
         self.knowledge = knowledge    # KnowledgeManager
         self.seed_weights = seed_weights
-        for sub in ("raw", "teacher", "taught", "approved", "rejected", "datasets", "training"):
+        for sub in ("raw", "teacher", "escritos", "taught", "approved", "rejected", "datasets", "training"):
             (self.root / sub).mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------ caminhos
@@ -62,6 +62,18 @@ class TrainingPipeline:
     @property
     def teacher_file(self) -> Path:
         return self.root / "teacher" / "generated.jsonl"
+
+    @property
+    def escritos_dir(self) -> Path:
+        """Lotes de exemplos escritos à mão (por uma pessoa ou por um assistente),
+        sempre NÃO verificados: só entram no treino depois da revisão humana."""
+        return self.root / "escritos"
+
+    def _escritos(self) -> List[Dict]:
+        out: List[Dict] = []
+        for arq in sorted(self.escritos_dir.glob("*.jsonl")):
+            out += read_jsonl(arq)
+        return out
 
     @property
     def taught_file(self) -> Path:
@@ -133,7 +145,7 @@ class TrainingPipeline:
         decididos, vistos, out = self._decididos(), set(), []
         q = self.quarantined()
         suspensos = [r for r in self._todos_aprovados() if r["id"] in q]
-        for r in read_jsonl(self.raw_file) + read_jsonl(self.teacher_file) + suspensos:
+        for r in read_jsonl(self.raw_file) + read_jsonl(self.teacher_file) + self._escritos() + suspensos:
             if r["id"] in decididos or r["id"] in vistos:
                 continue
             vistos.add(r["id"])
@@ -245,14 +257,14 @@ class TrainingPipeline:
         return {"validos_pendentes": validos, "rejeitados_auto": len(rejeitar)}
 
     def review(self, ex_id: str, approve: bool, reason: str = "",
-               edited_answer: Optional[str] = None) -> Dict:
+               edited_answer: Optional[str] = None, revisor: str = "usuario") -> Dict:
         """Decisão humana sobre um candidato (/revisar)."""
         ex = next((r for r in self.pending() if r["id"] == ex_id), None)
         if ex is None:
             return {"ok": False, "error": f"candidato {ex_id} não está pendente"}
         if not approve:
             append_jsonl(self.rejected_file, [dict(ex, rejected_at=agora(),
-                                                   rejected_by="usuario", reasons=[reason or "rejeitado"])])
+                                                   rejected_by=revisor, reasons=[reason or "rejeitado"])])
             return {"ok": True, "decisao": "rejeitado"}
         final = ex
         if edited_answer and edited_answer.strip():
@@ -260,12 +272,12 @@ class TrainingPipeline:
             msgs[-1]["content"] = edited_answer.strip()
             final = make_example(msgs, origin=ex["origin"],
                                  meta=dict(ex.get("meta", {}), editado_de=ex["id"]))
-            append_jsonl(self.rejected_file, [dict(ex, rejected_at=agora(), rejected_by="usuario",
+            append_jsonl(self.rejected_file, [dict(ex, rejected_at=agora(), rejected_by=revisor,
                                                    reasons=["substituído por versão editada"])])
         ok, erros = validate(final, known_ids={r["id"] for r in self.approved()})
         if not ok:
             return {"ok": False, "error": "; ".join(erros)}
-        append_jsonl(self.approved_file, [dict(final, approved_at=agora(), approved_by="usuario")])
+        append_jsonl(self.approved_file, [dict(final, approved_at=agora(), approved_by=revisor)])
         return {"ok": True, "decisao": "aprovado", "id": final["id"]}
 
     # -------------------------------------------------------- dataset

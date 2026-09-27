@@ -77,12 +77,56 @@ def preparar_corpus(textos: Iterable[str], tok, destino: Path, max_tokens: int,
     return meta
 
 
-def _abrir_bin(pasta: Path, nome: str):
-    meta = json.loads((Path(pasta) / "meta.json").read_text(encoding="utf-8"))
-    return np.memmap(Path(pasta) / f"{nome}.bin", dtype=meta["dtype"], mode="r")
+class CorpusMulti:
+    """Vários corpora (pastas com meta.json) vistos como um só: cada exemplo do lote
+    vem de uma parte sorteada proporcionalmente ao tamanho dela."""
+
+    def __init__(self, partes):
+        self.partes = [p for p in partes if len(p) > 1]
+        tam = np.array([len(p) for p in self.partes], dtype=np.float64)
+        self.pesos = tam / tam.sum()
+
+    def __len__(self):
+        return int(sum(len(p) for p in self.partes))
+
+    def lote(self, T: int, B: int, dev: str):
+        escolha = np.random.choice(len(self.partes), size=B, p=self.pesos)
+        xs, ys = [], []
+        for k in escolha:
+            d = self.partes[k]
+            i = np.random.randint(0, len(d) - T - 1)
+            xs.append(d[i:i + T].astype(np.int64)); ys.append(d[i + 1:i + 1 + T].astype(np.int64))
+        x, y = torch.from_numpy(np.stack(xs)), torch.from_numpy(np.stack(ys))
+        return x.to(dev, non_blocking=True), y.to(dev, non_blocking=True)
+
+
+def pastas_corpus(pasta) -> List[Path]:
+    """Aceita uma pasta com meta.json, uma pasta com subpastas parte_* ou uma lista delas."""
+    if isinstance(pasta, (list, tuple)):
+        out: List[Path] = []
+        for p in pasta:
+            out += pastas_corpus(p)
+        return out
+    pasta = Path(pasta)
+    if (pasta / "meta.json").exists():
+        return [pasta]
+    return sorted(p for p in pasta.glob("parte_*") if (p / "meta.json").exists())
+
+
+def _abrir_bin(pasta, nome: str):
+    pastas = pastas_corpus(pasta)
+    if not pastas:
+        raise FileNotFoundError(f"nenhum corpus pronto em {pasta}")
+    arrays = []
+    for p in pastas:
+        meta = json.loads((p / "meta.json").read_text(encoding="utf-8"))
+        arrays.append(np.memmap(p / f"{nome}.bin", dtype=meta["dtype"], mode="r"))
+    return arrays[0] if len(arrays) == 1 else CorpusMulti(arrays)
 
 
 def _lote(dados, T: int, B: int, dev: str):
+    if isinstance(dados, CorpusMulti):
+        return dados.lote(T, B, dev)
     ix = np.random.randint(0, len(dados) - T - 1, size=B)
     x = torch.from_numpy(np.stack([dados[i:i + T].astype(np.int64) for i in ix]))
     y = torch.from_numpy(np.stack([dados[i + 1:i + 1 + T].astype(np.int64) for i in ix]))
@@ -106,8 +150,11 @@ def _perda_val(modelo, dados, T, B, dev, lotes=20, amp=False):
 def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int = 20000,
                lote: int = 32, lr: float = 6e-4, lr_min: float = 6e-5, aquecimento: int = 500,
                tempo_max_min: Optional[float] = None, avaliar_cada: int = 500,
-               salvar_cada: int = 1000, log: Log = print) -> Dict:
-    """Pré-treino com retomada: se `ckpt` existir, continua de onde parou."""
+               salvar_cada: int = 1000, log: Log = print, acumular: int = 1) -> Dict:
+    """Pré-treino com retomada: se `ckpt` existir, continua de onde parou.
+
+    acumular=k: soma o gradiente de k micro-lotes antes de cada passo (lote efetivo
+    = lote × k), para caber modelos maiores na memória da GPU."""
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     amp = dev == "cuda"
     tr, va = _abrir_bin(pasta_corpus, "train"), _abrir_bin(pasta_corpus, "val")
@@ -148,11 +195,12 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
             break
         for g in opt.param_groups:
             g["lr"] = lr_em(passo)
-        x, y = _lote(tr, cfg.block_size, lote, dev)
-        with torch.autocast("cuda", dtype=torch.float16, enabled=amp):
-            _, loss = modelo(x, y)
         opt.zero_grad(set_to_none=True)
-        scaler.scale(loss).backward()
+        for _ in range(max(1, acumular)):
+            x, y = _lote(tr, cfg.block_size, lote, dev)
+            with torch.autocast("cuda", dtype=torch.float16, enabled=amp):
+                _, loss = modelo(x, y)
+            scaler.scale(loss / max(1, acumular)).backward()
         scaler.unscale_(opt)
         torch.nn.utils.clip_grad_norm_(modelo.parameters(), 1.0)
         scaler.step(opt)
@@ -238,7 +286,7 @@ def ajustar_conversa(modelo, treino: List[Dict], val: List[Dict], passos: int = 
     tok = modelo.tokenizer
     T = modelo.cfg.block_size
     it_tr, it_va = _exemplos_sft(treino, tok, T), _exemplos_sft(val, tok, T)
-    texto = _abrir_bin(Path(pasta_corpus), "train") if pasta_corpus else None
+    texto = _abrir_bin(pasta_corpus, "train") if pasta_corpus else None
     opt = torch.optim.AdamW(modelo.parameters(), lr=lr, weight_decay=0.05)
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
     melhor, melhor_estado, sem_melhora, hist = None, None, 0, []

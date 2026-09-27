@@ -21,6 +21,10 @@ from heilo.training.records import read_jsonl
 
 # Configuração padrão do v1.0 (~30 M parâmetros com vocabulário de 16k)
 CONFIG_V1 = GPTConfig(block_size=512, n_layer=8, n_head=8, n_embd=512, dropout=0.05)
+# v2.x: mesmo tamanho (~30 M), "motor" moderno no estilo Gemma — RoPE, RMSNorm, GeGLU,
+# GQA (2 cabeças de chave/valor) e QK-norm. Treinada do zero; só as técnicas vêm do Gemma.
+CONFIG_V2 = GPTConfig(block_size=512, n_layer=8, n_head=8, n_embd=512, dropout=0.0,
+                      arquitetura="moderna", n_kv_head=2)
 VOCAB_V1 = 16000
 
 
@@ -77,8 +81,8 @@ def dividir_sft(pipeline) -> Dict:
 
 
 def registrar(ciclos, arquivo: Path, nome: str, manifest: Dict, relatorio: Dict,
-              promover: bool = True) -> Dict:
+              promover: bool = True,
+              origem: str = "pré-treino em texto geral PT + SFT com o dataset HEILO (tokenizer BPE próprio)") -> Dict:
     return ciclos.registrar_versao_externa(
         arquivo, nome, ciclo=None, pai=None, dataset_version=manifest["version"],
-        origem="pré-treino em texto geral PT + SFT com o dataset HEILO (tokenizer BPE próprio)",
-        promover=promover, extra={"treino": relatorio})
+        origem=origem, promover=promover, extra={"treino": relatorio})

@@ -134,7 +134,7 @@ body:not(.vazia) .chips{display:none}
 .modal label{display:block;font-size:13px;color:var(--ink2);margin:10px 0 4px;font-weight:600}
 .modal textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--bg);min-height:70px}
 .modal .pes{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px}
-.b{padding:8px 14px;border-radius:9px;font-size:14px;font-weight:550;border:1px solid var(--line)}
+.b{white-space:nowrap;padding:8px 14px;border-radius:9px;font-size:14px;font-weight:550;border:1px solid var(--line)}
 .b.pri{background:var(--accent);color:#fff;border-color:var(--accent)}
 .b.ruim{color:var(--danger)}
 .cand{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:14px}
@@ -193,9 +193,10 @@ body:not(.vazia) .chips{display:none}
       <div class="linha">
         <select id="cerebro" title="Motor usado nas respostas">
           <option value="auto">Automático</option>
-          <option value="seed">Só HEILO Seed</option>
+          <option value="seed">Só HEILO (modelo próprio)</option>
           <option value="teacher">Teacher (temporário)</option>
           <option value="off">Sem modelo (só conhecimento)</option>
+          <optgroup label="Testar outra versão" id="grupo-versoes"></optgroup>
         </select>
         <div class="esp"></div>
         <button id="enviar" disabled title="Enviar (Enter)">
@@ -204,10 +205,12 @@ body:not(.vazia) .chips{display:none}
       </div>
     </div>
     <div class="chips">
+      <button>Que dia é hoje?</button>
+      <button>Quanto é 17% de 2.380?</button>
+      <button>32 mm em polegadas</button>
+      <button>Me lembra em 30 minutos de beber água</button>
+      <button>Mostra a lista de compras</button>
       <button>Quem é você?</button>
-      <button>O que é uma função em Python?</button>
-      <button>Me explica o que é CNC</button>
-      <button>/status</button>
     </div>
     <div class="aviso">A HEILO ainda está em treinamento e pode errar. Use 👍 e "Corrigir" para ensinar.</div>
   </div>
@@ -234,7 +237,7 @@ const COMANDOS = [
 /* ---------------- armazenamento ---------------- */
 let convs = [];
 try { convs = JSON.parse(localStorage.getItem(CHAVE) || "[]"); } catch (e) { convs = []; }
-let atual = null, ocupado = false;
+let atual = null, ocupado = false, versaoTeste = null, modoAtual = "auto";
 function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify(convs.slice(0, 200))); } catch (e) {} }
 function conv() { return convs.find(c => c.id === atual); }
 function novaConv() {
@@ -285,7 +288,9 @@ const SOL = '<svg class="sol" style="width:24px;height:24px;color:var(--accent)"
 function nomeModelo(m) {
   if (!m) return "";
   if (m === "comando") return "comando";
-  if (/seed/i.test(m)) return "HEILO Seed";
+  if (m === "ferramenta") return "ferramenta";
+  if (/\(teste\)/.test(m)) return m;
+  if (/seed/i.test(m)) return "HEILO Faísca";
   if (/teacher|qwen/i.test(m)) return "Teacher";
   return m;
 }
@@ -298,12 +303,12 @@ function elMsg(m, idx) {
     return d;
   }
   d.className = "m bot" + (m.erro ? " erro" : "");
-  const fonte = [nomeModelo(m.model), m.source && !/^model_/.test(m.source) ? m.source : ""].filter(Boolean).join(" · ");
+  const fonte = [nomeModelo(m.model), m.source && !/^model_|versao_teste/.test(m.source) ? m.source.replace(/^ferramenta:/, "") : ""].filter(Boolean).join(" · ");
   d.innerHTML = `<div class="av">${SOL}</div><div class="conteudo"><div class="corpo">${md(m.content)}</div>` +
     (fonte ? `<div class="meta">${esc(fonte)}</div>` : "") +
     `<div class="acoes">
       <button data-a="copiar" title="Copiar">⧉ Copiar</button>
-      ${m.model !== "comando" && !m.erro ? `<button data-a="boa" title="Aprovar esta resposta para o treino" class="${m.aprovada ? "feito" : ""}">👍 ${m.aprovada ? "Aprovada" : "Boa"}</button>
+      ${m.model !== "comando" && m.model !== "ferramenta" && !m.erro ? `<button data-a="boa" title="Aprovar esta resposta para o treino" class="${m.aprovada ? "feito" : ""}">👍 ${m.aprovada ? "Aprovada" : "Boa"}</button>
       <button data-a="corrigir" title="Ensinar a resposta certa">✎ Corrigir</button>
       <button data-a="refazer" title="Gerar de novo">↻ Refazer</button>` : ""}
     </div></div>`;
@@ -364,7 +369,7 @@ async function enviar(texto, historicoFixo) {
   const hist = c.msgs.slice(0, -1).filter(m => !m.erro).map(m => ({ role: m.role, content: m.content }));
   let resp;
   try {
-    const r = await api("/api/conversa", { message: texto, history: hist });
+    const r = await api("/api/conversa", { message: texto, history: hist, versao: versaoTeste });
     resp = { role: "assistant", content: r.content || "(sem resposta)", model: r.model || "", source: r.source || "", erro: r.type === "erro" };
   } catch (e) {
     resp = { role: "assistant", content: "Não consegui falar com o servidor da HEILO. Ele está aberto? (" + e.message + ")", erro: true };
@@ -374,6 +379,7 @@ async function enviar(texto, historicoFixo) {
   await digitar(resp, c.msgs.length - 1);
   ocupado = false; atualizarBotao();
   if (/^\/(cerebro|ensinar)/.test(texto)) carregarModelo();
+  if (/lembr|timer|avis/i.test(texto)) pedirNotificacao();
 }
 async function digitar(m, idx) {
   const el = elMsg({ ...m, content: "" }, idx); $("#msgs").appendChild(el);
@@ -436,7 +442,7 @@ function abrirEnsinar(pergunta = "", resposta = "") {
 $("#abrir-ensinar").onclick = () => abrirEnsinar();
 
 async function abrirRevisar() {
-  modal(`<h2>Revisar aprendizados</h2><div class="sub">Candidatos vindos das conversas e do Teacher. Só o que você aprovar entra no treino.</div><div class="cont" id="rv">carregando…</div><div class="pes"><button class="b" onclick="fecharModal()">Fechar</button></div>`);
+  modal(`<h2>Revisar aprendizados</h2><div class="sub">Candidatos vindos das conversas, do Teacher e de lotes escritos. Só o que você aprovar entra no treino.</div><div class="cont" id="rv">carregando…</div><div class="pes"><button class="b pri" id="rv-todos" hidden>✓ Aprovar todos que li</button><button class="b" onclick="fecharModal()">Fechar</button></div>`);
   let d;
   try { d = await api("/api/revisar"); } catch (e) { $("#rv").textContent = "Erro: " + e.message; return; }
   contarPendentes(d.pendentes.length);
@@ -448,7 +454,8 @@ async function abrirRevisar() {
     const el = document.createElement("div"); el.className = "cand";
     el.innerHTML = `<div class="tag"></div><div class="q"></div><div class="r"></div>
       <div class="bs"><button class="b" data-v="a">✓ Aprovar</button><button class="b" data-v="e">✎ Editar e aprovar</button><button class="b ruim" data-v="r">✕ Rejeitar</button></div>`;
-    el.querySelector(".tag").textContent = p.origem || "";
+    el.dataset.id = p.id;
+    el.querySelector(".tag").textContent = [p.origem === "escrito_claude" ? "escrito pelo Claude" : p.origem, p.categoria].filter(Boolean).join(" · ");
     el.querySelector(".q").textContent = "Você: " + q;
     el.querySelector(".r").textContent = "HEILO: " + r;
     el.onclick = async e => {
@@ -468,6 +475,18 @@ async function abrirRevisar() {
     };
     $("#rv").appendChild(el);
   });
+  const bt = $("#rv-todos"); bt.hidden = false;
+  bt.onclick = async () => {
+    const ids = [...document.querySelectorAll(".cand")].map(c => c.dataset.id);
+    if (!ids.length) return;
+    if (!confirm(`Aprovar os ${ids.length} candidatos da lista? Só faça isso se você leu e concorda com as respostas. Os que estiverem errados, rejeite ou edite antes.`)) return;
+    bt.disabled = true; bt.textContent = "aprovando…";
+    try {
+      const r = await api("/api/revisar/lote", { ids, aprovar: true });
+      toast(`${r.feitos} aprovado(s)` + (r.falhas ? `, ${r.falhas} com erro` : "") + ". Entram no próximo treino.");
+      abrirRevisar();
+    } catch (e) { toast("Erro: " + e.message); bt.disabled = false; }
+  };
 }
 $("#abrir-revisar").onclick = abrirRevisar;
 function contarPendentes(n) { const e = $("#n-pend"); e.hidden = !n; e.textContent = n; }
@@ -478,13 +497,25 @@ async function carregarModelo() {
     const d = await api("/api/heilo");
     const pct = x => x == null ? "—" : (x * 100).toFixed(1) + "%";
     const at = (d.versoes || []).find(v => v.versao === d.ativa) || {};
-    $("#modelo").innerHTML = `<b>HEILO Seed ${esc(d.ativa || "?")}</b> · modo ${esc(d.modo)}<br>acerto no eval: ${pct(at.acerto)}` +
+    $("#modelo").innerHTML = `<b>HEILO ${esc(d.linha || "Faísca")} ${esc((d.ativa || "?").replace(/^(v|aurora-|zenite-)/, ""))}</b> · modo ${esc(d.modo)}<br>acerto no eval: ${pct(at.acerto)}` +
       (d.seed && d.seed.available === false ? `<br><span style="color:var(--danger)">${esc(d.seed.reason || "Seed indisponível")}</span>` : "");
-    const sel = $("#cerebro");
-    if ([...sel.options].some(o => o.value === d.modo)) sel.value = d.modo;
+    const sel = $("#cerebro"), g = $("#grupo-versoes");
+    modoAtual = d.modo;
+    g.innerHTML = (d.versoes || []).filter(v => v.no_pc && v.versao !== d.ativa).reverse()
+      .map(v => `<option value="v:${esc(v.versao)}">HEILO ${esc(v.linha || "Faísca")} ${esc(v.versao.replace(/^(v|aurora-|zenite-)/, ""))} (${esc(v.status || "")}${v.acerto != null ? ", eval " + pct(v.acerto) : ""})</option>`).join("");
+    g.hidden = !g.children.length;
+    if (versaoTeste && [...sel.options].some(o => o.value === "v:" + versaoTeste)) sel.value = "v:" + versaoTeste;
+    else if ([...sel.options].some(o => o.value === d.modo)) { versaoTeste = null; sel.value = d.modo; }
   } catch (e) { $("#modelo").textContent = "servidor offline"; }
 }
 $("#cerebro").onchange = async e => {
+  const v = e.target.value;
+  if (v.startsWith("v:")) {
+    versaoTeste = v.slice(2);
+    toast(`Testando o Seed ${versaoTeste}. Não muda a versão ativa; volte em "Automático" quando quiser.`);
+    return;
+  }
+  versaoTeste = null;
   try { const r = await api("/api/cerebro", { texto: e.target.value }); toast(r.texto || "ok"); carregarModelo(); }
   catch (err) { toast("Erro: " + err.message); }
 };
@@ -510,7 +541,9 @@ txt.addEventListener("keydown", e => {
   if (D.style.display === "block") {
     const itens = D.querySelectorAll("[data-c]");
     if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); dicaSel = (dicaSel + (e.key === "ArrowDown" ? 1 : -1) + itens.length) % itens.length; dicas(); return; }
-    if (e.key === "Tab" || (e.key === "Enter" && !e.shiftKey)) { e.preventDefault(); txt.value = itens[dicaSel].dataset.c + " "; ajustar(); return; }
+    const exato = txt.value.trim().toLowerCase() === itens[dicaSel].dataset.c;
+    if (e.key === "Tab" || (e.key === "Enter" && !e.shiftKey && !exato)) { e.preventDefault(); txt.value = itens[dicaSel].dataset.c + " "; ajustar(); return; }
+    if (exato) D.style.display = "none";   // comando já completo: Enter envia
   }
   if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); enviar(); }
 });
@@ -529,6 +562,24 @@ $("#saud").textContent = (h < 5 ? "Boa noite" : h < 12 ? "Bom dia" : h < 18 ? "B
 if (innerWidth < 760) document.body.classList.add("fechada");
 render(); carregarModelo(); txt.focus();
 api("/api/revisar").then(d => contarPendentes(d.pendentes.length)).catch(() => {});
+
+/* ---------------- lembretes ---------------- */
+function pedirNotificacao() { try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch (e) {} }
+async function checarLembretes() {
+  try {
+    const d = await api("/api/lembretes/vencidos");
+    for (const l of d.vencidos || []) {
+      const t = "⏰ " + l.texto;
+      toast(t); { const e = $("#toast"); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove("on"), 12000); }
+      try { if ("Notification" in window && Notification.permission === "granted") new Notification("HEILO", { body: l.texto }); } catch (e) {}
+      try { const a = new AudioContext(), o = a.createOscillator(); o.frequency.value = 880; o.connect(a.destination); o.start(); setTimeout(() => { o.stop(); a.close(); }, 400); } catch (e) {}
+      const c = conv() || novaConv();
+      c.msgs.push({ role: "assistant", content: "⏰ **Lembrete:** " + l.texto, model: "ferramenta", source: "ferramenta:lembrete" });
+      salvar(); render();
+    }
+  } catch (e) {}
+}
+setInterval(checarLembretes, 30000); checarLembretes();
 </script>
 </body>
 </html>

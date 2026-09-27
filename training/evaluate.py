@@ -37,16 +37,25 @@ def acertou(resposta: str, criterios: Dict) -> bool:
     for proibida in criterios.get("none", []):
         if _contem(r, proibida):
             return False
+    if "so_numeros" in criterios:
+        # todos os números da resposta precisam estar entre os permitidos
+        # ("10 menos 12 é 12" NÃO acerta "qual é maior: 9 ou 12?")
+        permitidos = {str(n) for n in criterios["so_numeros"]}
+        if any(n not in permitidos for n in re.findall(r"\d+", r)):
+            return False
     return True
 
 
 def _contem(resposta_norm: str, termo: str) -> bool:
     """Termo precisa começar numa fronteira de palavra ("ia" não casa com "programação";
     prefixos como "descans" continuam valendo para "descansa")."""
-    t = normalizar(termo)
+    inteira = termo.startswith("=")          # "=class": só a palavra inteira (não "classe")
+    t = normalizar(termo.lstrip("="))
     if not t:
         return False
     padrao = (r"(?<![\w])" if t[0].isalnum() else "") + re.escape(t)
+    if inteira:
+        padrao += r"(?![\w])"
     if t[-1].isdigit():
         padrao += r"(?!\d)"          # "100" não pode casar com "1000"
     return re.search(padrao, resposta_norm) is not None

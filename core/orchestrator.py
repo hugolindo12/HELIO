@@ -12,6 +12,7 @@ Recebe mensagens, gerencia contexto e coordena os componentes:
 O Core não importa nenhuma biblioteca de modelo e não conhece o modelo externo
 por trás do Teacher.
 """
+from pathlib import Path
 from typing import Any, Dict, Optional, List
 from heilo.core.model_adapter import ModelAdapter, Message
 from heilo.core.task import TaskLog, new_task_id
@@ -81,6 +82,11 @@ class Orchestrator:
         from heilo.knowledge.manager import KnowledgeManager
         from heilo.training.pipeline import TrainingPipeline
         self.models = models or ModelManager.from_config(config)
+        # HEILO Dia a Dia: hora, contas, conversões, lembretes, notas e listas (exatos, locais)
+        from heilo.tools.diaadia import DiaADia
+        import os as _os
+        from heilo.config import MEMORY_DIR as _MEM
+        self.diaadia = DiaADia(Path(_os.environ.get("HEILO_PESSOAL_DIR") or (_MEM / "pessoal")))
         self.memory_mgr = memory_manager or MemoryManager(
             enabled=getattr(config, "memory_log_conversations", True))
         self.knowledge_mgr = knowledge_manager or KnowledgeManager(
@@ -224,6 +230,12 @@ class Orchestrator:
 
     def _chat(self, user_message: str, somente_conversa: bool = False) -> Dict[str, Any]:
         self.conversation.append(Message(role="user", content=user_message))
+
+        if getattr(self, "diaadia", None) is not None:
+            ferramenta = self.diaadia.responder(user_message)
+            if ferramenta is not None:
+                self.conversation.append(Message(role="assistant", content=ferramenta["content"]))
+                return ferramenta
 
         msg_l = user_message.lower().strip()
         if msg_l in ("continue", "continuar", "continue a tarefa anterior.", "continue a tarefa anterior"):

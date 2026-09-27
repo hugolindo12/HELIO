@@ -1,0 +1,190 @@
+# Perguntas para o HEILO Teacher (Qwen) responder: python -m heilo.main professor
+# Formato: categoria|pergunta   (linhas com # são ignoradas)
+# As respostas viram candidatos PENDENTES: só entram no treino depois da sua revisão.
+conversa|oi, heilo, tudo certo por aí?
+conversa|bom dia! dormiu bem?
+conversa|to feliz, passei na prova
+conversa|hoje o trabalho foi puxado
+conversa|me anima um pouco
+conversa|tô com preguiça de estudar
+conversa|me conta uma curiosidade
+conversa|qual é o seu dia favorito da semana?
+conversa|o que você acha de café?
+conversa|me recomenda um hobby
+conversa|tô sem ideia do que fazer hoje
+conversa|obrigado pela paciência
+conversa|foi mal, errei a pergunta
+conversa|você me entende?
+conversa|conversa comigo um pouco
+conversa|estou nervoso para uma entrevista de emprego
+conversa|como faço para ter mais foco?
+conversa|me dá uma dica para acordar cedo
+conversa|tô aprendendo inglês
+conversa|qual música você gosta?
+conversa|comprei um computador novo
+conversa|terminei meu primeiro programa em python
+conversa|to pensando em fazer faculdade de engenharia
+conversa|me ajuda a fazer uma lista de compras
+conversa|estou gripado hoje
+conversa|meu time perdeu ontem
+conversa|choveu muito aqui hoje
+conversa|to cozinhando um macarrão
+conversa|quero começar a correr
+conversa|como faço para organizar minha semana?
+conversa|me fala algo engraçado
+conversa|tchau, até a próxima
+conversa|boa madrugada
+conversa|você pode ser minha amiga?
+conversa|me elogia
+conversa|tô orgulhoso do meu projeto
+conversa|estou com dor de cabeça de tanto programar
+conversa|preciso de um conselho
+conversa|qual é a melhor hora para estudar?
+conversa|gosto de jogos de terror
+python|o que é uma classe abstrata em python?
+python|como faço uma função com número variável de argumentos?
+python|o que é *args?
+python|o que é **kwargs?
+python|como pego a data de hoje em python?
+python|como gero um número aleatório em python?
+python|como embaralho uma lista?
+python|como escolho um item aleatório de uma lista?
+python|o que é um módulo em python?
+python|o que é um pacote em python?
+python|o que é o __init__?
+python|o que é self em python?
+python|o que é herança?
+python|o que é um método?
+python|o que é um decorador em python?
+python|o que é um gerador em python?
+python|pra que serve o yield?
+python|o que é recursão?
+python|como leio um arquivo csv em python?
+python|como salvo dados em json?
+python|como faço uma requisição http em python?
+python|o que é o pandas?
+python|o que é o tkinter?
+python|como crio uma janela simples com tkinter?
+python|como meço o tempo que um código leva?
+python|como faço o programa esperar alguns segundos?
+python|o que é uma exceção?
+python|como crio minha própria exceção?
+python|o que faz o finally?
+python|como verifico se um arquivo existe?
+python|como listo os arquivos de uma pasta?
+python|como crio uma pasta com python?
+python|o que é o pathlib?
+python|como removo itens duplicados de uma lista mantendo a ordem?
+python|como ordeno um dicionário pelos valores?
+python|como pego só as chaves de um dicionário?
+python|como juntar dois dicionários?
+python|o que é uma variável global?
+python|qual a diferença entre lista e tupla?
+python|como transformo uma lista de números em texto?
+python|como verifico se uma string é número?
+python|como deixo a primeira letra maiúscula?
+python|como conto os caracteres de um texto sem espaços?
+python|o que é o operador and?
+python|o que é o operador or?
+python|o que é o not em python?
+python|como faço um menu no terminal com python?
+python|o que é o if __name__ == "__main__"?
+python|como instalo uma biblioteca pelo requirements.txt?
+python|o que é pep 8?
+cnc|o que é um ciclo fixo no cnc?
+cnc|o que é o g76 no torno fanuc?
+cnc|o que é o g71 no torno?
+cnc|o que é o g70 no torno fanuc?
+cnc|o que é o m02?
+cnc|o que é o r no ciclo de furação?
+cnc|o que é o q no g83?
+cnc|o que é um corretor de ferramenta?
+cnc|como zerar uma peça na fresadora?
+cnc|o que é o eixo z na fresadora?
+cnc|o que é o eixo x no torno?
+cnc|o que é desbaste e acabamento?
+ferramentas|o que é a unity?
+ferramentas|o que é o visual studio code?
+ferramentas|o que é o excel?
+ferramentas|pra que serve o powershell?
+ferramentas|o que é o sap?
+ferramentas|o que é uma engine de jogos?
+ferramentas|o que é a unreal engine?
+ferramentas|o que é um arquivo stl?
+ferramentas|o que é um arquivo step?
+ferramentas|o que é um arquivo dxf?
+ferramentas|o que é modelagem 3d?
+ferramentas|o que é uma textura no blender?
+ferramentas|o que é rigging?
+ferramentas|o que é um prefab na unity?
+ferramentas|o que é o rigidbody na unity?
+ferramentas|o que é um script em c# na unity?
+ferramentas|o que é o google colab?
+ferramentas|o que é uma gpu?
+ferramentas|o que é o windows?
+ferramentas|o que é o linux?
+conhecimento|o que é a amazônia?
+conhecimento|qual é o maior estado do brasil?
+conhecimento|qual é a capital do paraná?
+conhecimento|qual é a capital da bahia?
+conhecimento|qual é a capital do rio grande do sul?
+conhecimento|qual é a capital da itália?
+conhecimento|qual é a capital da alemanha?
+conhecimento|qual é a capital da espanha?
+conhecimento|qual é a capital do canadá?
+conhecimento|qual é a capital do méxico?
+conhecimento|qual é a moeda do brasil?
+conhecimento|qual é a moeda do japão?
+conhecimento|o que é um vulcão?
+conhecimento|o que é um terremoto?
+conhecimento|o que é o efeito estufa?
+conhecimento|o que é reciclagem?
+conhecimento|o que é energia solar?
+conhecimento|o que é energia eólica?
+conhecimento|o que é um eclipse?
+conhecimento|por que o céu fica alaranjado no pôr do sol?
+conhecimento|o que é o dna?
+conhecimento|o que é uma célula?
+conhecimento|o que são vitaminas?
+conhecimento|o que é um mamífero?
+conhecimento|o que é um réptil?
+conhecimento|quantas patas tem uma aranha?
+conhecimento|quantas patas tem um inseto?
+conhecimento|o que é a copa do mundo?
+conhecimento|quantos jogadores tem um time de futebol em campo?
+conhecimento|o que é um motor elétrico?
+conhecimento|o que é um motor a combustão?
+conhecimento|o que é atrito?
+conhecimento|o que é pressão?
+conhecimento|o que é temperatura?
+conhecimento|o que é um imã?
+conhecimento|o que é um circuito elétrico?
+conhecimento|o que é tensão elétrica?
+conhecimento|o que é corrente elétrica?
+conhecimento|o que é um resistor?
+conhecimento|o que é um sensor?
+conhecimento|o que é um robô industrial?
+conhecimento|o que é automação industrial?
+conhecimento|o que é um clp?
+conhecimento|o que é manutenção preventiva?
+conhecimento|o que é segurança do trabalho?
+conhecimento|o que é epi?
+conhecimento|o que é o 5s?
+conhecimento|o que é kaizen?
+conhecimento|o que é lean manufacturing?
+conhecimento|o que é controle de qualidade?
+raciocinio|se uma peça leva 5 minutos para ser feita, quantas peças são feitas em uma hora?
+raciocinio|um carro anda 80 km por hora. quanto anda em 3 horas?
+raciocinio|se eu tenho 20 reais e cada lanche custa 6, quantos lanches consigo comprar?
+raciocinio|uma caixa tem 12 parafusos. quantos parafusos há em 7 caixas?
+raciocinio|um produto custava 200 reais e teve 10% de desconto. quanto ficou?
+raciocinio|se um turno tem 8 horas e já passaram 3, quantas faltam?
+raciocinio|uma barra de 1 metro é cortada em pedaços de 25 cm. quantos pedaços saem?
+raciocinio|quanto é a soma de todos os números de 1 a 10?
+raciocinio|se 4 máquinas fazem 40 peças, quantas peças faz cada máquina?
+raciocinio|um retângulo tem lados 6 e 9. qual o perímetro?
+raciocinio|se economizo 50 reais por mês, quanto junto em um ano?
+raciocinio|uma receita pede 3 ovos para 6 pessoas. quantos ovos para 12 pessoas?
+raciocinio|um trem sai às 14h e a viagem dura 3 horas. a que horas chega?
+raciocinio|tenho 36 alunos para dividir em grupos de 4. quantos grupos formo?
+raciocinio|se um diâmetro é 50 mm, qual é o raio?

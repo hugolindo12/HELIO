@@ -204,6 +204,16 @@
         "sonda": {
           "itens": 24,
           "acerto": 0.0417,
+          "acerto_amostrado": null,
+          "consistencia": null,
+          "regua": "sonda_independente_v2",
+          "recalculada_de_respostas_salvas": true
+        },
+        "perda_por_caractere": 1.5624,
+        "tokenizer": "byte",
+        "sonda_v1": {
+          "itens": 24,
+          "acerto": 0.0417,
           "acerto_amostrado": 0.0417,
           "consistencia": 1.0,
           "por_categoria": {
@@ -232,9 +242,7 @@
               "itens": 5
             }
           }
-        },
-        "perda_por_caractere": 1.5624,
-        "tokenizer": "byte"
+        }
       },
       "comparacao": "vs v0.1: +12 itens certos",
       "status": "ativa"
@@ -293,6 +301,16 @@
         "itens": 67,
         "sonda": {
           "itens": 24,
+          "acerto": 0.0417,
+          "acerto_amostrado": null,
+          "consistencia": null,
+          "regua": "sonda_independente_v2",
+          "recalculada_de_respostas_salvas": true
+        },
+        "perda_por_caractere": 0.7538,
+        "tokenizer": "bpe",
+        "sonda_v1": {
+          "itens": 24,
           "acerto": 0.0833,
           "acerto_amostrado": 0.0417,
           "consistencia": 0.9722,
@@ -322,9 +340,7 @@
               "itens": 5
             }
           }
-        },
-        "perda_por_caractere": 0.7538,
-        "tokenizer": "bpe"
+        }
       },
       "comparacao": "vs v0.3: sonda +1, eval -7 itens (generalizou melhor, mas perdeu muito do que sabia: decisão manual)",
       "status": "rejeitada",
@@ -400,6 +416,16 @@
         "itens": 67,
         "sonda": {
           "itens": 24,
+          "acerto": 0.0417,
+          "acerto_amostrado": null,
+          "consistencia": null,
+          "regua": "sonda_independente_v2",
+          "recalculada_de_respostas_salvas": true
+        },
+        "perda_por_caractere": 0.7788,
+        "tokenizer": "bpe",
+        "sonda_v1": {
+          "itens": 24,
           "acerto": 0.125,
           "acerto_amostrado": 0.0972,
           "consistencia": 0.9306,
@@ -429,9 +455,7 @@
               "itens": 5
             }
           }
-        },
-        "perda_por_caractere": 0.7788,
-        "tokenizer": "bpe"
+        }
       },
       "comparacao": "vs v0.3: sonda +2, eval -6 itens (generalizou melhor, mas perdeu muito do que sabia: decisão manual)",
       "status": "rejeitada",

@@ -117,7 +117,10 @@ def export(path: Path) -> int:
     return len(itens)
 
 
-SONDA_FILE = Path(__file__).resolve().parents[1] / "data" / "eval" / "sonda_independente_v1.jsonl"
+# v2 (27/09): mesmas 24 perguntas da v1, régua corrigida — a v1 contava "10 menos 12 é 12"
+# como acerto de "qual é maior: 9 ou 12?" e "Não tenho um modelo de frio" como "oposto de quente".
+SONDA_VERSION = "sonda_independente_v2"
+SONDA_FILE = Path(__file__).resolve().parents[1] / "data" / "eval" / f"{SONDA_VERSION}.jsonl"
 
 
 def load_sonda(path: Path = None) -> List[Dict]:
@@ -132,3 +135,34 @@ def load_sonda(path: Path = None) -> List[Dict]:
             it.setdefault("referencia", "")
             itens.append(it)
     return itens
+
+
+def reavaliar_sonda_salva(pasta_eval: Path, registro: Path, log=print) -> Dict:
+    """Recalcula a sonda de TODAS as versões com a régua atual, usando as respostas já
+    salvas em data/training/eval/<versão>.json (sem rodar o modelo de novo).
+    Só a resposta principal (greedy) é recalculada; a amostrada fica como None."""
+    from heilo.training.evaluate import acertou
+    por_pergunta = {it["pergunta"]: it for it in load_sonda()}
+    reg = json.loads(Path(registro).read_text(encoding="utf-8"))
+    feitas = {}
+    for v in reg.get("versoes", []):
+        arq = Path(pasta_eval) / f"{v['versao']}.json"
+        if not arq.exists():
+            continue
+        dados = json.loads(arq.read_text(encoding="utf-8"))
+        det = dados.get("sonda_detalhes") or []
+        casados = [(d, por_pergunta[d["pergunta"]]) for d in det if d["pergunta"] in por_pergunta]
+        if not casados:
+            continue
+        acertos = [acertou(d["resposta"], it["criterios"]) for d, it in casados]
+        nova = {"itens": len(casados), "acerto": round(sum(acertos) / len(casados), 4),
+                "acerto_amostrado": None, "consistencia": None, "regua": SONDA_VERSION,
+                "recalculada_de_respostas_salvas": True}
+        ev = v.setdefault("eval", {})
+        if ev.get("sonda") and ev["sonda"].get("regua") != SONDA_VERSION:
+            ev["sonda_v1"] = ev["sonda"]
+        ev["sonda"] = nova
+        feitas[v["versao"]] = (ev.get("sonda_v1") or {}).get("acerto"), nova["acerto"]
+        log(f"{v['versao']}: sonda v1 {feitas[v['versao']][0]} → v2 {nova['acerto']}")
+    Path(registro).write_text(json.dumps(reg, indent=2, ensure_ascii=False), encoding="utf-8")
+    return feitas
