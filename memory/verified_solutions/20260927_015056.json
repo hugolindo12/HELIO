@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-09-27T01:50:56.224652+00:00",
+  "problem": "Oi, pesquise e corrija o bug de desconto",
+  "status": "generated",
+  "result_preview": "FINAL: Síntese da pesquisa\n\n## Resumo\nPara calcular o preço final após um desconto percentual em Python, use:\n\n```python\nfinal = total * (1 - percent / 100)\n```\n\nErro comum: `total * percent / 100` retorna só o valor do desconto, não o preço final.\n\nExemplo: total=60, percent=10 -> final=54.0\n\n## Fontes\n- knowledge/programming/python_discounts.md\n- Documentação comum de cálculo comercial\n\nSources collected:\n- [verified_solutions\\20260927_013705_863083_com_base_na_pesquisa_abaixo_aplique_a_solucao_no_projeto_do.md] (score=0.70) \n- [conversational\\heilo_persona.md#chunk1] (score=0.63) ## 2. Princípios de Diálogo Normal\n1. **Calor humano e presteza:**\n- [programming\\python_discounts.md] (score=0.51) # Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do de\n- [conversational\\smalltalk_guidelines.md] (score=0.43) # Padrões de Diálogo e Conversação Cotidiana (Smalltalk)\n\nDiretriz\n- [verified_solutions\\20260926_233306_130993_corrigir_desconto.md] (score=0.39) # verified_soluti",
+  "tools_used": [
+    "search_knowledge"
+  ]
+}

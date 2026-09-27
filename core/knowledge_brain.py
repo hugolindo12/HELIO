@@ -42,15 +42,18 @@ class KnowledgeBrain:
         chunks: List[str] = []
         scores: List[float] = []
 
+        q_tokens = set(self._tokens(query))
+        if not q_tokens:
+            return BrainAnswer(found=False, confidence=0.0, answer="", sources=[], mode="none")
+
         # 1) Verified solutions (highest trust)
         if self.memory:
             try:
                 sols = self.memory.list_solutions(limit=20)
-                q_tokens = set(self._tokens(query))
                 for sol in sols:
                     text = f"{sol.get('problem', '')} {sol.get('result_preview', '')}"
                     overlap = self._overlap(q_tokens, self._tokens(text))
-                    if overlap >= 0.25 and sol.get("status") == "verified":
+                    if overlap >= 0.35 and sol.get("status") == "verified":
                         chunks.append(
                             f"[verified] {sol.get('problem', '')[:200]}\n"
                             f"{sol.get('result_preview', '')[:500]}"
@@ -135,9 +138,30 @@ class KnowledgeBrain:
         )
         return "\n".join(lines)
 
-    @staticmethod
-    def _tokens(text: str) -> List[str]:
-        return re.findall(r"[a-zA-ZÀ-ÿ0-9_]{3,}", (text or "").lower())
+    STOPWORDS = {
+        "a", "o", "as", "os", "um", "uma", "uns", "umas",
+        "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas",
+        "por", "pelo", "pela", "pelos", "pelas", "com", "sem",
+        "para", "pra", "pro", "pras", "pros",
+        "e", "ou", "mas", "que", "se", "como", "quando", "onde",
+        "eu", "tu", "ele", "ela", "nos", "você", "voce", "vocês", "voces", "eles", "elas",
+        "me", "te", "lhe", "lhes",
+        "meu", "minha", "meus", "minhas", "seu", "sua", "seus", "suas",
+        "esse", "essa", "esses", "essas", "este", "esta", "estes", "estas",
+        "aquele", "aquela", "aqueles", "aquelas", "isso", "isto", "aquilo",
+        "ser", "estar", "ter", "haver", "fazer", "ir", "vir",
+        "sou", "era", "fui", "foi", "estou", "está", "esta", "estamos", "estão",
+        "tem", "temos", "têm", "tinha", "tive",
+        "mais", "menos", "muito", "pouco", "bem", "mal", "já", "ainda",
+        "só", "apenas", "também", "não", "sim",
+        "tudo", "nada", "todo", "toda", "todos", "todas", "outro", "outra",
+        "oi", "ola", "olá", "opa", "tchau", "valeu", "obrigado", "obrigada",
+    }
+
+    @classmethod
+    def _tokens(cls, text: str) -> List[str]:
+        raw = re.findall(r"[a-zA-ZÀ-ÿ0-9_]{3,}", (text or "").lower())
+        return [t for t in raw if t not in cls.STOPWORDS]
 
     @staticmethod
     def _overlap(a: set, b) -> float:

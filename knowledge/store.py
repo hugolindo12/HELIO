@@ -12,7 +12,7 @@ class KnowledgeStore:
         self.root = root or KNOWLEDGE_DIR
         self.root.mkdir(parents=True, exist_ok=True)
         for sub in ["general", "programming", "projects", "documentation",
-                    "verified_solutions", "agents"]:
+                    "verified_solutions", "agents", "conversational"]:
             (self.root / sub).mkdir(exist_ok=True)
 
     def add_document(self, category: str, name: str, content: str):

@@ -58,6 +58,8 @@ class Orchestrator:
             knowledge=self.knowledge,
             learning=self.learning,
         )
+        from heilo.core.dialogue import ConversationalEngine
+        self.dialogue = ConversationalEngine()
         self.tools = self._build_tools()
 
         agent_kwargs = dict(
@@ -150,6 +152,8 @@ class Orchestrator:
                 return self._resume_code_task()
 
         intent = self._classify_intent(user_message)
+        if intent == "conversation":
+            return self._handle_conversational(user_message)
         if intent == "pipeline_research_code_test":
             return self._handle_pipeline_research_code_test(user_message)
         if intent == "pipeline_research_code":
@@ -178,6 +182,19 @@ class Orchestrator:
 
     def _classify_intent(self, text: str) -> str:
         text_l = text.lower()
+        from heilo.core.dialogue import DialogueClassifier
+        social = DialogueClassifier.classify(text)
+        has_task_action = any(
+            k in text_l for k in (
+                "corrija", "corrigir", "pesquise", "pesquisar", "rode os testes",
+                "rodar teste", "execute", "crie um arquivo", "editar arquivo",
+                "altere", "refatore", "analise este projeto", "find_symbol",
+                "escreva testes", "criar testes", "consulte a documentacao",
+            )
+        )
+        if social and not has_task_action:
+            return "conversation"
+
         # Full pipeline: research + apply + test
         full_markers = [
             "pesquise corrija e teste", "pesquise, corrija e teste",
@@ -229,6 +246,26 @@ class Orchestrator:
         if any(k in text_l for k in code_keywords):
             return "code"
         return "general"
+
+    def _handle_conversational(self, user_message: str) -> Dict[str, Any]:
+        from heilo.core.dialogue import DialogueClassifier
+        sub_intent = DialogueClassifier.classify(user_message) or "greeting"
+        tz = self.get_user_timezone()
+        reply = self.dialogue.respond(
+            intent=sub_intent,
+            message=user_message,
+            user_tz=tz,
+            history=[{"role": m.role, "content": m.content} for m in self.conversation],
+        )
+        self.conversation.append(Message(role="assistant", content=reply))
+        return {
+            "type": "message",
+            "content": reply,
+            "agent": "HEILO",
+            "intent": "conversation",
+            "sub_intent": sub_intent,
+            "source": "conversational_brain",
+        }
 
     def _handle_code_task(self, user_message: str) -> Dict[str, Any]:
         task_id = new_task_id()
