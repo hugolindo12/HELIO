@@ -1,135 +1,135 @@
 [
   {
-    "id": "45bb79d4a2fc90de",
-    "text": "# Padrão RAG (Retrieval-Augmented Generation)\n\nFluxo:\n1. Pergunta do usuário\n2. Retriever busca documentos relevantes (embeddings + vector DB)\n3. Contexto reduzido é enviado ao modelo\n4. Modelo gera resposta fundamentada\n\nBenefícios: menos alucinação, conhecimento atualizável sem retreinar.\n",
-    "source": "documentation/rag_pattern.md",
+    "id": "1b30a573c5882a03",
+    "text": "# Regras de Arquitetura e Segurança da HEILO\n\nEste documento estabelece as diretrizes de governança e princípios operacionais do sistema HEILO.\n\n## 1. Princípio Local-First (Conhecimento Próprio Primeiro)\n- Toda consulta ou problema enviado pelo usuário deve primeiro ser avaliado pelo `KnowledgeBrain`.\n- Se a base local de conhecimento ou histórico de soluções verificadas (`verified_solutions`) possuir uma resposta com confiança superior ao limiar (`>= 0.35`), o sistema responde imediatamente a partir da memória local.\n- Modelos LLM externos (OpenAI, Ollama, etc.) atuam exclusivamente como mecanismo de síntese ou fallback para problemas totalmente inéditos.",
+    "source": "documentation\\architecture_rules.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619792+00:00"
+    "added_at": "2026-09-27T01:33:32.207015+00:00"
   },
   {
-    "id": "8d13d27dc1deee6d",
-    "text": "# HEILO — Conhecimento próprio primeiro\n\nA HEILO não é só um wrapper de modelo de IA.\n\n## Princípio\n\n1. O **repositório** (knowledge/, memory/, verified_solutions/) é a memória e o entendimento da HEILO.\n2. O **modelo** (local ou cloud) é opcional: serve para sintetizar, gerar código novo ou quando o repositório não sabe.\n3. Soluções **verificadas** (teste PASS) têm prioridade sobre texto genérico.\n\n## Como alimentar a HEILO\n\n- Coloque manuais e notas em `knowledge/programming/`, `knowledge/documentation/`, etc.\n- Pipelines que passam em testes gravam em `memory/verified_solutions/`.\n- Use RESEARCH + `save_research_note` para persistir achados.\n\n## Configuração\n\n```python\nconfig.local_first = True\nconfig.knowledge_confidence_threshold = 0.35\nconfig.llm_fallback = True   # False = nunca chama modelo externo\n```",
-    "source": "general/heilo_knowledge_first.md",
+    "id": "aee09fbe097829fe",
+    "text": "## 2. Isolamento Estrito de Workspace\n- Nenhum agente tem permissão para ler ou modificar caminhos fora do diretório autorizado do workspace (`WorkspaceManager`).\n- Tentativas de path traversal (`..`, caminhos absolutos de sistema como `/etc`, `C:\\Windows`, `System32`) são bloqueadas e registradas com exceção de segurança.\n\n## 3. Padrão Checkpoint-Before-Write\n- Antes de qualquer mutação destrutiva em disco (`write_file`, `edit_file`), o `CheckpointManager` cria um snapshot prévio do arquivo.\n- Se a suíte de testes falhar após a alteração (`HEILO TEST` falha), o sistema executa rollback automático imediatamente para restaurar o estado original e impedir arquivos corrompidos.",
+    "source": "documentation\\architecture_rules.md#chunk1",
     "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619832+00:00"
+    "added_at": "2026-09-27T01:33:32.207067+00:00"
   },
   {
-    "id": "bb68c63ff78e6c3d",
-    "text": "Com Ollama local:\n```python\nadapter.switch_provider(\"ollama\", model_name=\"llama3\", base_url=\"http://localhost:11434/v1\")\n```\n",
-    "source": "general/heilo_knowledge_first.md#chunk1",
+    "id": "af7e8b89812bf957",
+    "text": "## 4. Governança por Permissões (Princípio do Menor Privilégio)\n- Operações de leitura (`READ`) são livres.\n- Operações de escrita (`WRITE`) e execução (`EXECUTE`) podem exigir aprovação explícita conforme a política de segurança ativa.\n- Comandos críticos (`CRITICAL`) sempre exigem confirmação do usuário.\n",
+    "source": "documentation\\architecture_rules.md#chunk2",
     "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619839+00:00"
-  },
-  {
-    "id": "cc524fafd4f01e64",
-    "text": "# HEILO Platform\n\nHEILO is an AI agent platform with:\n- Orchestrator (HEILO Principal)\n- Specialized sub-agents (HEILO CODE, future CAD, PC, SAP)\n- Tool system, workspace security, permissions\n- Memory and RAG knowledge base\n- Substitutable model adapter\n\nThe model is only the engine. HEILO is the full system around it.\n",
-    "source": "general/heilo_overview.md",
-    "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619845+00:00"
-  },
-  {
-    "id": "7354cda9fb34eb48",
-    "text": "# Python Asyncio – conceitos básicos\n\n- `async def` define uma corrotina\n- `await` suspende até a operação assíncrona completar\n- `asyncio.run(main())` é o entrypoint comum\n- Use `asyncio.gather` para concorrência\n\nExemplo:\n```python\nimport asyncio\n\nasync def fetch(url):\n    await asyncio.sleep(0.1)\n    return url\n\nasync def main():\n    results = await asyncio.gather(fetch(\"a\"), fetch(\"b\"))\n    print(results)\n\nasyncio.run(main())\n```\n",
-    "source": "programming/python_async.md",
-    "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619852+00:00"
-  },
-  {
-    "id": "0994d847dec92c0f",
-    "text": "# Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do desconto em vez do preço final.\n\nIncorreto:\n```python\nreturn total * percent / 100\n```\n\nCorreto (preço após desconto):\n```python\nreturn total * (1 - percent / 100)\n```\n\nExemplo: total=60, percent=10 → resultado esperado = 54.0\n",
-    "source": "programming/python_discounts.md",
-    "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619860+00:00"
-  },
-  {
-    "id": "980975c1fdf8293a",
-    "text": "# verified_solution: Sketch nao atualizava apos selecao\n\n- **id:** `20260926_233303_241186`\n- **created:** 2026-09-26T23:33:03.241340+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava apos selecao\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
-    "source": "verified_solutions/20260926_233303_241186_sketch_nao_atualizava_apos_selecao.md",
-    "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619865+00:00"
-  },
-  {
-    "id": "9489b05943b90e19",
-    "text": "# verified_solution: corrigir desconto\n\n- **id:** `20260926_233306_130993`\n- **created:** 2026-09-26T23:33:06.131042+00:00\n- **confidence:** verified\n- **project:** demo_project\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\ncorrigir desconto\n\n## Correction\nFINAL: fixed discount\n\n## Files\n- `main.py`\n\n## Tags\ndesconto, python\n",
-    "source": "verified_solutions/20260926_233306_130993_corrigir_desconto.md",
-    "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619870+00:00"
-  },
-  {
-    "id": "95db0a87e01ffc1b",
-    "text": "# verified_solution: Sketch nao atualizava\n\n- **id:** `20260926_233328_556101`\n- **created:** 2026-09-26T23:33:28.556145+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
-    "source": "verified_solutions/20260926_233328_556101_sketch_nao_atualizava.md",
-    "metadata": {},
-    "added_at": "2026-09-27T00:42:29.619875+00:00"
+    "added_at": "2026-09-27T01:33:32.207083+00:00"
   },
   {
     "id": "b174c90a21266cf2",
     "text": "# RAG com vetores densos (HEILO)\n\n## Backends\n\n| Backend | Tipo | Requisito |\n|---|---|---|\n| `lsa` | denso (SVD sobre TF-IDF) | só NumPy — padrão |\n| `ollama` | denso neural | Ollama + modelo embed (`nomic-embed-text`) |\n| `sentence-transformers` | denso neural | `pip install sentence-transformers` |\n| `tfidf` | esparso normalizado | legado |\n\n## Configuração\n\n```bash\nexport HEILO_EMBED_BACKEND=auto   # lsa | ollama | st | tfidf\nexport HEILO_LSA_DIM=64\nexport HEILO_USE_ST=1             # força ST se instalado\nexport HEILO_OLLAMA_EMBED_MODEL=nomic-embed-text\nexport OLLAMA_HOST=http://127.0.0.1:11434\n```\n\n## Uso\n\n```python\nfrom heilo.rag.retriever import Retriever\nr = Retriever(mode=\"hybrid\")\nr.index_knowledge(force=True)\nr.search(\"desconto percentual\", top_k=5)\n```\n\nAPI: `POST /api/search` · `POST /api/search/reindex`\n",
     "source": "documentation\\dense_rag.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798016+00:00"
+    "added_at": "2026-09-27T01:33:32.207101+00:00"
   },
   {
     "id": "50c3814f6e599903",
     "text": "# Padrão RAG (Retrieval-Augmented Generation)\n\nFluxo:\n1. Pergunta do usuário\n2. Retriever busca documentos relevantes (embeddings + vector DB)\n3. Contexto reduzido é enviado ao modelo\n4. Modelo gera resposta fundamentada\n\nBenefícios: menos alucinação, conhecimento atualizável sem retreinar.\n",
     "source": "documentation\\rag_pattern.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798065+00:00"
+    "added_at": "2026-09-27T01:33:32.207113+00:00"
   },
   {
     "id": "ae6c620437f55b8c",
     "text": "# HEILO — Conhecimento próprio primeiro\n\nA HEILO não é só um wrapper de modelo de IA.\n\n## Princípio\n\n1. O **repositório** (knowledge/, memory/, verified_solutions/) é a memória e o entendimento da HEILO.\n2. O **modelo** (local ou cloud) é opcional: serve para sintetizar, gerar código novo ou quando o repositório não sabe.\n3. Soluções **verificadas** (teste PASS) têm prioridade sobre texto genérico.\n\n## Como alimentar a HEILO\n\n- Coloque manuais e notas em `knowledge/programming/`, `knowledge/documentation/`, etc.\n- Pipelines que passam em testes gravam em `memory/verified_solutions/`.\n- Use RESEARCH + `save_research_note` para persistir achados.\n\n## Configuração\n\n```python\nconfig.local_first = True\nconfig.knowledge_confidence_threshold = 0.35\nconfig.llm_fallback = True   # False = nunca chama modelo externo\n```",
     "source": "general\\heilo_knowledge_first.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798086+00:00"
+    "added_at": "2026-09-27T01:33:32.207127+00:00"
   },
   {
     "id": "015c50298b4868e6",
     "text": "Com Ollama local:\n```python\nadapter.switch_provider(\"ollama\", model_name=\"llama3\", base_url=\"http://localhost:11434/v1\")\n```\n",
     "source": "general\\heilo_knowledge_first.md#chunk1",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798099+00:00"
+    "added_at": "2026-09-27T01:33:32.207138+00:00"
   },
   {
     "id": "afd01e557d4b82d7",
     "text": "# HEILO Platform\n\nHEILO is an AI agent platform with:\n- Orchestrator (HEILO Principal)\n- Specialized sub-agents (HEILO CODE, future CAD, PC, SAP)\n- Tool system, workspace security, permissions\n- Memory and RAG knowledge base\n- Substitutable model adapter\n\nThe model is only the engine. HEILO is the full system around it.\n",
     "source": "general\\heilo_overview.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798111+00:00"
+    "added_at": "2026-09-27T01:33:32.207149+00:00"
+  },
+  {
+    "id": "541a7ed98df0f9f6",
+    "text": "# Padrões de Testes com Pytest (HEILO Standard)\n\nEste documento define como o subagente HEILO TEST e desenvolvedores devem escrever e validar suítes de testes na plataforma.\n\n## 1. Padrão Arrange-Act-Assert (AAA)\nTodo teste unitário deve seguir a estrutura tripartite:\n- **Arrange (Preparação):** Configuração de variáveis, mocks e estado inicial.\n- **Act (Execução):** Chamada da função ou método a ser testado.\n- **Assert (Validação):** Verificação rigorosa do resultado esperado.\n\n```python\ndef test_calculate_discounted_total_success():\n    # Arrange\n    prices = [10.0, 20.0, 30.0]\n    discount = 10.0\n    expected = 54.0\n\n    # Act\n    actual = calculate_discounted_total(prices, discount)\n\n    # Assert\n    assert abs(actual - expected) < 1e-6\n```",
+    "source": "programming\\pytest_standards.md",
+    "metadata": {},
+    "added_at": "2026-09-27T01:33:32.207159+00:00"
+  },
+  {
+    "id": "c7af0f055291e04a",
+    "text": "## 2. Cobertura de Casos Limite (Edge Cases)\nSempre teste cenários adversos e de fronteira:\n1. **Coleções vazias:** lista de preços vazia `[]`.\n2. **Valores nulos ou neutros:** desconto de 0% ou 100%.\n3. **Casos inválidos:** valores negativos ou percentuais acima de 100%.\n\n```python\nimport pytest\n\ndef test_calculate_discount_invalid_percent_raises():\n    with pytest.raises(ValueError, match=\"entre 0 e 100\"):\n        calculate_discounted_total([100.0], -5.0)\n```\n\n## 3. Testes Parametrizados (`@pytest.mark.parametrize`)\nEvite duplicar código de teste para diferentes entradas e saídas. Utilize parametrização:\n\n```python\nimport pytest",
+    "source": "programming\\pytest_standards.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T01:33:32.207170+00:00"
+  },
+  {
+    "id": "c5f7b4ca92b74c26",
+    "text": "@pytest.mark.parametrize(\"prices,percent,expected\", [\n    ([100.0], 0.0, 100.0),\n    ([100.0], 20.0, 80.0),\n    ([50.0, 50.0], 50.0, 50.0),\n    ([10.0, 20.0, 30.0], 10.0, 54.0),\n])\ndef test_discount_matrix(prices, percent, expected):\n    assert abs(calculate_discounted_total(prices, percent) - expected) < 1e-6\n```\n\n## 4. Uso de Fixtures para Isolamento\nUtilize `tmp_path` nativo do pytest para operações de sistema de arquivos e evite compartilhar estado mutável entre testes.",
+    "source": "programming\\pytest_standards.md#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T01:33:32.207180+00:00"
   },
   {
     "id": "06c64bea7df83324",
     "text": "# Python Asyncio – conceitos básicos\n\n- `async def` define uma corrotina\n- `await` suspende até a operação assíncrona completar\n- `asyncio.run(main())` é o entrypoint comum\n- Use `asyncio.gather` para concorrência\n\nExemplo:\n```python\nimport asyncio\n\nasync def fetch(url):\n    await asyncio.sleep(0.1)\n    return url\n\nasync def main():\n    results = await asyncio.gather(fetch(\"a\"), fetch(\"b\"))\n    print(results)\n\nasyncio.run(main())\n```\n",
     "source": "programming\\python_async.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798124+00:00"
+    "added_at": "2026-09-27T01:33:32.207192+00:00"
+  },
+  {
+    "id": "66aeb059d8e8106f",
+    "text": "# Padrões de Código Limpo e Boas Práticas em Python (HEILO Standard)\n\nEste documento define as diretrizes fundamentais de engenharia de software para o subagente HEILO CODE e desenvolvedores da plataforma.\n\n## 1. Tipagem Estrita (Type Annotations)\n- Todas as funções e métodos devem incluir anotações de tipo completas em argumentos e retorno.\n- Utilize `Optional[T]` ou `T | None` para valores opcionais.\n- Utilize `List[T]`, `Dict[K, V]` ou as versões nativas do Python 3.9+ (`list[T]`, `dict[K, V]`).\n\nExemplo:\n```python\nfrom typing import Optional, List\n\ndef calculate_discounted_total(prices: list[float], discount_percent: float) -> float:\n    if discount_percent < 0 or discount_percent > 100:\n        raise ValueError(\"O percentual de desconto deve estar entre 0 e 100\")\n    total = sum(prices)\n    return total * (1.0 - (discount_percent / 100.0))\n```",
+    "source": "programming\\python_clean_code.md",
+    "metadata": {},
+    "added_at": "2026-09-27T01:33:32.207202+00:00"
+  },
+  {
+    "id": "fbffe95cc08b1f5c",
+    "text": "## 2. Tratamento de Exceções Explicito\n- Nunca use `except:` genérico que engula exceções silenciosamente.\n- Capture exceções específicas (`ValueError`, `FileNotFoundError`, `KeyError`).\n- Forneça mensagens de erro claras com o contexto do problema.\n\n## 3. Evitar Argumentos Padrão Mutáveis\n- Nunca use listas ou dicionários como valores padrão de argumentos (`def foo(items=[])`).\n- Use `None` e inicialize dentro da função:\n```python\ndef process_items(items: Optional[list[str]] = None) -> list[str]:\n    if items is None:\n        items = []\n    return [i.strip() for i in items]\n```\n\n## 4. Estruturas Imutáveis e Dataclasses\n- Prefira `@dataclass` com `frozen=True` para objetos de valor (Value Objects).\n- Mantenha funções puras e isoladas sempre que possível, facilitando testes unitários sem efeitos colaterais.",
+    "source": "programming\\python_clean_code.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T01:33:32.207213+00:00"
+  },
+  {
+    "id": "2ef9ad9393aee1da",
+    "text": "## 5. Gerenciadores de Contexto (Context Managers)\n- Sempre utilize `with` para abrir arquivos, conexões de banco de dados ou sockets de rede, garantindo o fechamento seguro mesmo em caso de erro.\n```python\nwith open(file_path, \"r\", encoding=\"utf-8\") as f:\n    content = f.read()\n```\n",
+    "source": "programming\\python_clean_code.md#chunk2",
+    "metadata": {},
+    "added_at": "2026-09-27T01:33:32.207223+00:00"
   },
   {
     "id": "33a961e1fae84f51",
     "text": "# Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do desconto em vez do preço final.\n\nIncorreto:\n```python\nreturn total * percent / 100\n```\n\nCorreto (preço após desconto):\n```python\nreturn total * (1 - percent / 100)\n```\n\nExemplo: total=60, percent=10 → resultado esperado = 54.0\n",
     "source": "programming\\python_discounts.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798137+00:00"
+    "added_at": "2026-09-27T01:33:32.207235+00:00"
   },
   {
     "id": "1a325b8c67a9aaed",
     "text": "# verified_solution: Sketch nao atualizava apos selecao\n\n- **id:** `20260926_233303_241186`\n- **created:** 2026-09-26T23:33:03.241340+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava apos selecao\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
     "source": "verified_solutions\\20260926_233303_241186_sketch_nao_atualizava_apos_selecao.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798148+00:00"
+    "added_at": "2026-09-27T01:33:32.207246+00:00"
   },
   {
     "id": "05fc6c89f3dd6626",
     "text": "# verified_solution: corrigir desconto\n\n- **id:** `20260926_233306_130993`\n- **created:** 2026-09-26T23:33:06.131042+00:00\n- **confidence:** verified\n- **project:** demo_project\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\ncorrigir desconto\n\n## Correction\nFINAL: fixed discount\n\n## Files\n- `main.py`\n\n## Tags\ndesconto, python\n",
     "source": "verified_solutions\\20260926_233306_130993_corrigir_desconto.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798159+00:00"
+    "added_at": "2026-09-27T01:33:32.207272+00:00"
   },
   {
     "id": "452c44bb64bc3512",
     "text": "# verified_solution: Sketch nao atualizava\n\n- **id:** `20260926_233328_556101`\n- **created:** 2026-09-26T23:33:28.556145+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
     "source": "verified_solutions\\20260926_233328_556101_sketch_nao_atualizava.md",
     "metadata": {},
-    "added_at": "2026-09-27T00:51:42.798169+00:00"
+    "added_at": "2026-09-27T01:33:32.207282+00:00"
   }
 ]
