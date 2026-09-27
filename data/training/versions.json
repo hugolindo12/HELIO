@@ -345,6 +345,115 @@
           "melhor_perda_val": 2.8049698076223137
         }
       }
+    },
+    {
+      "versao": "v1.1",
+      "arquivo": "v1.1/heilo_seed.pt",
+      "criada": "2026-09-27T18:22:29+00:00",
+      "pai": null,
+      "ciclo": null,
+      "dataset_version": 1,
+      "origem": "pré-treino em texto geral PT + SFT com o dataset HEILO (tokenizer BPE próprio)",
+      "eval": {
+        "acerto": 0.1791,
+        "acerto_amostrado": 0.1642,
+        "consistencia": 0.9353,
+        "perda": 2.1408,
+        "perplexidade": 8.506,
+        "seguir_instrucoes": 0.1667,
+        "generalizacao": 0.1,
+        "parafrase": 0.2195,
+        "por_categoria": {
+          "cnc": {
+            "acerto": 0.0,
+            "itens": 12
+          },
+          "conversa": {
+            "acerto": 0.4,
+            "itens": 10
+          },
+          "ferramentas": {
+            "acerto": 0.0,
+            "itens": 4
+          },
+          "honestidade": {
+            "acerto": 0.8,
+            "itens": 5
+          },
+          "identidade": {
+            "acerto": 0.3333,
+            "itens": 6
+          },
+          "instrucao": {
+            "acerto": 0.1667,
+            "itens": 6
+          },
+          "matematica": {
+            "acerto": 0.0,
+            "itens": 12
+          },
+          "python": {
+            "acerto": 0.0833,
+            "itens": 12
+          }
+        },
+        "itens": 67,
+        "sonda": {
+          "itens": 24,
+          "acerto": 0.125,
+          "acerto_amostrado": 0.0972,
+          "consistencia": 0.9306,
+          "por_categoria": {
+            "cnc": {
+              "acerto": 0.0,
+              "itens": 2
+            },
+            "conversa": {
+              "acerto": 0.3333,
+              "itens": 3
+            },
+            "instrucao": {
+              "acerto": 0.0,
+              "itens": 4
+            },
+            "logica": {
+              "acerto": 0.3333,
+              "itens": 6
+            },
+            "portugues": {
+              "acerto": 0.0,
+              "itens": 4
+            },
+            "programacao": {
+              "acerto": 0.0,
+              "itens": 5
+            }
+          }
+        },
+        "perda_por_caractere": 0.7788,
+        "tokenizer": "bpe"
+      },
+      "comparacao": "vs v0.3: sonda +2, eval -6 itens (generalizou melhor, mas perdeu muito do que sabia: decisão manual)",
+      "status": "rejeitada",
+      "treino": {
+        "base": "v1.0",
+        "pretreino": {
+          "passos": 44484,
+          "minutos": 165.9,
+          "ultimo": {
+            "passo": 44484,
+            "perda_treino": 3.2244,
+            "perda_val": 3.2313,
+            "ppl_val": 25.31,
+            "min": 165.9
+          }
+        },
+        "sft": {
+          "perda_val_inicial": 6.937263548843504,
+          "melhor_perda_val": 2.686312657954499
+        },
+        "sft_misturado": true
+      }
     }
   ],
   "nota": "Versões em models/seed/versions/<versão>/heilo_seed.pt. A ativa é copiada para models/seed/weights/heilo_seed.pt. Auditoria: docs/AUDITORIA_TREINAMENTO_2026-09-27.md"
