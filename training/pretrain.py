@@ -225,13 +225,20 @@ def _perda_sft(modelo, itens, pad, dev, amp):
 
 def ajustar_conversa(modelo, treino: List[Dict], val: List[Dict], passos: int = 1500, lote: int = 32,
                      lr: float = 1e-4, avaliar_cada: int = 100, paciencia: int = 4,
-                     log: Log = print) -> Dict:
-    """SFT com parada antecipada: guarda o estado com MENOR perda de validação."""
+                     log: Log = print, pasta_corpus: Optional[Path] = None,
+                     peso_texto: float = 0.3, lote_texto: int = 8) -> Dict:
+    """SFT com parada antecipada: guarda o estado com MENOR perda de validação.
+
+    pasta_corpus (opcional): a cada passo soma `peso_texto` × perda de modelagem de
+    linguagem num lote do corpus do pré-treino. Evita que um dataset de conversa
+    pequeno faça o modelo esquecer o português e colar em poucas frases prontas
+    (o que aconteceu na v1.0)."""
     dev = next(modelo.parameters()).device.type
     amp = dev == "cuda"
     tok = modelo.tokenizer
     T = modelo.cfg.block_size
     it_tr, it_va = _exemplos_sft(treino, tok, T), _exemplos_sft(val, tok, T)
+    texto = _abrir_bin(Path(pasta_corpus), "train") if pasta_corpus else None
     opt = torch.optim.AdamW(modelo.parameters(), lr=lr, weight_decay=0.05)
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
     melhor, melhor_estado, sem_melhora, hist = None, None, 0, []
@@ -244,8 +251,15 @@ def ajustar_conversa(modelo, treino: List[Dict], val: List[Dict], passos: int = 
         with torch.autocast("cuda", dtype=torch.float16, enabled=amp):
             logits, _ = modelo(x)
         loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), y.view(-1), ignore_index=-100)
+        if texto is not None and peso_texto > 0:
+            xt, yt = _lote(texto, T, lote_texto, dev)
+            with torch.autocast("cuda", dtype=torch.float16, enabled=amp):
+                _, perda_txt = modelo(xt, yt)
+            loss_total = loss + peso_texto * perda_txt.float()
+        else:
+            loss_total = loss
         opt.zero_grad(set_to_none=True)
-        scaler.scale(loss).backward()
+        scaler.scale(loss_total).backward()
         scaler.unscale_(opt)
         torch.nn.utils.clip_grad_norm_(modelo.parameters(), 1.0)
         scaler.step(opt)

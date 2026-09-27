@@ -170,8 +170,10 @@ class Orchestrator:
             agent.tools = self.tools
         self.code_agent.checkpoints = self.checkpoints
 
-    def chat(self, user_message: str) -> Dict[str, Any]:
-        result = self._chat(user_message)
+    def chat(self, user_message: str, somente_conversa: bool = False) -> Dict[str, Any]:
+        """somente_conversa=True (interface de chat): não dispara agentes de código,
+        teste ou pesquisa; responde com conhecimento local + HEILO Seed."""
+        result = self._chat(user_message, somente_conversa=somente_conversa)
         # HEILO Memory: registra a troca (memória local — NÃO treina nada)
         if isinstance(result, dict) and result.get("content"):
             try:
@@ -220,7 +222,7 @@ class Orchestrator:
     # compatibilidade com o nome antigo
     comparar_cerebros = comparar_modelos
 
-    def _chat(self, user_message: str) -> Dict[str, Any]:
+    def _chat(self, user_message: str, somente_conversa: bool = False) -> Dict[str, Any]:
         self.conversation.append(Message(role="user", content=user_message))
 
         msg_l = user_message.lower().strip()
@@ -229,6 +231,8 @@ class Orchestrator:
                 return self._resume_code_task()
 
         intent = self._classify_intent(user_message)
+        if somente_conversa and intent != "conversation":
+            intent = "general"
         if intent == "conversation":
             return self._handle_conversational(user_message)
         if intent == "pipeline_research_code_test":
@@ -242,7 +246,9 @@ class Orchestrator:
         if intent == "code":
             return self._handle_code_task(user_message)
         # Local-first: answer from HEILO knowledge repository when possible
-        if config.local_first:
+        # Na interface de chat quem responde é o HEILO Seed; o repositório de
+        # conhecimento só entra se o modelo não tiver resposta.
+        if config.local_first and not somente_conversa:
             local = self._try_local_answer(user_message)
             if local is not None:
                 self.conversation.append(Message(role="assistant", content=local["content"]))
@@ -250,6 +256,11 @@ class Orchestrator:
 
         reply, qual = self._responder_com_modelo()
         source = f"model_{qual}"
+        if not reply and somente_conversa:
+            local = self._try_local_answer(user_message)
+            if local is not None:
+                self.conversation.append(Message(role="assistant", content=local["content"]))
+                return local
         if not reply:
             reply = self._general_reply(user_message)
             source = "llm_fallback"

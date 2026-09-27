@@ -112,11 +112,17 @@ def executar_teste(codigo: str, teste: str, tempo: int = 5) -> bool:
 
 def completar(modelo, prompt: str, temperatura: float = 1.0, top_k: int = 1,
               max_novos: int = 160) -> str:
+    """Completa o corpo da função. O prompt é codificado SEM o '\n' final: no treino o
+    corpo começa com o token '\n   ' (quebra + indentação); um '\n' solto no fim do
+    prompt é uma fronteira de token que o modelo quase nunca viu e o faz recomeçar
+    em coluna 0 (bug da avaliação v0.1, que deu corpo vazio em tudo)."""
     tok = modelo.tokenizer
-    ids = [tok.doc] + tok.encode(prompt)
+    ids = [tok.doc] + tok.encode(prompt.rstrip("\n"))
     novos = modelo.gerar(ids[-modelo.cfg.block_size:], max_novos=max_novos, temperatura=temperatura,
                          top_k=top_k, parar_em=(tok.fim, tok.doc))
-    return tok.decode(novos)
+    texto = tok.decode(novos)
+    # descarta o resto da linha do prompt (normalmente vazio) e a quebra de linha
+    return texto.split("\n", 1)[1] if "\n" in texto else ""
 
 
 def avaliar_codigo(modelo, amostras: int = 5, log: Callable[[str], None] = print) -> Dict:

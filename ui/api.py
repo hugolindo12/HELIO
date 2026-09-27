@@ -15,6 +15,9 @@ from heilo.config import BASE_DIR
 app = FastAPI(title="HEILO", version="0.1.0")
 orchestrator = Orchestrator()
 
+from heilo.ui.chat_api import router as _chat_router  # noqa: E402
+app.include_router(_chat_router)
+
 static_dir = Path(__file__).parent / "static"
 static_dir.mkdir(exist_ok=True)
 
@@ -38,6 +41,11 @@ async def index():
     if index_path.exists():
         return FileResponse(index_path)
     return HTMLResponse("<h1>HEILO</h1><p>UI not found. Place index.html in ui/static/</p>")
+
+
+@app.get("/antigo", response_class=HTMLResponse)
+async def index_antigo():
+    return FileResponse(static_dir / "antigo.html")
 
 
 @app.post("/api/chat")
