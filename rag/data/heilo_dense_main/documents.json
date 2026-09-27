@@ -1,0 +1,65 @@
+[
+  {
+    "id": "45bb79d4a2fc90de",
+    "text": "# Padrão RAG (Retrieval-Augmented Generation)\n\nFluxo:\n1. Pergunta do usuário\n2. Retriever busca documentos relevantes (embeddings + vector DB)\n3. Contexto reduzido é enviado ao modelo\n4. Modelo gera resposta fundamentada\n\nBenefícios: menos alucinação, conhecimento atualizável sem retreinar.\n",
+    "source": "documentation/rag_pattern.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051665+00:00"
+  },
+  {
+    "id": "8d13d27dc1deee6d",
+    "text": "# HEILO — Conhecimento próprio primeiro\n\nA HEILO não é só um wrapper de modelo de IA.\n\n## Princípio\n\n1. O **repositório** (knowledge/, memory/, verified_solutions/) é a memória e o entendimento da HEILO.\n2. O **modelo** (local ou cloud) é opcional: serve para sintetizar, gerar código novo ou quando o repositório não sabe.\n3. Soluções **verificadas** (teste PASS) têm prioridade sobre texto genérico.\n\n## Como alimentar a HEILO\n\n- Coloque manuais e notas em `knowledge/programming/`, `knowledge/documentation/`, etc.\n- Pipelines que passam em testes gravam em `memory/verified_solutions/`.\n- Use RESEARCH + `save_research_note` para persistir achados.\n\n## Configuração\n\n```python\nconfig.local_first = True\nconfig.knowledge_confidence_threshold = 0.35\nconfig.llm_fallback = True   # False = nunca chama modelo externo\n```",
+    "source": "general/heilo_knowledge_first.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051703+00:00"
+  },
+  {
+    "id": "bb68c63ff78e6c3d",
+    "text": "Com Ollama local:\n```python\nadapter.switch_provider(\"ollama\", model_name=\"llama3\", base_url=\"http://localhost:11434/v1\")\n```\n",
+    "source": "general/heilo_knowledge_first.md#chunk1",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051709+00:00"
+  },
+  {
+    "id": "cc524fafd4f01e64",
+    "text": "# HEILO Platform\n\nHEILO is an AI agent platform with:\n- Orchestrator (HEILO Principal)\n- Specialized sub-agents (HEILO CODE, future CAD, PC, SAP)\n- Tool system, workspace security, permissions\n- Memory and RAG knowledge base\n- Substitutable model adapter\n\nThe model is only the engine. HEILO is the full system around it.\n",
+    "source": "general/heilo_overview.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051713+00:00"
+  },
+  {
+    "id": "7354cda9fb34eb48",
+    "text": "# Python Asyncio – conceitos básicos\n\n- `async def` define uma corrotina\n- `await` suspende até a operação assíncrona completar\n- `asyncio.run(main())` é o entrypoint comum\n- Use `asyncio.gather` para concorrência\n\nExemplo:\n```python\nimport asyncio\n\nasync def fetch(url):\n    await asyncio.sleep(0.1)\n    return url\n\nasync def main():\n    results = await asyncio.gather(fetch(\"a\"), fetch(\"b\"))\n    print(results)\n\nasyncio.run(main())\n```\n",
+    "source": "programming/python_async.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051717+00:00"
+  },
+  {
+    "id": "0994d847dec92c0f",
+    "text": "# Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do desconto em vez do preço final.\n\nIncorreto:\n```python\nreturn total * percent / 100\n```\n\nCorreto (preço após desconto):\n```python\nreturn total * (1 - percent / 100)\n```\n\nExemplo: total=60, percent=10 → resultado esperado = 54.0\n",
+    "source": "programming/python_discounts.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051722+00:00"
+  },
+  {
+    "id": "980975c1fdf8293a",
+    "text": "# verified_solution: Sketch nao atualizava apos selecao\n\n- **id:** `20260926_233303_241186`\n- **created:** 2026-09-26T23:33:03.241340+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava apos selecao\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
+    "source": "verified_solutions/20260926_233303_241186_sketch_nao_atualizava_apos_selecao.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051726+00:00"
+  },
+  {
+    "id": "9489b05943b90e19",
+    "text": "# verified_solution: corrigir desconto\n\n- **id:** `20260926_233306_130993`\n- **created:** 2026-09-26T23:33:06.131042+00:00\n- **confidence:** verified\n- **project:** demo_project\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\ncorrigir desconto\n\n## Correction\nFINAL: fixed discount\n\n## Files\n- `main.py`\n\n## Tags\ndesconto, python\n",
+    "source": "verified_solutions/20260926_233306_130993_corrigir_desconto.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051729+00:00"
+  },
+  {
+    "id": "95db0a87e01ffc1b",
+    "text": "# verified_solution: Sketch nao atualizava\n\n- **id:** `20260926_233328_556101`\n- **created:** 2026-09-26T23:33:28.556145+00:00\n- **confidence:** verified\n- **project:** HL-3D\n- **agent:** HEILO_CODE\n- **tests_passed:** True\n\n## Problem\nSketch nao atualizava\n\n## Error\n```\nevento nao conectado\n```\n\n## Correction\nconectar evento X ao controlador Y\n\n## Files\n- `SketchController.cs`\n\n## Tags\nsketch, csharp\n",
+    "source": "verified_solutions/20260926_233328_556101_sketch_nao_atualizava.md",
+    "metadata": {},
+    "added_at": "2026-09-27T00:45:52.051732+00:00"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-09-26T22:54:33.448874",
+  "problem": "Pesquise como calcular desconto percentual em Python corretamente.",
+  "status": "generated",
+  "result_preview": "FINAL: Síntese da pesquisa\n\n## Resumo\nPara calcular o preço final após um desconto percentual em Python, use:\n\n```python\nfinal = total * (1 - percent / 100)\n```\n\nErro comum: `total * percent / 100` retorna só o valor do desconto, não o preço final.\n\nExemplo: total=60, percent=10 → final=54.0\n\n## Fontes\n- knowledge/programming/python_discounts.md\n- Documentação comum de cálculo comercial\n\nSources collected:\n- [programming/python_discounts.md] (score=0.35) # Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do de\n- [programming/python_async.md] (score=0.06) # Python Asyncio – conceitos básicos\n\n- `async def` define uma corrotina\n- `a\n- [programming/python_discounts.md] # Python – Cálculo de desconto  Erro comum: calcular apenas o valor do desconto em vez\n- [programming/python_async.md] # Python Asyncio – conceitos básicos  - `async def` define uma corrotina - `await` suspend\n- [store.py] \"\"\" HEILO Knowledge Store + basic retriever (keyword for v1) \"\"\" from pathlib import ",
+  "tools_used": [
+    "search_knowledge"
+  ]
+}

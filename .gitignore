@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+htmlcov/
+.coverage
+logs/
+rag/data/**/*.npy
+workspace/**/.heilo/
+.env

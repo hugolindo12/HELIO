@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-09-27T01:13:51.545625+00:00",
+  "problem": "pesquise rock",
+  "status": "generated",
+  "result_preview": "FINAL: Síntese da pesquisa\n\n## Resumo\nPara calcular o preço final após um desconto percentual em Python, use:\n\n```python\nfinal = total * (1 - percent / 100)\n```\n\nErro comum: `total * percent / 100` retorna só o valor do desconto, não o preço final.\n\nExemplo: total=60, percent=10 → final=54.0\n\n## Fontes\n- knowledge/programming/python_discounts.md\n- Documentação comum de cálculo comercial",
+  "tools_used": [
+    "search_knowledge"
+  ]
+}
