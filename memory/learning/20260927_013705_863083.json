@@ -1,0 +1,27 @@
+{
+  "entry_id": "20260927_013705_863083",
+  "created_at": "2026-09-27T01:37:05.863122+00:00",
+  "kind": "verified_solution",
+  "problem": "Com base na pesquisa abaixo, aplique a solucao no projeto do workspace.\nPedido original do usuario: Pesquise a solucao de desconto em Python, aplique no projeto e rode os testes.\n\n--- Pesquisa (HEILO RESEARCH) ---\n**HEILO** (via HEILO RESEARCH)\n\nFINAL: Síntese da pesquisa\n\n## Resumo\nPara calcular o preço final após um desconto percentual em Python, use:\n\n```python\nfinal = total * (1 - percent / 100)\n```\n\nErro comum: `total * percent / 100` retorna só o valor do desconto, não o preço final.\n\nExemplo: total=60, percent=10 -> final=54.0\n\n## Fontes\n- knowledge/programming/python_discounts.md\n- Documentação comum de cálculo comercial\n\nSources collected:\n- [programming\\python_discounts.md] (score=0.72) # Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do de\n- [programming\\pytes",
+  "error_message": "",
+  "cause": "",
+  "correction": "FINAL: Correção concluída com sucesso.\n\nProblema: a função apply_discount calculava o valor do desconto em vez do preço final.\nCausa: return total * percent / 100\nCorreção: return total * (1 - percent / 100)\nArquivo: main.py\nTestes: PASS",
+  "files": [
+    "main.py"
+  ],
+  "tests_passed": true,
+  "project": "demo_project",
+  "agent": "",
+  "source": "runtime",
+  "confidence": "verified",
+  "tags": [
+    "discount",
+    "desconto",
+    "pytest",
+    "python"
+  ],
+  "raw": {
+    "status": "success",
+    "step_count": 5
+  }
+}

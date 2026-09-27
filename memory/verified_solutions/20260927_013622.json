@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-09-27T01:36:22.750254+00:00",
+  "problem": "Pesquise a solucao de desconto em Python, aplique no projeto e rode os testes.",
+  "status": "generated",
+  "result_preview": "FINAL: Síntese da pesquisa\n\n## Resumo\nPara calcular o preço final após um desconto percentual em Python, use:\n\n```python\nfinal = total * (1 - percent / 100)\n```\n\nErro comum: `total * percent / 100` retorna só o valor do desconto, não o preço final.\n\nExemplo: total=60, percent=10 -> final=54.0\n\n## Fontes\n- knowledge/programming/python_discounts.md\n- Documentação comum de cálculo comercial\n\nSources collected:\n- [programming\\python_discounts.md] (score=0.72) # Python – Cálculo de desconto\n\nErro comum: calcular apenas o valor do de\n- [programming\\pytest_standards.md#chunk1] (score=0.46) ## 2. Cobertura de Casos Limite (Edge Cases)\nSempre teste cenários\n- [programming\\python_clean_code.md] (score=0.43) # Padrões de Código Limpo e Boas Práticas em Python (HEILO Standard)\n\nEs\n- [verified_solutions\\20260926_233306_130993_corrigir_desconto.md] (score=0.40) # verified_solution: corrigir desconto\n\n- \n- [programming\\python_clean_code.md#chunk2] (score=0.40) ## 5. Gerenciadores de Contexto (Context",
+  "tools_used": [
+    "search_knowledge"
+  ]
+}

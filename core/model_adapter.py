@@ -127,7 +127,7 @@ class StubProvider(BaseModelProvider):
                     "```\n\n"
                     "Erro comum: `total * percent / 100` retorna só o valor do desconto, "
                     "não o preço final.\n\n"
-                    "Exemplo: total=60, percent=10 → final=54.0\n\n"
+                    "Exemplo: total=60, percent=10 -> final=54.0\n\n"
                     "## Fontes\n"
                     "- knowledge/programming/python_discounts.md\n"
                     "- Documentação comum de cálculo comercial"

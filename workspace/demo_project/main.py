@@ -7,7 +7,7 @@ def calculate_total(prices):
     return total
 
 def apply_discount(total, percent):
-    return total * (1 - percent / 100)
+    return total * percent / 100
 
 if __name__ == "__main__":
     prices = [10, 20, 30]
