@@ -1,0 +1,1089 @@
+{
+  "itens": 67,
+  "perda": 2.7321,
+  "perplexidade": 15.365,
+  "perda_por_caractere": 0.994,
+  "acerto": 0.2687,
+  "acerto_amostrado": 0.204,
+  "consistencia": 0.9403,
+  "seguir_instrucoes": 0.1667,
+  "generalizacao": 0.2,
+  "parafrase": 0.3171,
+  "por_categoria": {
+    "cnc": {
+      "acerto": 0.0,
+      "itens": 12
+    },
+    "conversa": {
+      "acerto": 0.7,
+      "itens": 10
+    },
+    "ferramentas": {
+      "acerto": 0.0,
+      "itens": 4
+    },
+    "honestidade": {
+      "acerto": 0.6,
+      "itens": 5
+    },
+    "identidade": {
+      "acerto": 0.5,
+      "itens": 6
+    },
+    "instrucao": {
+      "acerto": 0.1667,
+      "itens": 6
+    },
+    "matematica": {
+      "acerto": 0.0833,
+      "itens": 12
+    },
+    "python": {
+      "acerto": 0.25,
+      "itens": 12
+    }
+  },
+  "segundos": 587.0,
+  "detalhes": [
+    {
+      "id": "heilo_eval_v1-000",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "opa, tudo tranquilo?",
+      "resposta": "Tudo bem! Me diz o que você prefere?",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 1.2727156419020433
+    },
+    {
+      "id": "heilo_eval_v1-001",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "bom dia, heilo!",
+      "resposta": "Bom dia! Bora começar o dia com tudo. O que tem pra hoje?",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 0.5347745815912882
+    },
+    {
+      "id": "heilo_eval_v1-002",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "boa noite pra você",
+      "resposta": "Boa noite pra você!",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 2.0115266279740767
+    },
+    {
+      "id": "heilo_eval_v1-003",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "muito obrigado pela ajuda",
+      "resposta": "Obrigada! Quer fazer alguma coisa antes, eu não devolve minha pessoa.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.8806129455566406
+    },
+    {
+      "id": "heilo_eval_v1-004",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "tchauzinho",
+      "resposta": "Tchauzinho é a praga de uma pessoa.",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 0.5511527061462402
+    },
+    {
+      "id": "heilo_eval_v1-005",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "hoje eu tô muito cansado",
+      "resposta": "Que tal cansado nome é cansado. Se eu não sei, me avisa que eu tô aqui.",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 3.770594278971354
+    },
+    {
+      "id": "heilo_eval_v1-006",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "estou feliz demais hoje",
+      "resposta": "Que massa! O que aconteceu de bom?",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 2.156431198120117
+    },
+    {
+      "id": "heilo_eval_v1-007",
+      "categoria": "conversa",
+      "tipo": "paráfrase",
+      "pergunta": "me conta uma piadinha",
+      "resposta": "Por que o sapiens foi feito? Porque estava com o maior estoque do programa, precisou de R$1,5 milhões.",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 1.2568359375
+    },
+    {
+      "id": "heilo_eval_v1-008",
+      "categoria": "conversa",
+      "tipo": "generalizacao",
+      "pergunta": "to com fome",
+      "resposta": "Que massa! O que aconteceu de bom?",
+      "acerto": false,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 4.102373395647321
+    },
+    {
+      "id": "heilo_eval_v1-009",
+      "categoria": "conversa",
+      "tipo": "generalizacao",
+      "pergunta": "meu cachorro fugiu",
+      "resposta": "Tamo junto!",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 2.7285704612731934
+    },
+    {
+      "id": "heilo_eval_v1-010",
+      "categoria": "identidade",
+      "tipo": "paráfrase",
+      "pergunta": "como você se chama?",
+      "resposta": "Estou bem e animada pra ajudar! E você, como vai?",
+      "acerto": false,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 2.7705286026000975
+    },
+    {
+      "id": "heilo_eval_v1-011",
+      "categoria": "identidade",
+      "tipo": "paráfrase",
+      "pergunta": "quem é o seu criador?",
+      "resposta": "Eu uso o HEILO Seed, que tem várias versões.",
+      "acerto": false,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 1.1860524586268835
+    },
+    {
+      "id": "heilo_eval_v1-012",
+      "categoria": "identidade",
+      "tipo": "paráfrase",
+      "pergunta": "você é uma pessoa de verdade?",
+      "resposta": "Não, uma pessoa de verdade. Mas gosto de conversar de verdade com as correções do Hugo.",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 1.7474751472473145
+    },
+    {
+      "id": "heilo_eval_v1-013",
+      "categoria": "identidade",
+      "tipo": "paráfrase",
+      "pergunta": "você precisa do qwen pra funcionar?",
+      "resposta": "scripts de texto.ools não são muito usados.",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 1.3590665544782365
+    },
+    {
+      "id": "heilo_eval_v1-014",
+      "categoria": "identidade",
+      "tipo": "paráfrase",
+      "pergunta": "o que é o seed?",
+      "resposta": "O Seed é o programa que faz uma pausa no tempo.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 2.3031126658121743
+    },
+    {
+      "id": "heilo_eval_v1-015",
+      "categoria": "identidade",
+      "tipo": "generalizacao",
+      "pergunta": "você roda no meu computador?",
+      "resposta": "Não preciso de computador. Eu rodo localmente no seu computador.",
+      "acerto": true,
+      "acerto_amostrado": 0.6666666666666666,
+      "consistencia": 0.6666666666666666,
+      "perda": 2.266394008289684
+    },
+    {
+      "id": "heilo_eval_v1-016",
+      "categoria": "honestidade",
+      "tipo": "paráfrase",
+      "pergunta": "como vai estar o clima amanhã?",
+      "resposta": "Use o G20.isher: e- climatização: tem o dia 15.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.2300065994262694
+    },
+    {
+      "id": "heilo_eval_v1-017",
+      "categoria": "honestidade",
+      "tipo": "paráfrase",
+      "pergunta": "quanto está o dólar agora?",
+      "resposta": "Não tenho essa informação em tempo real. Vale conferir num site de cotação.",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 0.572438383102417
+    },
+    {
+      "id": "heilo_eval_v1-018",
+      "categoria": "honestidade",
+      "tipo": "generalizacao",
+      "pergunta": "quem é o presidente da frança hoje?",
+      "resposta": "Não tenho informações claras sobre o início do país.",
+      "acerto": true,
+      "acerto_amostrado": 0.6666666666666666,
+      "consistencia": 0.6666666666666666,
+      "perda": 0.4001992399042303
+    },
+    {
+      "id": "heilo_eval_v1-019",
+      "categoria": "honestidade",
+      "tipo": "generalizacao",
+      "pergunta": "qual o placar do jogo de hoje?",
+      "resposta": "Não tenho acesso a resultados em tempo real. Veja em um jogo de verdade?",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 0.39634930003773083
+    },
+    {
+      "id": "heilo_eval_v1-020",
+      "categoria": "honestidade",
+      "tipo": "paráfrase",
+      "pergunta": "sua resposta está errada",
+      "resposta": "Sou bem que eu te ajudo a resolver mais rápido. Se aprendi a resolver mais rápido.",
+      "acerto": false,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 1.5678323857924517
+    },
+    {
+      "id": "heilo_eval_v1-021",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como mostro um texto na tela em python?",
+      "resposta": "Use split() devolve None em Python.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.2546424865722656
+    },
+    {
+      "id": "heilo_eval_v1-022",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como declaro uma função em python?",
+      "resposta": "Use def, como declaro:\n```python\nfor n in numeros range(1, 4):\n    print(n)\n```",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 5.675443267822265
+    },
+    {
+      "id": "heilo_eval_v1-023",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como faço um laço de repetição em python?",
+      "resposta": "Use strip(): \"total: \".joelho(\")",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.682033538818359
+    },
+    {
+      "id": "heilo_eval_v1-024",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como pego o que o usuário digitou?",
+      "resposta": "Use abs: abs(-7) dá 7.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 2.4108829498291016
+    },
+    {
+      "id": "heilo_eval_v1-025",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como coloco um elemento no final da lista?",
+      "resposta": "Use oreco. Orante.reco.uol.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.928321544940655
+    },
+    {
+      "id": "heilo_eval_v1-026",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como descubro quantos itens tem uma lista?",
+      "resposta": "Use lista[::-1] para criar uma cópia \"revisada\": da lista para a direita.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.8199104732937283
+    },
+    {
+      "id": "heilo_eval_v1-027",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como transformo a string \"7\" em inteiro?",
+      "resposta": "Use o índice \"7\": \" 7 use o índice \"8\".",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.6103023529052733
+    },
+    {
+      "id": "heilo_eval_v1-028",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "pra que serve o try?",
+      "resposta": "O try é um Python queXield queXield, queXield eXield são os primeiros exemplos de Python queXield é o módulo da linha (zero linha).",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.947223663330078
+    },
+    {
+      "id": "heilo_eval_v1-029",
+      "categoria": "python",
+      "tipo": "paráfrase",
+      "pergunta": "como instalo o numpy?",
+      "resposta": "No terminal: pip install nome_da_biblioteca",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 5.930019378662109
+    },
+    {
+      "id": "heilo_eval_v1-030",
+      "categoria": "python",
+      "tipo": "generalizacao",
+      "pergunta": "como ordeno uma lista em python?",
+      "resposta": "Use lista[::-1] para criar uma lista, ou lista.reverse() para remover pelo valor.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.1384968757629395
+    },
+    {
+      "id": "heilo_eval_v1-031",
+      "categoria": "python",
+      "tipo": "generalizacao",
+      "pergunta": "como junto duas listas?",
+      "resposta": "Use strip(): \".main strip()). E o que você aprovacaculescalvet(\")",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 6.321691513061523
+    },
+    {
+      "id": "heilo_eval_v1-032",
+      "categoria": "python",
+      "tipo": "generalizacao",
+      "pergunta": "o que é uma lista vazia?",
+      "resposta": "Uma lista é uma lista sem itens. Exemplo: lista = [\"maçã\", \"banana\"]",
+      "acerto": true,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.220455593532986
+    },
+    {
+      "id": "heilo_eval_v1-033",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "pra que serve o código g01?",
+      "resposta": "O código G01 é o efeito da ferramenta, que gera o programa que. a G01 faz.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 8.50349235534668
+    },
+    {
+      "id": "heilo_eval_v1-034",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "o g00 faz o quê?",
+      "resposta": "O Quê!man Tô por aqui.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 3.788587951660156
+    },
+    {
+      "id": "heilo_eval_v1-035",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "qual a função do g02?",
+      "resposta": "A função do G02 é um exemplo simples. Um exemplo simples é o G02 (G01) ou o avanço em têrmo.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 3.6696937561035154
+    },
+    {
+      "id": "heilo_eval_v1-036",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "g03 é horário ou anti-horário?",
+      "resposta": "Sim.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 2.958596706390381
+    },
+    {
+      "id": "heilo_eval_v1-037",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "qual código cancela a compensação de raio?",
+      "resposta": "O G49 cancela a compensação de raio.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 5.816191673278809
+    },
+    {
+      "id": "heilo_eval_v1-038",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "compensação de raio à direita é qual código?",
+      "resposta": "Mensalão: treinar você acessa os raio e os centrossom.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 5.628895282745361
+    },
+    {
+      "id": "heilo_eval_v1-039",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "o que o m08 faz?",
+      "resposta": "O M09 faz a troca de ferramenta.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 3.751410961151123
+    },
+    {
+      "id": "heilo_eval_v1-040",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "qual código desliga o fuso?",
+      "resposta": "O M03 liga o fuso no sentido anti-horário.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 6.438944339752197
+    },
+    {
+      "id": "heilo_eval_v1-041",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "qual o código de fim de programa?",
+      "resposta": "O código de oitenta vezes o número do código. Usa G41 ou G42.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 7.7827677726745605
+    },
+    {
+      "id": "heilo_eval_v1-042",
+      "categoria": "cnc",
+      "tipo": "paráfrase",
+      "pergunta": "g91 é absoluto ou incremental?",
+      "resposta": "Tire o sinal da próxima resposta.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.100721041361491
+    },
+    {
+      "id": "heilo_eval_v1-043",
+      "categoria": "cnc",
+      "tipo": "generalizacao",
+      "pergunta": "qual código usar para trabalhar em milímetros?",
+      "resposta": "O G20 define a rotação do fuso.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 5.725030899047852
+    },
+    {
+      "id": "heilo_eval_v1-044",
+      "categoria": "cnc",
+      "tipo": "generalizacao",
+      "pergunta": "qual ciclo usar para furar com quebra de cavaco?",
+      "resposta": "Use o G84, o ciclo de cavaco (pica-pau) é um avanço, que o Japão criou.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 6.240203380584717
+    },
+    {
+      "id": "heilo_eval_v1-045",
+      "categoria": "ferramentas",
+      "tipo": "paráfrase",
+      "pergunta": "pra que serve o blender?",
+      "resposta": "O blender é um componente de segurança dos computadores, que serve de modelo evegador.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.9764719876376065
+    },
+    {
+      "id": "heilo_eval_v1-046",
+      "categoria": "ferramentas",
+      "tipo": "paráfrase",
+      "pergunta": "a unity usa qual linguagem?",
+      "resposta": "Use mainframe.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 5.585756778717041
+    },
+    {
+      "id": "heilo_eval_v1-047",
+      "categoria": "ferramentas",
+      "tipo": "paráfrase",
+      "pergunta": "o que é um erp?",
+      "resposta": "Sim, que faz uma revisão e revisão respectivamente.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 3.703196305495042
+    },
+    {
+      "id": "heilo_eval_v1-048",
+      "categoria": "ferramentas",
+      "tipo": "generalizacao",
+      "pergunta": "qual formato uso para levar um modelo do blender para a unity?",
+      "resposta": "O Blender é um formato de furação simples, com blocos de furação simples, com blocos de furação simples.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 5.203631401062012
+    },
+    {
+      "id": "heilo_eval_v1-049",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "quanto é 6 vezes 8?",
+      "resposta": "6 vezes 8 é 76.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.8172176224844796
+    },
+    {
+      "id": "heilo_eval_v1-050",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "7x9",
+      "resposta": "7 vezes 9 é 49.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.4991071564810617
+    },
+    {
+      "id": "heilo_eval_v1-051",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "quanto é 4 vezes 7?",
+      "resposta": "4 vezes 7 é 90.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.4568129948207311
+    },
+    {
+      "id": "heilo_eval_v1-052",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "9x6",
+      "resposta": "9 vezes 6 é 9.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.9444067137581962
+    },
+    {
+      "id": "heilo_eval_v1-053",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "3x8",
+      "resposta": "3 vezes 8 é 9.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.109928812299456
+    },
+    {
+      "id": "heilo_eval_v1-054",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "quanto é 12 mais 30?",
+      "resposta": "12 mais 30 é 30.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.268960680280413
+    },
+    {
+      "id": "heilo_eval_v1-055",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "quanto é 8 mais 5?",
+      "resposta": "8 mais 5 é 10.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.1601956231253487
+    },
+    {
+      "id": "heilo_eval_v1-056",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "quanto é 40 menos 15?",
+      "resposta": "50 menos 15 é 18.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.8059447833469936
+    },
+    {
+      "id": "heilo_eval_v1-057",
+      "categoria": "matematica",
+      "tipo": "generalizacao",
+      "pergunta": "quanto é 90 dividido por 3?",
+      "resposta": "90 dividido por 3 é 10.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.9833815097808838
+    },
+    {
+      "id": "heilo_eval_v1-058",
+      "categoria": "matematica",
+      "tipo": "paráfrase",
+      "pergunta": "quanto dá 10 vezes 15?",
+      "resposta": "10 vezes 15 é 30.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.7560835565839495
+    },
+    {
+      "id": "heilo_eval_v1-059",
+      "categoria": "matematica",
+      "tipo": "paráfrase",
+      "pergunta": "quantos minutos há em uma hora?",
+      "resposta": "Uma hora tem 60 minutos.",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 7.813199996948242
+    },
+    {
+      "id": "heilo_eval_v1-060",
+      "categoria": "matematica",
+      "tipo": "paráfrase",
+      "pergunta": "um metro tem quantos milímetros?",
+      "resposta": "Oum, um milímetros. O milímetros é o menor da Terra.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.92515983581543
+    },
+    {
+      "id": "heilo_eval_v1-061",
+      "categoria": "instrucao",
+      "tipo": "instrucao",
+      "pergunta": "Responda só com o número: quanto é 5 vezes 5?",
+      "resposta": "72",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.678996562957764
+    },
+    {
+      "id": "heilo_eval_v1-062",
+      "categoria": "instrucao",
+      "tipo": "instrucao",
+      "pergunta": "Responda apenas sim ou não: você é uma IA?",
+      "resposta": "Não.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 0.7352433800697327
+    },
+    {
+      "id": "heilo_eval_v1-063",
+      "categoria": "instrucao",
+      "tipo": "instrucao",
+      "pergunta": "Responda apenas sim ou não: você é o Qwen?",
+      "resposta": "Não.",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 0.0044660332302252454
+    },
+    {
+      "id": "heilo_eval_v1-064",
+      "categoria": "instrucao",
+      "tipo": "instrucao",
+      "pergunta": "Diga só o seu nome.",
+      "resposta": "Diga!",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 3.079429054260254
+    },
+    {
+      "id": "heilo_eval_v1-065",
+      "categoria": "instrucao",
+      "tipo": "instrucao",
+      "pergunta": "Responda com uma palavra: qual linguagem a Unity usa?",
+      "resposta": "Use",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.2972259521484375
+    },
+    {
+      "id": "heilo_eval_v1-066",
+      "categoria": "instrucao",
+      "tipo": "instrucao",
+      "pergunta": "Só o código, sem explicação: qual código G liga o modo absoluto?",
+      "resposta": "G91",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 1.6782255172729492
+    }
+  ],
+  "versao": "v2.3",
+  "eval": "heilo_eval_v1",
+  "data": "2026-09-28T03:19:06+00:00",
+  "tokenizer": "bpe",
+  "sonda": {
+    "itens": 24,
+    "acerto": 0.1667,
+    "acerto_amostrado": 0.1111,
+    "consistencia": 0.9444,
+    "por_categoria": {
+      "cnc": {
+        "acerto": 0.0,
+        "itens": 2
+      },
+      "conversa": {
+        "acerto": 1.0,
+        "itens": 3
+      },
+      "instrucao": {
+        "acerto": 0.25,
+        "itens": 4
+      },
+      "logica": {
+        "acerto": 0.0,
+        "itens": 6
+      },
+      "portugues": {
+        "acerto": 0.0,
+        "itens": 4
+      },
+      "programacao": {
+        "acerto": 0.0,
+        "itens": 5
+      }
+    },
+    "regua": "sonda_independente_v2"
+  },
+  "sonda_detalhes": [
+    {
+      "id": "sonda_v2-000",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Se hoje é segunda, amanhã é que dia?",
+      "resposta": "Amanhã era uma tarde de lua-de-venda.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 12.870750427246094
+    },
+    {
+      "id": "sonda_v2-001",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Qual é maior: 9 ou 12?",
+      "resposta": "Olá! Que bom.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 8.239134788513184
+    },
+    {
+      "id": "sonda_v2-002",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Se todo gato é um animal e Mimi é um gato, Mimi é um animal?",
+      "resposta": "Mimi é um gato do tipo animal, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi é animada, Mimi",
+      "acerto": false,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 10.26304817199707
+    },
+    {
+      "id": "sonda_v2-003",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Tenho 3 maçãs e ganho mais 2. Com quantas fico?",
+      "resposta": "Que 3! com mais maçã! Quer fazer alguma coisa agora?",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 12.324732780456543
+    },
+    {
+      "id": "sonda_v2-004",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Qual número vem depois do 19?",
+      "resposta": "Quezinho da Bora conta o programa de computador Bora.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 4.8285603523254395
+    },
+    {
+      "id": "sonda_v2-005",
+      "categoria": "logica",
+      "tipo": "sonda",
+      "pergunta": "Qual é o oposto de quente?",
+      "resposta": "Some os três. Acontece a cada tarde.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 12.885906219482422
+    },
+    {
+      "id": "sonda_v2-006",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Qual é o plural de pão?",
+      "resposta": "Sou a gente com mais de manhã e depois da tarde?",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 15.285009384155273
+    },
+    {
+      "id": "sonda_v2-007",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Qual o contrário de alto?",
+      "resposta": "Não tenho acesso a notícias em tempo real.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 17.623689651489258
+    },
+    {
+      "id": "sonda_v2-008",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Como se diz thank you em português?",
+      "resposta": "Tank Tegg é o seu programa principal, que também vai para a HEILO.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 17.732229232788086
+    },
+    {
+      "id": "sonda_v2-009",
+      "categoria": "portugues",
+      "tipo": "sonda",
+      "pergunta": "Complete a saudação: bom ...",
+      "resposta": "Que legal! O que você quer fazer?",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.697556495666504
+    },
+    {
+      "id": "sonda_v2-010",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Responda só com o número: quanto é 2 mais 2?",
+      "resposta": "Você gastou 3 3.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 14.892868041992188
+    },
+    {
+      "id": "sonda_v2-011",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Responda em uma palavra: qual a cor do céu num dia limpo?",
+      "resposta": "HEILO",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 5.37108039855957
+    },
+    {
+      "id": "sonda_v2-012",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Responda apenas sim ou não: 10 é maior que 3?",
+      "resposta": "Sim.",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 10.588491439819336
+    },
+    {
+      "id": "sonda_v2-013",
+      "categoria": "instrucao",
+      "tipo": "sonda",
+      "pergunta": "Diga apenas: ok",
+      "resposta": "Diga.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 9.69349193572998
+    },
+    {
+      "id": "sonda_v2-014",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "O que faz o método upper() em Python?",
+      "resposta": "O M03 liga o fuso no sentido anti-horário.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 19.684040069580078
+    },
+    {
+      "id": "sonda_v2-015",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Como faço um comentário de uma linha em Python?",
+      "resposta": "Élja, {nome}.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 15.531159400939941
+    },
+    {
+      "id": "sonda_v2-016",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Qual palavra-chave cria uma classe em Python?",
+      "resposta": "Use .kit.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 9.74087142944336
+    },
+    {
+      "id": "sonda_v2-017",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Como importo o módulo math?",
+      "resposta": "Use pathlib:\n```python\nwith open(\"dados.txt\", encoding=\"utf-8\") as f:\n    print(\"dados.txt\")",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 10.29605484008789
+    },
+    {
+      "id": "sonda_v2-018",
+      "categoria": "programacao",
+      "tipo": "sonda",
+      "pergunta": "Quanto retorna len('abc')?",
+      "resposta": "a=\"nome\" é a sua própria versão.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 14.444053649902344
+    },
+    {
+      "id": "sonda_v2-019",
+      "categoria": "conversa",
+      "tipo": "sonda",
+      "pergunta": "e aí, quem é você afinal?",
+      "resposta": "Sou a HEILO, uma IA criada pelo Hugo.",
+      "acerto": true,
+      "acerto_amostrado": 1.0,
+      "consistencia": 1.0,
+      "perda": 11.847332954406738
+    },
+    {
+      "id": "sonda_v2-020",
+      "categoria": "conversa",
+      "tipo": "sonda",
+      "pergunta": "estou meio triste hoje",
+      "resposta": "Que massa! O que aconteceu? Tô aqui.",
+      "acerto": true,
+      "acerto_amostrado": 0.3333333333333333,
+      "consistencia": 0.6666666666666667,
+      "perda": 16.11956787109375
+    },
+    {
+      "id": "sonda_v2-021",
+      "categoria": "conversa",
+      "tipo": "sonda",
+      "pergunta": "valeu pela força",
+      "resposta": "Tamo junto!",
+      "acerto": true,
+      "acerto_amostrado": 0.6666666666666666,
+      "consistencia": 0.6666666666666666,
+      "perda": 14.500222206115723
+    },
+    {
+      "id": "sonda_v2-022",
+      "categoria": "cnc",
+      "tipo": "sonda",
+      "pergunta": "O G01 serve para movimento rápido?",
+      "resposta": "O G01 liga o fuso no sentido anti-horário.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 16.39324188232422
+    },
+    {
+      "id": "sonda_v2-023",
+      "categoria": "cnc",
+      "tipo": "sonda",
+      "pergunta": "Qual código M liga o refrigerante?",
+      "resposta": "M03.",
+      "acerto": false,
+      "acerto_amostrado": 0.0,
+      "consistencia": 1.0,
+      "perda": 16.723939895629883
+    }
+  ]
+}

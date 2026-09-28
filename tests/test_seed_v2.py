@@ -65,3 +65,20 @@ def test_checkpoint_antigo_gpt2_continua_carregando(tmp_path):
     torch.save(ck, arq)
     m2, _ = carregar(arq, dispositivo="cpu")
     assert m2.cfg.arquitetura == "gpt2" and hasattr(m2, "pos")
+
+
+def test_ajuste_escolhe_passo_pelas_respostas_geradas():
+    """O ajuste de conversa guarda o passo que RESPONDE melhor (não o de menor perda)."""
+    from heilo.training import pretrain
+    torch.manual_seed(0)
+    m = _modelo(_tok())
+    ex = [{"messages": [{"role": "user", "content": f"quanto é {a} mais 1?"},
+                        {"role": "assistant", "content": f"{a} mais 1 é {a + 1}."}]} for a in range(12)]
+    nota0 = pretrain.pontuar_geracao(m, ex, n=4, max_novos=8)
+    assert 0.0 <= nota0 <= 1.0
+    r = pretrain.ajustar_conversa(m, ex[:8], ex[8:], passos=6, lote=4, avaliar_cada=2,
+                                  log=lambda *_: None, n_selecao=4)
+    assert r["selecao"] == "geracao"
+    assert r["passo_escolhido"] in (2, 4, 6)
+    assert all("nota_geracao" in h for h in r["hist"])
+    assert r["melhor_nota_geracao"] == max(h["nota_geracao"] for h in r["hist"])

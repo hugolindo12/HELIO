@@ -301,16 +301,51 @@ def _perda_sft(modelo, itens, pad, dev, amp):
     return s / max(1, n)
 
 
+def _palavras_f1(texto: str) -> List[str]:
+    import re, unicodedata
+    t = unicodedata.normalize("NFD", (texto or "").lower())
+    t = "".join(c for c in t if unicodedata.category(c) != "Mn")
+    return re.findall(r"[a-z0-9_]+", t)
+
+
+def pontuar_geracao(modelo, exemplos: List[Dict], n: int = 60, max_novos: int = 64) -> float:
+    """Nota média (F1 de palavras, 0 a 1) das respostas GERADAS (sem sorteio) contra as
+    respostas certas, nas perguntas simples (uma pergunta → uma resposta) da validação."""
+    from heilo.models.seed.gpt import encode_chat
+    tok = modelo.tokenizer
+    modelo.eval()
+    notas = []
+    simples = [e for e in exemplos if len(e.get("messages") or []) == 2
+               and e["messages"][0]["role"] == "user"][:n]
+    with torch.no_grad():
+        for e in simples:
+            ids = encode_chat([e["messages"][0]], tok=tok) + [tok.heilo]
+            novos = modelo.gerar(ids, max_novos=max_novos, temperatura=1e-4, top_k=1,
+                                 parar_em=(tok.fim, tok.usuario))
+            g, r = _palavras_f1(tok.decode(novos)), _palavras_f1(e["messages"][1]["content"])
+            comum = sum(min(g.count(w), r.count(w)) for w in set(g))
+            notas.append(0.0 if not comum else 2 * comum / (len(g) + len(r)))
+    return float(np.mean(notas)) if notas else 0.0
+
+
 def ajustar_conversa(modelo, treino: List[Dict], val: List[Dict], passos: int = 1500, lote: int = 32,
                      lr: float = 1e-4, avaliar_cada: int = 100, paciencia: int = 4,
                      log: Log = print, pasta_corpus: Optional[Path] = None,
-                     peso_texto: float = 0.3, lote_texto: int = 8) -> Dict:
+                     peso_texto: float = 0.3, lote_texto: int = 8,
+                     selecao: str = "geracao", n_selecao: int = 60) -> Dict:
     """SFT com parada antecipada: guarda o estado com MENOR perda de validação.
 
     pasta_corpus (opcional): a cada passo soma `peso_texto` × perda de modelagem de
     linguagem num lote do corpus do pré-treino. Evita que um dataset de conversa
     pequeno faça o modelo esquecer o português e colar em poucas frases prontas
-    (o que aconteceu na v1.0)."""
+    (o que aconteceu na v1.0).
+
+    selecao="geracao" (padrão): o ponto guardado é o que RESPONDE melhor às perguntas de
+    validação (a resposta gerada é comparada, palavra por palavra, com a resposta certa).
+    Antes (selecao="perda") guardava a menor perda de validação, e isso cortava o ajuste
+    cedo demais: as perguntas de validação são fatos que o treino não tem, então essa
+    perda sobe logo no passo 200 mesmo com o modelo ainda aprendendo a conversar
+    (v2.1/v2.2 ficaram com só 100 passos de ajuste)."""
     dev = next(modelo.parameters()).device.type
     amp = dev == "cuda"
     tok = modelo.tokenizer
@@ -319,7 +354,7 @@ def ajustar_conversa(modelo, treino: List[Dict], val: List[Dict], passos: int = 
     texto = _abrir_bin(pasta_corpus, "train") if pasta_corpus else None
     opt = torch.optim.AdamW(modelo.parameters(), lr=lr, weight_decay=0.05)
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
-    melhor, melhor_estado, sem_melhora, hist = None, None, 0, []
+    melhor, melhor_estado, sem_melhora, hist, melhor_passo = None, None, 0, [], None
     rnd = np.random.RandomState(0)
     base = _perda_sft(modelo, it_va, tok.pad, dev, amp) if it_va else None
     log(f"[SFT] {len(it_tr)} exemplos de treino, {len(it_va)} de validação | perda val inicial {base}")
@@ -344,10 +379,20 @@ def ajustar_conversa(modelo, treino: List[Dict], val: List[Dict], passos: int = 
         scaler.update()
         if it_va and (p % avaliar_cada == 0 or p == passos):
             pv = _perda_sft(modelo, it_va, tok.pad, dev, amp)
-            hist.append({"passo": p, "perda_treino": round(loss.item(), 4), "perda_val": round(pv, 4)})
-            log(f"  SFT passo {p} | treino {loss.item():.3f} | val {pv:.3f}")
-            if melhor is None or pv < melhor - 1e-4:
-                melhor, sem_melhora = pv, 0
+            h = {"passo": p, "perda_treino": round(loss.item(), 4), "perda_val": round(pv, 4)}
+            if selecao == "geracao":
+                nota = pontuar_geracao(modelo, val, n_selecao)
+                modelo.train()
+                h["nota_geracao"] = round(nota, 4)
+                crit = -nota                      # menor é melhor, como a perda
+            else:
+                crit = pv
+            hist.append(h)
+            log(f"  SFT passo {p} | treino {loss.item():.3f} | val {pv:.3f}"
+                + (f" | respostas {h['nota_geracao']:.3f}" if "nota_geracao" in h else ""))
+            if melhor is None or crit < melhor - 1e-4:
+                melhor, sem_melhora = crit, 0
+                melhor_passo = p
                 melhor_estado = {k: v.detach().clone() for k, v in modelo.state_dict().items()}
             else:
                 sem_melhora += 1
@@ -357,7 +402,13 @@ def ajustar_conversa(modelo, treino: List[Dict], val: List[Dict], passos: int = 
     if melhor_estado is not None:
         modelo.load_state_dict(melhor_estado)
     modelo.eval()
-    return {"perda_val_inicial": base, "melhor_perda_val": melhor, "hist": hist}
+    melhor_pv = min((h["perda_val"] for h in hist), default=None)
+    if melhor_passo is not None:
+        log(f"[SFT] guardado o passo {melhor_passo} ({selecao})")
+    return {"perda_val_inicial": base, "melhor_perda_val": melhor_pv, "selecao": selecao,
+            "passo_escolhido": melhor_passo,
+            "melhor_nota_geracao": (-melhor if selecao == "geracao" and melhor is not None else None),
+            "hist": hist}
 
 
 def exportar(modelo, arquivo: Path, info: Dict) -> Path:

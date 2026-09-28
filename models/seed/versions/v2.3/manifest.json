@@ -1,0 +1,96 @@
+{
+  "versao": "v2.3",
+  "arquivo": "v2.3/heilo_seed.pt",
+  "criada": "2026-09-28T03:19:42+00:00",
+  "pai": "v2.2",
+  "ciclo": null,
+  "dataset_version": 2,
+  "origem": "Faísca 2.2 + ajuste de conversa completo (500 passos; corrige a parada antecipada que deixava só 100)",
+  "eval": {
+    "acerto": 0.2687,
+    "acerto_amostrado": 0.204,
+    "consistencia": 0.9403,
+    "perda": 2.7321,
+    "perplexidade": 15.365,
+    "seguir_instrucoes": 0.1667,
+    "generalizacao": 0.2,
+    "parafrase": 0.3171,
+    "por_categoria": {
+      "cnc": {
+        "acerto": 0.0,
+        "itens": 12
+      },
+      "conversa": {
+        "acerto": 0.7,
+        "itens": 10
+      },
+      "ferramentas": {
+        "acerto": 0.0,
+        "itens": 4
+      },
+      "honestidade": {
+        "acerto": 0.6,
+        "itens": 5
+      },
+      "identidade": {
+        "acerto": 0.5,
+        "itens": 6
+      },
+      "instrucao": {
+        "acerto": 0.1667,
+        "itens": 6
+      },
+      "matematica": {
+        "acerto": 0.0833,
+        "itens": 12
+      },
+      "python": {
+        "acerto": 0.25,
+        "itens": 12
+      }
+    },
+    "itens": 67,
+    "sonda": {
+      "itens": 24,
+      "acerto": 0.1667,
+      "acerto_amostrado": 0.1111,
+      "consistencia": 0.9444,
+      "por_categoria": {
+        "cnc": {
+          "acerto": 0.0,
+          "itens": 2
+        },
+        "conversa": {
+          "acerto": 1.0,
+          "itens": 3
+        },
+        "instrucao": {
+          "acerto": 0.25,
+          "itens": 4
+        },
+        "logica": {
+          "acerto": 0.0,
+          "itens": 6
+        },
+        "portugues": {
+          "acerto": 0.0,
+          "itens": 4
+        },
+        "programacao": {
+          "acerto": 0.0,
+          "itens": 5
+        }
+      },
+      "regua": "sonda_independente_v2"
+    },
+    "perda_por_caractere": 0.994,
+    "tokenizer": "bpe"
+  },
+  "comparacao": "vs v0.3: sonda +3, eval +0 itens",
+  "status": "ativa",
+  "base": "v2.2",
+  "sft": {
+    "passos_total": 500,
+    "motivo": "v2.1/v2.2 pararam o ajuste no passo 100 por um critério errado (perda de validação); refeito na nuvem (CPU) sem Colab"
+  }
+}
