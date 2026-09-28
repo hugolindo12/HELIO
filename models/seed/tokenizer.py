@@ -64,12 +64,18 @@ class BPETokenizer:
 
     @classmethod
     def treinar(cls, textos: Iterable[str], vocab_size: int = 16000,
-                min_frequency: int = 2) -> "BPETokenizer":
-        """Treina um BPE byte-level do zero (sem vocabulário externo)."""
+                min_frequency: int = 2, digitos_separados: bool = False) -> "BPETokenizer":
+        """Treina um BPE byte-level do zero (sem vocabulário externo).
+
+        digitos_separados=True: cada algarismo vira um token ("48" → "4", "8"), como no
+        Llama/Gemma. Sem isso, "48" é um token só e o modelo não "enxerga" as casas decimais,
+        o que atrapalha muito as contas."""
         from tokenizers import Tokenizer, decoders, models, normalizers, pre_tokenizers, trainers
         tok = Tokenizer(models.BPE())
         tok.normalizer = normalizers.NFC()
-        tok.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)
+        nivel_byte = pre_tokenizers.ByteLevel(add_prefix_space=False)
+        tok.pre_tokenizer = (pre_tokenizers.Sequence([pre_tokenizers.Digits(individual_digits=True), nivel_byte])
+                             if digitos_separados else nivel_byte)
         tok.decoder = decoders.ByteLevel()
         trainer = trainers.BpeTrainer(
             vocab_size=vocab_size, min_frequency=min_frequency, special_tokens=ESPECIAIS,
