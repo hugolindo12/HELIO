@@ -126,9 +126,15 @@ def resumo(rel: Dict) -> List[str]:
         falhas = [k for k in ESSENCIAIS if not r.get(k, {}).get("ok")]
         linhas.append(f"\n{rodada}: {'OK' if not falhas else 'FALHOU em ' + ', '.join(falhas)}")
         for k, v in r.items():
-            linhas.append(f"  {'✔' if v.get('ok') else '✘'} {k}: {v.get('detalhe')}")
+            simbolo = "[OK]" if v.get("ok") else "[X]"
+            linhas.append(f"  {simbolo} {k}: {v.get('detalhe')}")
     return linhas
 
 
 if __name__ == "__main__":
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
     print("\n".join(resumo(run_independence_test())))
