@@ -1,8 +1,8 @@
 """
 Linhas de modelos da HEILO — do menor/mais rápido para o maior/mais capaz.
 
-  HEILO Faísca  — pequeno e rápido (até ~300 M parâmetros; meta: 200 M). Roda em qualquer PC.
-  HEILO Aurora  — médio (~300 M a 1 bi; meta: 600 M). Mais capaz, ainda roda no PC.
+  HEILO Faísca  — pequeno e rápido (até ~500 M parâmetros; meta: 400 M). Roda em qualquer PC.
+  HEILO Aurora  — médio (~500 M a 1 bi; meta: 600 M–1 bi). Mais capaz, ainda roda no PC.
   HEILO Zênite  — o maior (1 bi ou mais; meta: 2 bi): o sol no ponto mais alto.
 
 "Seed" continua sendo o nome do motor/projeto de treino (HEILO Seed v2.0 = motor);
@@ -14,7 +14,7 @@ from __future__ import annotations
 from typing import Optional
 
 LINHAS = [
-    ("Faísca", 300_000_000, "pequeno e rápido: roda em qualquer PC"),
+    ("Faísca", 500_000_000, "pequeno e rápido: roda em qualquer PC"),
     ("Aurora", 1_000_000_000, "médio: mais capaz, ainda roda no PC"),
     ("Zênite", None, "o maior: mais capaz, mais pesado"),
 ]

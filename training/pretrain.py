@@ -192,7 +192,10 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
         opt.load_state_dict(st["opt"])
         passo, hist = st["passo"], st["hist"]
         min_antes = st.get("minutos_agenda", 0.0) if minutos_alvo else 0.0
-        inicio_agenda = st.get("inicio_agenda", passo) if minutos_alvo and "minutos_agenda" in st else passo
+        # o aquecimento da taxa só acontece uma vez (no começo, ou depois de um crescimento):
+        # antes, cada retomada sem minutos_alvo refazia 500–1000 passos de aquecimento à toa
+        inicio_agenda = (st.get("inicio_agenda", passo)
+                         if ("minutos_agenda" in st or not minutos_alvo) else passo)
         log(f"[pré-treino] retomando do passo {passo}" + (f" ({min_antes:.0f} min já feitos)" if minutos_alvo else ""))
     log(f"[pré-treino] {modelo.n_params()/1e6:.1f} M parâmetros | {len(tr):,} tokens de treino | "
         f"{dev} | lote {lote}x{cfg.block_size}")

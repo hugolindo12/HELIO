@@ -35,3 +35,31 @@ def test_tokenizer_separa_algarismos(tmp_path):
     assert tok.decode(ids) == "6 vezes 8 é 48 e G01"
     # na 2ª vez só carrega o que já existe
     assert preparar_tokenizer(tmp_path, log=lambda s: None, textos=iter([])).vocab_size == tok.vocab_size
+
+
+def test_crescer_profundidade_mantem_as_respostas(tmp_path):
+    """A 200M esticada (mais camadas) responde IGUAL à original antes de treinar."""
+    import dataclasses
+    import pytest
+    torch = pytest.importorskip("torch")
+    from heilo.models.seed.gpt import GPTConfig, MiniGPT
+    from heilo.training import faisca_grande
+    cfg = GPTConfig(block_size=32, n_layer=2, n_head=4, n_embd=64, dropout=0.0, vocab_size=100,
+                    arquitetura="moderna", n_kv_head=2)
+    torch.manual_seed(0)
+    m = MiniGPT(cfg)
+    opt = torch.optim.AdamW(m.parameters())
+    ck = tmp_path / "pre.pt"
+    torch.save({"modelo": m.state_dict(), "opt": opt.state_dict(), "passo": 77, "hist": [],
+                "config": cfg.__dict__, "inicio_agenda": 0, "minutos_agenda": 0.0}, ck)
+    info = faisca_grande.crescer_profundidade(ck, tmp_path / "pre4.pt", 4, log=lambda s: None)
+    st = torch.load(tmp_path / "pre4.pt", weights_only=False)
+    g = MiniGPT(GPTConfig(**st["config"]))
+    g.load_state_dict(st["modelo"])
+    x = torch.randint(0, 100, (2, 16))
+    m.eval(); g.eval()
+    assert torch.allclose(m(x)[0], g(x)[0], atol=1e-5)
+    assert st["passo"] == 77 and st["inicio_agenda"] == 77 and g.cfg.n_layer == 4
+    n400 = sum(p.numel() for p in MiniGPT(faisca_grande.CONFIG_FAISCA_400M).parameters())
+    assert 350e6 < n400 < 450e6 and linha(n400) == "Faísca"
+    assert faisca_grande.lote_para_gpu("L4", 22, n_layer=32)["micro"] == 4
