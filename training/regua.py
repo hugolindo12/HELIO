@@ -8,6 +8,8 @@ perplexidade do log não compara bem um dia com o outro. A régua é congelada u
       (pedaços da validação da Wikipédia e da 1ª parte da web). Menor é melhor.
 - R2: gramática em pares. Para cada par (frase certa × frase errada que difere por um detalhe),
       o modelo acerta se achar a certa mais provável. Maior é melhor.
+- R2b: o mesmo, com 60 pares difíceis (crase, sujeito distante, verbos impessoais, subjuntivo,
+      particípios, plurais irregulares). Criado quando a Faísca 200M chegou a 50/50 no R2.
 
 Portão anti-esquecimento (plano de evolução): depois de crescer ou treinar outra fase,
 R1 não pode piorar mais de 3% em relação à versão anterior.
@@ -25,6 +27,7 @@ import numpy as np
 Log = Callable[[str], None]
 
 ARQ_R2 = Path(__file__).resolve().parents[1] / "data" / "eval" / "regua_r2_gramatica.jsonl"
+ARQ_R2B = ARQ_R2.parent / "regua_r2b_gramatica_dificil.jsonl"
 TOLERANCIA_R1 = 0.03   # R1 pode piorar no máximo 3%
 
 
@@ -133,15 +136,19 @@ def medir(modelo, tok, pasta_regua: Path, rotulo: str = "", log: Log = print,
     t0 = time.time()
     r1 = medir_r1(modelo, pasta_regua, max_janelas=max_janelas)
     r2 = medir_r2(modelo, tok)
+    r2b = medir_r2(modelo, tok, carregar_r2(ARQ_R2B)) if ARQ_R2B.exists() else None
     res = {"rotulo": rotulo, "data": time.strftime("%Y-%m-%d %H:%M"),
            "params_M": round(sum(p.numel() for p in modelo.parameters()) / 1e6, 1),
            "r1_ppl": round(r1, 3), "r2_acerto": r2["acerto"], "r2_por_tipo": r2["por_tipo"]}
+    if r2b:
+        res.update({"r2b_acerto": r2b["acerto"], "r2b_por_tipo": r2b["por_tipo"]})
     hist_arq = Path(pasta_regua) / "historico.json"
     hist = json.loads(hist_arq.read_text(encoding="utf-8")) if hist_arq.exists() else []
     hist.append(res)
     hist_arq.write_text(json.dumps(hist, indent=1, ensure_ascii=False), encoding="utf-8")
-    log(f"RÉGUA {rotulo}: R1 perplexidade fixa {r1:.2f} | R2 gramática {r2['acertos']}/{r2['total']} "
-        f"({time.time() - t0:.0f} s)")
+    log(f"RÉGUA {rotulo}: R1 perplexidade fixa {r1:.2f} | R2 gramática {r2['acertos']}/{r2['total']}"
+        + (f" | R2b difícil {r2b['acertos']}/{r2b['total']}" if r2b else "")
+        + f" ({time.time() - t0:.0f} s)")
     return res
 
 
@@ -151,8 +158,10 @@ def portao(antes: Dict, depois: Dict, tol_r1: float = TOLERANCIA_R1) -> Dict:
     lim = antes["r1_ppl"] * (1 + tol_r1)
     ok = depois["r1_ppl"] <= lim
     var = depois["r1_ppl"] / antes["r1_ppl"] - 1
-    aviso = (depois["r2_acerto"] - antes["r2_acerto"]) < -0.05
+    aviso = any(k in antes and k in depois and depois[k] - antes[k] < -0.05 for k in ("r2_acerto", "r2b_acerto"))
     motivo = (f"R1 {antes['r1_ppl']:.2f} → {depois['r1_ppl']:.2f} ({var:+.1%}; limite +{tol_r1:.0%})"
               f" | R2 {antes['r2_acerto']:.0%} → {depois['r2_acerto']:.0%}"
+              + (f" | R2b {antes['r2b_acerto']:.0%} → {depois['r2b_acerto']:.0%}"
+                 if "r2b_acerto" in antes and "r2b_acerto" in depois else "")
               + (" — atenção: gramática caiu" if aviso else ""))
     return {"aprovado": ok, "motivo": motivo, "variacao_r1": round(var, 4), "aviso_r2": aviso}

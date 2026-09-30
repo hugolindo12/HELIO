@@ -46,10 +46,20 @@ def test_medir_e_portao(tmp_path):
     a = _corpus(tmp_path / "wiki", [int(i) % tok.vocab_size for i in range(3000)])
     regua.congelar_r1([a], tmp_path / "regua", n_tokens=2000, log=lambda s: None)
     r = regua.medir(m, tok, tmp_path / "regua", rotulo="teste", log=lambda s: None)
-    assert r["r1_ppl"] > 1 and 0 <= r["r2_acerto"] <= 1
+    assert r["r1_ppl"] > 1 and 0 <= r["r2_acerto"] <= 1 and 0 <= r["r2b_acerto"] <= 1
     assert regua.medir_r1(m, tmp_path / "regua") == pytest.approx(r["r1_ppl"], rel=1e-3)   # sempre igual
     assert len(json.loads((tmp_path / "regua" / "historico.json").read_text())) == 1
     antes = {"r1_ppl": 20.0, "r2_acerto": 0.80}
     assert regua.portao(antes, {"r1_ppl": 20.5, "r2_acerto": 0.80})["aprovado"]
     assert not regua.portao(antes, {"r1_ppl": 20.7, "r2_acerto": 0.80})["aprovado"]
     assert regua.portao(antes, {"r1_ppl": 19.0, "r2_acerto": 0.70})["aviso_r2"]
+    b = {"r1_ppl": 20.0, "r2_acerto": 1.0, "r2b_acerto": 0.8}
+    assert regua.portao(b, {"r1_ppl": 20.0, "r2_acerto": 1.0, "r2b_acerto": 0.7})["aviso_r2"]
+    assert "R2b 80% → 85%" in regua.portao(b, {"r1_ppl": 20.0, "r2_acerto": 1.0, "r2b_acerto": 0.85})["motivo"]
+
+
+def test_r2b_tem_60_pares_dificeis_e_nao_repete_o_r2():
+    from heilo.training import regua
+    difs = regua.carregar_r2(regua.ARQ_R2B)
+    assert len(difs) == 60 and all(p["certa"] != p["errada"] for p in difs)
+    assert not {p["certa"] for p in difs} & {p["certa"] for p in regua.carregar_r2()}

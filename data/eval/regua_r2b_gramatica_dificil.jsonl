@@ -1,0 +1,60 @@
+{"tipo": "crase", "certa": "Vou à farmácia depois do almoço.", "errada": "Vou a farmácia depois do almoço."}
+{"tipo": "crase", "certa": "Ele saiu às oito da manhã.", "errada": "Ele saiu as oito da manhã."}
+{"tipo": "crase", "certa": "Entreguei o documento à diretora.", "errada": "Entreguei o documento a diretora."}
+{"tipo": "crase", "certa": "Ela começou a estudar cedo.", "errada": "Ela começou à estudar cedo."}
+{"tipo": "crase", "certa": "Andamos a pé até a praia.", "errada": "Andamos à pé até a praia."}
+{"tipo": "crase", "certa": "Fiz uma visita a uma amiga.", "errada": "Fiz uma visita à uma amiga."}
+{"tipo": "crase", "certa": "Refiro-me àquela proposta.", "errada": "Refiro-me aquela proposta."}
+{"tipo": "crase", "certa": "Ele pediu desculpas a todos.", "errada": "Ele pediu desculpas à todos."}
+{"tipo": "crase", "certa": "A entrada é a partir das oito.", "errada": "A entrada é à partir das oito."}
+{"tipo": "crase", "certa": "Chegamos a um acordo.", "errada": "Chegamos à um acordo."}
+{"tipo": "crase", "certa": "Ela obedece às regras da escola.", "errada": "Ela obedece as regras da escola."}
+{"tipo": "sujeito_distante", "certa": "Chegaram ontem as encomendas que pedimos.", "errada": "Chegou ontem as encomendas que pedimos."}
+{"tipo": "sujeito_distante", "certa": "A lista com os nomes dos convidados está na mesa.", "errada": "A lista com os nomes dos convidados estão na mesa."}
+{"tipo": "sujeito_distante", "certa": "Os resultados da pesquisa feita pela equipe surpreenderam todos.", "errada": "Os resultados da pesquisa feita pela equipe surpreendeu todos."}
+{"tipo": "sujeito_distante", "certa": "Faltam três dias para as férias.", "errada": "Falta três dias para as férias."}
+{"tipo": "sujeito_distante", "certa": "Existem muitas dúvidas sobre o projeto.", "errada": "Existe muitas dúvidas sobre o projeto."}
+{"tipo": "sujeito_distante", "certa": "Sobraram duas fatias de bolo.", "errada": "Sobrou duas fatias de bolo."}
+{"tipo": "sujeito_distante", "certa": "Aconteceram coisas estranhas naquela noite.", "errada": "Aconteceu coisas estranhas naquela noite."}
+{"tipo": "sujeito_distante", "certa": "O relatório que os técnicos prepararam ficou pronto.", "errada": "O relatório que os técnicos prepararam ficaram pronto."}
+{"tipo": "sujeito_distante", "certa": "A professora dos meus filhos mora perto daqui.", "errada": "A professora dos meus filhos moram perto daqui."}
+{"tipo": "sujeito_distante", "certa": "Bastam duas colheres de açúcar.", "errada": "Basta duas colheres de açúcar."}
+{"tipo": "verbo_impessoal", "certa": "Deve haver outras soluções para o problema.", "errada": "Devem haver outras soluções para o problema."}
+{"tipo": "verbo_impessoal", "certa": "Houve muitos acidentes na estrada.", "errada": "Houveram muitos acidentes na estrada."}
+{"tipo": "verbo_impessoal", "certa": "Fazia anos que não nos víamos.", "errada": "Faziam anos que não nos víamos."}
+{"tipo": "regencia", "certa": "Prefiro café a chá.", "errada": "Prefiro café do que chá."}
+{"tipo": "regencia", "certa": "Lembrei-me do seu aniversário.", "errada": "Lembrei-me o seu aniversário."}
+{"tipo": "ha_a", "certa": "Moro aqui há cinco anos.", "errada": "Moro aqui a cinco anos."}
+{"tipo": "ha_a", "certa": "Daqui a dois dias eu viajo.", "errada": "Daqui há dois dias eu viajo."}
+{"tipo": "palavras_parecidas", "certa": "Queria ir, mas estava chovendo.", "errada": "Queria ir, mais estava chovendo."}
+{"tipo": "palavras_parecidas", "certa": "Ele é um mau motorista.", "errada": "Ele é um mal motorista."}
+{"tipo": "palavras_parecidas", "certa": "Dormi mal esta noite.", "errada": "Dormi mau esta noite."}
+{"tipo": "palavras_parecidas", "certa": "Não fui porque estava doente.", "errada": "Não fui por que estava doente."}
+{"tipo": "concordancia_nominal", "certa": "Ela ficou meio cansada.", "errada": "Ela ficou meia cansada."}
+{"tipo": "concordancia_nominal", "certa": "Hoje há menos pessoas na fila.", "errada": "Hoje há menas pessoas na fila."}
+{"tipo": "concordancia_nominal", "certa": "Seguem anexas as notas fiscais.", "errada": "Seguem anexo as notas fiscais."}
+{"tipo": "concordancia_nominal", "certa": "É proibida a entrada de animais.", "errada": "É proibido a entrada de animais."}
+{"tipo": "concordancia_nominal", "certa": "Essas camisas custam caro.", "errada": "Essas camisas custam caras."}
+{"tipo": "concordancia_nominal", "certa": "Estas frutas estão bastante maduras.", "errada": "Estas frutas estão bastantes maduras."}
+{"tipo": "concordancia_nominal", "certa": "Estamos quites.", "errada": "Estamos quite."}
+{"tipo": "concordancia_nominal", "certa": "Eu mesma fiz o bolo, disse Maria.", "errada": "Eu mesmo fiz o bolo, disse Maria."}
+{"tipo": "concordancia_nominal", "certa": "As salas do segundo andar do prédio estão fechadas.", "errada": "As salas do segundo andar do prédio estão fechado."}
+{"tipo": "concordancia_nominal", "certa": "Os livros que a biblioteca recebeu ontem são novos.", "errada": "Os livros que a biblioteca recebeu ontem são nova."}
+{"tipo": "pronome", "certa": "Isso é para eu resolver.", "errada": "Isso é para mim resolver."}
+{"tipo": "pronome", "certa": "Entre mim e você não há segredos.", "errada": "Entre eu e você não há segredos."}
+{"tipo": "conjugacao", "certa": "Se você vir o Pedro, avise-me.", "errada": "Se você ver o Pedro, avise-me."}
+{"tipo": "conjugacao", "certa": "Quando eu puder, eu te ligo.", "errada": "Quando eu poder, eu te ligo."}
+{"tipo": "conjugacao", "certa": "Se ele mantiver o ritmo, vai vencer.", "errada": "Se ele manter o ritmo, vai vencer."}
+{"tipo": "conjugacao", "certa": "Eles intervieram na discussão.", "errada": "Eles interviram na discussão."}
+{"tipo": "conjugacao", "certa": "Espero que ela esteja bem.", "errada": "Espero que ela esteje bem."}
+{"tipo": "conjugacao", "certa": "Quero que você seja feliz.", "errada": "Quero que você seje feliz."}
+{"tipo": "conjugacao", "certa": "Se nós fizermos o trabalho hoje, descansamos amanhã.", "errada": "Se nós fazermos o trabalho hoje, descansamos amanhã."}
+{"tipo": "conjugacao", "certa": "O juiz interveio na briga.", "errada": "O juiz interviu na briga."}
+{"tipo": "conjugacao", "certa": "Eles trouxeram o bolo.", "errada": "Eles truxeram o bolo."}
+{"tipo": "participio", "certa": "A carta foi entregue ontem.", "errada": "A carta foi entregada ontem."}
+{"tipo": "participio", "certa": "O ladrão foi preso pela polícia.", "errada": "O ladrão foi prendido pela polícia."}
+{"tipo": "plural", "certa": "Comprei dois pães na padaria.", "errada": "Comprei dois pãos na padaria."}
+{"tipo": "plural", "certa": "Os cidadãos votaram cedo.", "errada": "Os cidadões votaram cedo."}
+{"tipo": "plural", "certa": "Os guarda-chuvas ficaram no carro.", "errada": "Os guardas-chuvas ficaram no carro."}
+{"tipo": "plural", "certa": "Os alemães chegaram ao hotel.", "errada": "Os alemões chegaram ao hotel."}
+{"tipo": "plural", "certa": "Os pastéis estavam deliciosos.", "errada": "Os pastels estavam deliciosos."}
