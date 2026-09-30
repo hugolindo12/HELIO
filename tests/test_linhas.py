@@ -63,3 +63,37 @@ def test_crescer_profundidade_mantem_as_respostas(tmp_path):
     n400 = sum(p.numel() for p in MiniGPT(faisca_grande.CONFIG_FAISCA_400M).parameters())
     assert 350e6 < n400 < 450e6 and linha(n400) == "Faísca"
     assert faisca_grande.lote_para_gpu("L4", 22, n_layer=32)["micro"] == 4
+
+
+def test_plano_crescimento_16_para_24_e_32():
+    from heilo.training import faisca_grande
+    p24 = faisca_grande.plano_crescimento(16, 24)
+    assert len(p24) == 24 and sum(c for _, c in p24) == 8
+    assert [i for i, c in p24 if c] == [1, 3, 5, 7, 9, 11, 13, 15]   # espalhadas, não só no fim
+    p32 = faisca_grande.plano_crescimento(16, 32)
+    assert len(p32) == 32 and all(p32[2 * i] == (i, False) and p32[2 * i + 1] == (i, True) for i in range(16))
+    assert len(faisca_grande.plano_crescimento(24, 32)) == 32
+    assert faisca_grande.plano_crescimento(16, 16) == [(i, False) for i in range(16)]
+
+
+def test_crescer_nao_multiplo_mantem_as_respostas(tmp_path):
+    """4 → 6 camadas (como 16 → 24): responde igual antes de treinar; a 300M é Faísca."""
+    import pytest
+    torch = pytest.importorskip("torch")
+    from heilo.models.seed.gpt import GPTConfig, MiniGPT
+    from heilo.training import faisca_grande
+    cfg = GPTConfig(block_size=32, n_layer=4, n_head=4, n_embd=64, dropout=0.0, vocab_size=100,
+                    arquitetura="moderna", n_kv_head=2)
+    torch.manual_seed(1)
+    m = MiniGPT(cfg)
+    ck = tmp_path / "pre.pt"
+    torch.save({"modelo": m.state_dict(), "opt": {}, "passo": 5, "hist": [], "config": cfg.__dict__}, ck)
+    faisca_grande.crescer_profundidade(ck, tmp_path / "pre6.pt", 6, log=lambda s: None)
+    st = torch.load(tmp_path / "pre6.pt", weights_only=False)
+    g = MiniGPT(GPTConfig(**st["config"]))
+    g.load_state_dict(st["modelo"])
+    x = torch.randint(0, 100, (2, 16))
+    m.eval(); g.eval()
+    assert g.cfg.n_layer == 6 and torch.allclose(m(x)[0], g(x)[0], atol=1e-5)
+    n300 = sum(p.numel() for p in MiniGPT(faisca_grande.CONFIG_FAISCA_300M).parameters())
+    assert 270e6 < n300 < 330e6 and linha(n300) == "Faísca"

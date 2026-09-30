@@ -29,9 +29,10 @@ CONFIG_FAISCA_200M = GPTConfig(block_size=1024, n_layer=16, n_head=16, n_embd=10
                                arquitetura="moderna", n_kv_head=4, vocab_size=VOCAB)
 TOKENS_ALVO = 3_000_000_000          # ~15 tokens por parâmetro (o ideal "Chinchilla" seria ~4 bi)
 
-# Faísca 400M: a 200M "esticada" em profundidade (16 → 32 camadas) → ~390 M.
-# Não começa do zero: cada camada da 200M vira duas (ver crescer_profundidade).
-CONFIG_FAISCA_400M = dataclasses.replace(CONFIG_FAISCA_200M, n_layer=32)
+# Faísca 300M / 400M: a 200M "esticada" em profundidade (16 → 24 ou 32 camadas).
+# Não começam do zero: as camadas da 200M são duplicadas (ver crescer_profundidade).
+CONFIG_FAISCA_300M = dataclasses.replace(CONFIG_FAISCA_200M, n_layer=24)   # ~300 M
+CONFIG_FAISCA_400M = dataclasses.replace(CONFIG_FAISCA_200M, n_layer=32)   # ~390 M
 TOKENS_ALVO_400M = 3_000_000_000     # dá para aumentar depois: o treino só continua
 LOTE_SEQUENCIAS = 32                 # lote efetivo: 32 × 1024 tokens por passo
 CARACTERES_TOKENIZER = 300_000_000   # amostra usada para treinar o tokenizer (wiki + web)
@@ -84,12 +85,34 @@ def preparar_tokenizer(pasta: Path, log: Callable[[str], None] = print,
     return tok
 
 
+def plano_crescimento(n_antigo: int, n_novo: int):
+    """Para cada camada do modelo novo: (camada de origem, é cópia?).
+    Múltiplo exato (16 → 32): toda camada vira duas. Senão (16 → 24): as camadas extras são
+    espalhadas por igual (1, 3, 5, …), para o modelo crescer por inteiro e não só no fim."""
+    if n_novo < n_antigo:
+        raise ValueError(f"não dá para encolher: {n_antigo} → {n_novo} camadas")
+    extras = n_novo - n_antigo
+    duplicar = {min(n_antigo - 1, int((k + 0.5) * n_antigo / extras)) for k in range(extras)} if extras else set()
+    if len(duplicar) != extras:           # mais de uma cópia por camada (ex.: 16 → 48)
+        rep, resto = divmod(n_novo, n_antigo)
+        if resto:
+            raise ValueError(f"{n_antigo} → {n_novo} camadas: use um múltiplo ou até o dobro")
+        return [(i, r > 0) for i in range(n_antigo) for r in range(rep)]
+    plano = []
+    for i in range(n_antigo):
+        plano.append((i, False))
+        if i in duplicar:
+            plano.append((i, True))
+    return plano
+
+
 def crescer_profundidade(ck_origem: Path, ck_destino: Path, n_layer_novo: int = 32,
                          log: Callable[[str], None] = print) -> Dict:
     """Cria o checkpoint de um modelo MAIS FUNDO a partir de um já treinado, sem perder o
     que ele sabe (técnica parecida com a do SOLAR / "depth up-scaling").
 
-    Cada camada i vira duas seguidas: a original e uma cópia. Na cópia, as projeções de
+    Cada camada escolhida vira duas seguidas: a original e uma cópia (16 → 32: todas;
+    16 → 24: uma sim, uma não — ver plano_crescimento). Na cópia, as projeções de
     saída (atenção `o` e MLP `baixo`) começam em ZERO, então ela não altera nada no início:
     o modelo novo responde exatamente como o antigo e vai usando as camadas novas conforme
     treina. O otimizador recomeça (o dele não serve para o tamanho novo) e a taxa de
@@ -99,25 +122,20 @@ def crescer_profundidade(ck_origem: Path, ck_destino: Path, n_layer_novo: int = 
     st = torch.load(ck_origem, map_location="cpu", weights_only=False)
     cfg_antigo = GPTConfig(**st["config"])
     n_antigo = cfg_antigo.n_layer
-    if n_layer_novo % n_antigo:
-        raise ValueError(f"{n_layer_novo} camadas não é múltiplo de {n_antigo}")
-    rep = n_layer_novo // n_antigo
     velho = st["modelo"]
     novo = {}
     for k, v in velho.items():
         if not k.startswith("blocos."):
             novo[k] = v.clone()
-    for i in range(n_antigo):
+    for j, (i, copia) in enumerate(plano_crescimento(n_antigo, n_layer_novo)):
         pref = f"blocos.{i}."
-        for r in range(rep):
-            j = i * rep + r
-            for k, v in velho.items():
-                if k.startswith(pref):
-                    nome = k[len(pref):]
-                    w = v.clone()
-                    if r > 0 and nome in ("o.weight", "baixo.weight"):
-                        w.zero_()
-                    novo[f"blocos.{j}.{nome}"] = w
+        for k, v in velho.items():
+            if k.startswith(pref):
+                nome = k[len(pref):]
+                w = v.clone()
+                if copia and nome in ("o.weight", "baixo.weight"):
+                    w.zero_()
+                novo[f"blocos.{j}.{nome}"] = w
     cfg_novo = dataclasses.replace(cfg_antigo, n_layer=n_layer_novo)
     modelo = MiniGPT(cfg_novo)
     modelo.load_state_dict(novo)

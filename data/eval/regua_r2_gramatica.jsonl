@@ -1,0 +1,50 @@
+{"tipo": "concordancia_verbal", "certa": "As meninas chegaram cedo.", "errada": "As meninas chegou cedo."}
+{"tipo": "concordancia_verbal", "certa": "Nós fomos ao mercado ontem.", "errada": "Nós foi ao mercado ontem."}
+{"tipo": "concordancia_verbal", "certa": "Eles estão cansados depois do trabalho.", "errada": "Eles está cansados depois do trabalho."}
+{"tipo": "concordancia_nominal", "certa": "A casa amarela fica na esquina.", "errada": "A casa amarelo fica na esquina."}
+{"tipo": "concordancia_nominal", "certa": "Os livros novos estão na mesa.", "errada": "Os livros novas estão na mesa."}
+{"tipo": "concordancia_nominal", "certa": "Ela comprou duas camisas brancas.", "errada": "Ela comprou dois camisas brancas."}
+{"tipo": "concordancia_verbal", "certa": "O professor explicou a matéria para os alunos.", "errada": "O professor explicaram a matéria para os alunos."}
+{"tipo": "concordancia_verbal", "certa": "Eu gosto de café com leite.", "errada": "Eu gosta de café com leite."}
+{"tipo": "concordancia_verbal", "certa": "Amanhã nós vamos viajar.", "errada": "Amanhã nós vai viajar."}
+{"tipo": "tempo_verbal", "certa": "Ontem choveu muito na cidade.", "errada": "Amanhã choveu muito na cidade."}
+{"tipo": "tempo_verbal", "certa": "Se eu tivesse dinheiro, compraria um carro.", "errada": "Se eu tivesse dinheiro, comprarei um carro."}
+{"tipo": "tempo_verbal", "certa": "Quando eu era criança, brincava na rua.", "errada": "Quando eu era criança, brincarei na rua."}
+{"tipo": "genero", "certa": "A água do rio está fria.", "errada": "O água do rio está fria."}
+{"tipo": "genero", "certa": "O problema foi resolvido rapidamente.", "errada": "A problema foi resolvido rapidamente."}
+{"tipo": "concordancia_verbal", "certa": "As crianças brincam no parque.", "errada": "As crianças brinca no parque."}
+{"tipo": "concordancia_verbal", "certa": "Meu irmão e eu estudamos juntos.", "errada": "Meu irmão e eu estuda juntos."}
+{"tipo": "concordancia_nominal", "certa": "Ela é a mais alta da turma.", "errada": "Ela é a mais alto da turma."}
+{"tipo": "verbo_impessoal", "certa": "Havia muitas pessoas na festa.", "errada": "Haviam muitas pessoas na festa."}
+{"tipo": "verbo_impessoal", "certa": "Faz dois anos que moro aqui.", "errada": "Fazem dois anos que moro aqui."}
+{"tipo": "concordancia_verbal", "certa": "Eles se encontraram na praça.", "errada": "Eles se encontrou na praça."}
+{"tipo": "genero", "certa": "O menino caiu da bicicleta.", "errada": "O menino caiu do bicicleta."}
+{"tipo": "concordancia_verbal", "certa": "Ela está com fome.", "errada": "Ela estão com fome."}
+{"tipo": "concordancia_verbal", "certa": "Os carros foram consertados pela oficina.", "errada": "Os carros foi consertados pela oficina."}
+{"tipo": "concordancia_nominal", "certa": "A porta estava aberta.", "errada": "A porta estava aberto."}
+{"tipo": "concordancia_verbal", "certa": "Nossos vizinhos são muito simpáticos.", "errada": "Nossos vizinhos é muito simpáticos."}
+{"tipo": "concordancia_verbal", "certa": "Eu vi o filme que você indicou.", "errada": "Eu vi o filme que você indicaram."}
+{"tipo": "concordancia_verbal", "certa": "Ela sempre acorda às seis horas.", "errada": "Ela sempre acordam às seis horas."}
+{"tipo": "concordancia_verbal", "certa": "Minha mãe fez um bolo de chocolate.", "errada": "Minha mãe fizeram um bolo de chocolate."}
+{"tipo": "concordancia_nominal", "certa": "O Brasil tem muitas praias bonitas.", "errada": "O Brasil tem muitos praias bonitas."}
+{"tipo": "concordancia_nominal", "certa": "Essa ideia é muito boa.", "errada": "Essa ideia é muito bom."}
+{"tipo": "forma_verbal", "certa": "Precisamos terminar o trabalho hoje.", "errada": "Precisamos terminamos o trabalho hoje."}
+{"tipo": "forma_verbal", "certa": "Eles querem aprender a tocar violão.", "errada": "Eles querem aprendem a tocar violão."}
+{"tipo": "concordancia_verbal", "certa": "O gato dormiu no sofá a tarde inteira.", "errada": "O gato dormiram no sofá a tarde inteira."}
+{"tipo": "concordancia_nominal", "certa": "As janelas da sala estão sujas.", "errada": "As janelas da sala estão sujos."}
+{"tipo": "concordancia_verbal", "certa": "Os alunos fizeram a prova com calma.", "errada": "Os alunos fez a prova com calma."}
+{"tipo": "concordancia_nominal", "certa": "Eu tenho três irmãs mais velhas.", "errada": "Eu tenho três irmãs mais velhos."}
+{"tipo": "concordancia_nominal", "certa": "Ela trouxe os documentos necessários.", "errada": "Ela trouxe os documentos necessárias."}
+{"tipo": "concordancia_verbal", "certa": "A reunião começou às nove horas.", "errada": "A reunião começaram às nove horas."}
+{"tipo": "concordancia_verbal", "certa": "Nós moramos perto do centro.", "errada": "Nós mora perto do centro."}
+{"tipo": "concordancia_verbal", "certa": "Os dias estão ficando mais curtos.", "errada": "Os dias está ficando mais curtos."}
+{"tipo": "conjugacao", "certa": "Eu fiz o exercício sozinho.", "errada": "Eu fazi o exercício sozinho."}
+{"tipo": "conjugacao", "certa": "Ele trouxe o livro para mim.", "errada": "Ele trazeu o livro para mim."}
+{"tipo": "conjugacao", "certa": "Ela quis sair mais cedo.", "errada": "Ela quereu sair mais cedo."}
+{"tipo": "concordancia_verbal", "certa": "Eles viram o acidente da janela.", "errada": "Eles viu o acidente da janela."}
+{"tipo": "conjugacao", "certa": "Eu sei a resposta.", "errada": "Eu sabo a resposta."}
+{"tipo": "tempo_verbal", "certa": "Ontem eu fui ao cinema.", "errada": "Ontem eu vou ao cinema."}
+{"tipo": "tempo_verbal", "certa": "Na semana passada ela visitou a avó.", "errada": "Na semana que vem ela visitou a avó."}
+{"tipo": "concordancia_verbal", "certa": "O menino que chegou é meu primo.", "errada": "O menino que chegaram é meu primo."}
+{"tipo": "concordancia_nominal", "certa": "As flores do jardim são vermelhas.", "errada": "As flores do jardim são vermelhos."}
+{"tipo": "conjugacao", "certa": "Eles puderam descansar no domingo.", "errada": "Eles poderam descansar no domingo."}

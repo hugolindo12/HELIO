@@ -2,75 +2,61 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HEILO</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='%23FF7A1A'%3E%3Ccircle cx='32' cy='32' r='10'/%3E%3Cpath d='M32 2l4 16h-8zM32 62l-4-16h8zM2 32l16-4v8zM62 32l-16 4v-8z'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<meta name="theme-color" content="#120D0A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D98E1F'/%3E%3Cg stroke='%23D98E1F' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M16 2v4M16 26v4M2 16h4M26 16h4M6 6l3 3M23 23l3 3M6 26l3-3M23 9l3-3'/%3E%3C/g%3E%3C/svg%3E">
 <style>
-/* Marca HEILO — tema Noite é o principal; Dia só quando pedido */
 :root{
-  --bg:#120D0A; --side:#0E0A08; --panel:#1C1511; --ink:#F6EDE2; --ink2:#BCA998; --ink3:#9A8575;
-  --line:#33271F; --hover:#261C16; --bubble:#3A1A08; --accent:#FF7A1A; --accent2:#FFA05A; --accentbg:#3A1A08;
-  --on-accent:#1A0F08; --gold:#F5B83D; --code:#18110D; --danger:#FF6B81; --ok:#7DBB8A;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35);
-  --brilho:0 0 0 1px rgba(255,122,26,.25),0 8px 32px rgba(255,122,26,.14);
-  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
-  --f-sans:"Figtree","Segoe UI",system-ui,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
-  --sol1:rgba(255,122,26,.20); --sol2:rgba(245,184,61,.06);
-  color-scheme:dark;
+  --bg:#FAF8F3; --side:#F2EFE7; --panel:#FFFFFF; --ink:#2B2723; --ink2:#6E675E; --ink3:#9A9288;
+  --line:#E4DFD4; --bubble:#EFEBE2; --accent:#D98E1F; --accent2:#B8720F; --accentbg:#FBF1DE;
+  --code:#F4F1EA; --danger:#B4452F; --ok:#3F7D4E; --shadow:0 1px 2px rgba(40,30,10,.06),0 6px 24px rgba(40,30,10,.06);
 }
-:root[data-theme="light"]{
-  --bg:#FBF6EF; --side:#F4ECE1; --panel:#FFFFFF; --ink:#1F1510; --ink2:#6B5647; --ink3:#7E6858;
-  --line:#E8DCCD; --hover:#F1E6D8; --bubble:#FFE8D4; --accent:#B33A0A; --accent2:#B33A0A; --accentbg:#FFE8D4;
-  --on-accent:#FFFFFF; --gold:#8A5A00; --code:#F7F0E7; --danger:#B4233C; --ok:#3F7D4E;
-  --shadow:0 1px 2px rgba(31,21,16,.06),0 8px 24px rgba(31,21,16,.07);
-  --brilho:0 1px 2px rgba(31,21,16,.06),0 8px 24px rgba(179,58,10,.10);
-  --sol1:rgba(255,160,90,.22); --sol2:rgba(255,214,150,.10);
-  color-scheme:light;
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1F1E1C; --side:#191816; --panel:#2A2926; --ink:#ECE8E1; --ink2:#B3ACA2; --ink3:#857E75;
+  --line:#3A3834; --bubble:#34322E; --accent:#E9A23B; --accent2:#F2B65C; --accentbg:#3A2F1E;
+  --code:#262522; --danger:#E0775F; --ok:#7DBB8A; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  --bg:#1F1E1C; --side:#191816; --panel:#2A2926; --ink:#ECE8E1; --ink2:#B3ACA2; --ink3:#857E75;
+  --line:#3A3834; --bubble:#34322E; --accent:#E9A23B; --accent2:#F2B65C; --accentbg:#3A2F1E;
+  --code:#262522; --danger:#E0775F; --ok:#7DBB8A; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.25);
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-sans);display:flex;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font:15.5px/1.6 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;display:flex;overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
-.serif{font-family:var(--f-display);font-weight:700;letter-spacing:-.02em}
+.serif{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
 
 /* ---------- sidebar ---------- */
 #side{width:268px;flex:none;background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;transition:margin .2s}
 body.fechada #side{margin-left:-268px}
 .marca{display:flex;align-items:center;gap:10px;padding:16px 16px 10px}
-.marca b{font-size:21px;letter-spacing:-.02em}
-.marca b i{font-style:normal;color:var(--accent)}
+.marca b{font-size:20px;letter-spacing:.5px}
 .sol{width:26px;height:26px;flex:none}
 .btn-nova{margin:6px 12px 10px;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;color:var(--ink);font-weight:550}
-.btn-nova:hover{background:var(--hover)}
-.btn-nova .mais{width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:18px;line-height:1}
+.btn-nova:hover{background:var(--bubble)}
+.btn-nova .mais{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:18px;line-height:1}
 .rotulo{font-size:12px;color:var(--ink3);padding:8px 20px 4px;font-weight:600}
 #lista{flex:1;overflow:auto;padding:0 8px}
 .conv{display:flex;align-items:center;gap:4px;padding:7px 10px;border-radius:8px;font-size:14px;color:var(--ink);cursor:pointer}
 .conv span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.conv:hover{background:var(--hover)}
-.conv.ativa{background:var(--hover);font-weight:550}
+.conv:hover{background:var(--bubble)}
+.conv.ativa{background:var(--bubble);font-weight:550}
 .conv .x{opacity:0;color:var(--ink3);padding:0 4px;font-size:16px}
 .conv:hover .x{opacity:1}
 .conv .x:hover{color:var(--danger)}
 .rodape{border-top:1px solid var(--line);padding:10px 12px;display:flex;flex-direction:column;gap:4px}
 .item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;font-size:14px;text-align:left}
-.item:hover{background:var(--hover)}
-.item .n{margin-left:auto;background:var(--accent);color:var(--on-accent);border-radius:10px;font-size:11px;padding:0 7px;font-weight:700}
+.item:hover{background:var(--bubble)}
+.item .n{margin-left:auto;background:var(--accent);color:#fff;border-radius:10px;font-size:11px;padding:0 7px;font-weight:700}
 .modelo{font-size:12.5px;color:var(--ink2);padding:6px 10px 2px;line-height:1.45}
 .modelo b{color:var(--ink)}
 
 /* ---------- main ---------- */
 #main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
-.topo{position:absolute !important;top:0;left:0;right:0;z-index:2;background:var(--bg);height:52px;display:flex;align-items:center;gap:8px;padding:0 14px;flex:none}
+.topo{position:absolute;top:0;left:0;right:0;z-index:2;background:var(--bg);height:52px;display:flex;align-items:center;gap:8px;padding:0 14px;flex:none}
 .icone{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--ink2)}
-.icone:hover{background:var(--hover);color:var(--ink)}
+.icone:hover{background:var(--bubble);color:var(--ink)}
 .titulo-conv{font-size:14.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #rolagem{flex:1;overflow:auto;margin-top:52px}
 #msgs{max-width:760px;margin:0 auto;padding:12px 24px 40px}
@@ -83,22 +69,22 @@ body.fechada #side{margin-left:-268px}
 .m.bot .corpo{word-wrap:break-word}
 .corpo p{margin:0 0 .75em}
 .corpo p:last-child{margin-bottom:0}
-.corpo h1,.corpo h2,.corpo h3{font-family:var(--f-display);letter-spacing:-.01em;margin:1em 0 .4em;line-height:1.3}
+.corpo h1,.corpo h2,.corpo h3{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;margin:1em 0 .4em;line-height:1.3}
 .corpo h1{font-size:1.4em}.corpo h2{font-size:1.25em}.corpo h3{font-size:1.1em}
 .corpo ul,.corpo ol{margin:.2em 0 .8em;padding-left:1.5em}
 .corpo li{margin:.2em 0}
 .corpo a{color:var(--accent2)}
-.corpo code{background:var(--code);border:1px solid var(--line);padding:.05em .35em;border-radius:5px;font:.88em var(--f-mono)}
+.corpo code{background:var(--code);border:1px solid var(--line);padding:.05em .35em;border-radius:5px;font:.88em ui-monospace,SFMono-Regular,Consolas,monospace}
 .bloco{border:1px solid var(--line);border-radius:10px;margin:.6em 0 1em;overflow:hidden;background:var(--code)}
 .bloco .cab{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink3);padding:6px 12px;border-bottom:1px solid var(--line)}
 .bloco .cab button{font-size:12px;color:var(--ink2)}
-.bloco pre{margin:0;padding:12px 14px;overflow:auto;font:13.5px/1.55 var(--f-mono)}
+.bloco pre{margin:0;padding:12px 14px;overflow:auto;font:13.5px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}
 .bloco pre code{background:none;border:0;padding:0;font-size:inherit}
 .meta{font-size:12px;color:var(--ink3);margin-top:6px}
 .acoes{display:flex;gap:2px;margin-top:6px;opacity:.0;transition:opacity .15s}
 .m.bot:hover .acoes,.m.bot:last-child .acoes{opacity:1}
 .acoes button{height:28px;padding:0 8px;border-radius:6px;color:var(--ink3);font-size:12.5px;display:flex;align-items:center;gap:5px}
-.acoes button:hover{background:var(--hover);color:var(--ink)}
+.acoes button:hover{background:var(--bubble);color:var(--ink)}
 .acoes button.feito{color:var(--ok)}
 .erro .corpo{color:var(--danger)}
 .pensando{display:flex;align-items:center;gap:10px;color:var(--ink3);font-size:14px}
@@ -110,30 +96,24 @@ body.fechada #side{margin-left:-268px}
 /* ---------- composer ---------- */
 .base{flex:none;padding:0 24px 18px}
 .caixa{max-width:760px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:12px 12px 8px 16px;position:relative}
-.caixa:focus-within{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));box-shadow:var(--brilho)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-textarea:focus-visible,.caixa textarea:focus{outline:0}
+.caixa:focus-within{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
 textarea{width:100%;border:0;outline:0;resize:none;background:transparent;color:var(--ink);font:inherit;max-height:240px;min-height:26px;padding:2px 0}
 textarea::placeholder{color:var(--ink3)}
 .linha{display:flex;align-items:center;gap:8px;margin-top:6px}
 .linha .esp{flex:1}
 select{font:inherit;font-size:13px;color:var(--ink2);background:transparent;border:1px solid var(--line);border-radius:8px;padding:4px 8px;cursor:pointer}
-#enviar{width:36px;height:36px;border-radius:9999px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center}
+#enviar{width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;display:grid;place-items:center}
 #enviar:disabled{opacity:.35;cursor:default}
 .aviso{max-width:760px;margin:8px auto 0;font-size:12px;color:var(--ink3);text-align:center}
 #dicas{position:absolute;left:8px;right:8px;bottom:calc(100% + 6px);background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:6px;display:none;max-height:300px;overflow:auto}
 #dicas div{padding:7px 10px;border-radius:8px;font-size:14px;cursor:pointer;display:flex;gap:10px}
-#dicas div b{min-width:92px;font-family:var(--f-mono);font-size:13px}
+#dicas div b{min-width:92px;font-family:ui-monospace,Consolas,monospace;font-size:13px}
 #dicas div span{color:var(--ink2)}
-#dicas div.sel,#dicas div:hover{background:var(--hover)}
+#dicas div.sel,#dicas div:hover{background:var(--bubble)}
 
 /* ---------- inicio ---------- */
 body.vazia #rolagem{display:none}
 body.vazia #main{justify-content:center}
-#main::before{content:"";position:absolute;left:50%;bottom:-38vh;width:120vh;height:76vh;transform:translateX(-50%);border-radius:50%;pointer-events:none;opacity:0;transition:opacity .6s;
-  background:radial-gradient(closest-side,var(--sol1),var(--sol2) 60%,transparent);}
-body.vazia #main::before{opacity:1}
-#main>*{position:relative}
 body.vazia .base{padding-bottom:18vh}
 #inicio{display:none;text-align:center;padding:0 24px 22px}
 body.vazia #inicio{display:block}
@@ -141,8 +121,8 @@ body.vazia #inicio{display:block}
 #inicio p{color:var(--ink2);margin:0}
 .chips{max-width:760px;margin:14px auto 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 body:not(.vazia) .chips{display:none}
-.chips button{border:1px solid var(--line);background:var(--panel);border-radius:9999px;padding:7px 12px;font-size:13.5px;color:var(--ink2)}
-.chips button:hover{color:var(--ink);border-color:var(--accent);background:var(--accentbg)}
+.chips button{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:7px 12px;font-size:13.5px;color:var(--ink2)}
+.chips button:hover{color:var(--ink);border-color:var(--ink3)}
 
 /* ---------- modal ---------- */
 #fundo{position:fixed;inset:0;background:rgba(20,15,5,.35);display:none;align-items:center;justify-content:center;z-index:10;padding:16px}
@@ -155,7 +135,7 @@ body:not(.vazia) .chips{display:none}
 .modal textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--bg);min-height:70px}
 .modal .pes{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px}
 .b{white-space:nowrap;padding:8px 14px;border-radius:9px;font-size:14px;font-weight:550;border:1px solid var(--line)}
-.b.pri{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.b.pri{background:var(--accent);color:#fff;border-color:var(--accent)}
 .b.ruim{color:var(--danger)}
 .cand{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:14px}
 .cand .q{color:var(--ink2)}
@@ -168,141 +148,28 @@ body:not(.vazia) .chips{display:none}
 
 @media (max-width:760px){
   #side{position:fixed;z-index:5;height:100%;box-shadow:var(--shadow)}
+  body:not(.fechada) #main::before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:4}
   #msgs{padding:8px 16px 30px}.base{padding:0 16px 14px}
 }
-
-/* ================= v2: identidade HEILO ================= */
-html,body{height:100dvh}
-.ic{width:18px;height:18px;flex:none}
-/* barra lateral */
-#side{background:var(--side)}
-.marca{padding:18px 18px 8px}
-.btn-nova{margin:8px 12px 6px;border:1px solid var(--line);border-radius:9999px;padding:8px 14px 8px 8px;min-height:44px}
-.btn-nova:hover{background:var(--accentbg);border-color:var(--accent)}
-.btn-nova .mais{width:28px;height:28px}
-.busca{margin:6px 12px 6px;display:flex;align-items:center;gap:8px;padding:0 12px;height:38px;border-radius:9999px;background:var(--hover);color:var(--ink3)}
-.busca input{flex:1;min-width:0;border:0;outline:0;background:none;color:var(--ink);font:inherit;font-size:14px}
-.busca input::placeholder{color:var(--ink3)}
-.grupo{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:14px 12px 4px;font-weight:600}
-.conv{min-height:38px;border-radius:10px;position:relative}
-.conv.ativa{background:var(--accentbg);color:var(--ink)}
-.conv.ativa::before{content:"";position:absolute;left:-8px;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--accent)}
-.item{min-height:40px;color:var(--ink2)}
-.item:hover{color:var(--ink)}
-.item .ic{color:var(--ink3)}
-.item:hover .ic{color:var(--accent)}
-.modelo{margin:6px 4px 0;padding:10px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
-/* topo */
-.topo{gap:10px;padding:0 14px;padding-top:env(safe-area-inset-top);height:calc(56px + env(safe-area-inset-top));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-#rolagem{margin-top:calc(56px + env(safe-area-inset-top))}
-.titulo-conv{flex:1;min-width:0}
-.icone{width:40px;height:40px;border-radius:10px}
-.pilula{display:flex;align-items:center;gap:8px;height:36px;padding:0 6px 0 12px;border-radius:9999px;border:1px solid var(--line);background:var(--panel)}
-.pilula .ponto{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent);flex:none}
-.pilula select{border:0;padding:0 22px 0 0;height:34px;color:var(--ink);font-weight:600;font-size:13.5px;appearance:none;-webkit-appearance:none;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23BCA998' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center;max-width:210px;text-overflow:ellipsis}
-.pilula select option,.pilula select optgroup{background:var(--panel);color:var(--ink)}
-.so-celular{display:none}
-/* mensagens */
-.m{margin:26px 0;animation:entra .28s ease-out both}
-@keyframes entra{from{opacity:0;transform:translateY(6px)}}
-.m.user .corpo{background:var(--bubble);border-radius:20px 20px 6px 20px;padding:11px 18px}
-.m.bot .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--accentbg);margin-top:0}
-.m.bot .av .sol{width:18px!important;height:18px!important}
-.quem{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin:5px 0 6px}
-.acoes{gap:4px}
-.acoes button{height:32px;padding:0 10px;border-radius:9999px}
-.acoes button .ic{width:15px;height:15px}
-.acoes button.feito{color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
-.bloco{border-radius:12px}
-.bloco .cab button{border:1px solid var(--line);border-radius:9999px;padding:2px 10px}
-.corpo blockquote{margin:.6em 0;padding:.2em 0 .2em 14px;border-left:3px solid var(--accent);color:var(--ink2)}
-/* pensando: a faísca respira */
-.pensando .sol{animation:respira 1.6s ease-in-out infinite,gira 6s linear infinite}
-@keyframes respira{50%{transform:scale(.72);opacity:.6}}
-.brilho-txt{background:linear-gradient(90deg,var(--ink3) 0%,var(--ink3) 35%,var(--accent) 50%,var(--ink3) 65%,var(--ink3) 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:varre 1.8s linear infinite}
-@keyframes varre{from{background-position:100% 0}to{background-position:-120% 0}}
-/* composer */
-.base{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
-.caixa{border-radius:24px;padding:14px 12px 10px 18px}
-#enviar{width:40px;height:40px;transition:transform .15s,opacity .15s}
-#enviar:not(:disabled):hover{transform:scale(1.06)}
-#enviar:disabled{opacity:1;background:var(--hover);color:var(--ink3)}
-.dica-tecla{font-size:12px;color:var(--ink3)}
-#descer{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 10px);width:38px;height:38px;border-radius:50%;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--ink2);display:none;place-items:center;z-index:3}
-#descer.on{display:grid}
-.base{position:relative}
-/* início */
-#inicio h1{font-size:clamp(30px,4.4vw,44px);gap:16px}
-#inicio .sol{animation:nasce .9s cubic-bezier(.2,.8,.2,1) both,gira 40s linear infinite}
-@keyframes nasce{from{transform:translateY(14px) scale(.6);opacity:0}}
-.chips button{min-height:40px;display:flex;align-items:center;gap:8px}
-.chips button .ic{width:15px;height:15px;color:var(--accent)}
-/* véu do menu no celular */
-#veu{display:none}
-@media (max-width:760px){
-  #side{top:0;bottom:0;left:0;height:100dvh !important;width:86vw;max-width:320px;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 0 40px rgba(0,0,0,.5);transition:transform .25s ease,margin 0s}
-  body.fechada #side{margin-left:0;transform:translateX(-105%)}
-  body:not(.fechada) #veu{display:block;position:fixed;inset:0;z-index:4;background:rgba(8,5,3,.55);backdrop-filter:blur(2px)}
-  .so-celular{display:grid}
-  .topo{padding-left:8px;padding-right:8px}
-  .titulo-conv{display:none}
-  .pilula{margin:0 auto}
-  .pilula select{max-width:52vw}
-  #msgs{padding:4px 14px 24px}
-  .m{margin:20px 0}
-  .m.bot{gap:0;flex-direction:column}
-  .m.bot .av{display:none}
-  .m.user .corpo{max-width:88%}
-  .acoes{opacity:1}
-  .acoes button span{display:none}
-  .acoes button{width:40px;height:40px;padding:0;justify-content:center}
-  .base{padding:0 10px calc(10px + env(safe-area-inset-bottom))}
-  .caixa{border-radius:22px;padding:10px 8px 8px 14px}
-  textarea{font-size:16px}
-  .chips{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:0 2px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .chips::-webkit-scrollbar{display:none}
-  .chips button{flex:none;white-space:nowrap}
-  body:not(.vazia) .aviso{display:none}
-  .dica-tecla{display:none}
-  body.vazia .base{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
-  body.vazia #main{justify-content:flex-end}
-  body.vazia #inicio{margin-bottom:auto;margin-top:28vh}
-  .modal{max-height:92dvh;border-radius:20px 20px 0 0;align-self:flex-end;width:100%}
-  #fundo{padding:0}
-}
-@media (hover:none){.conv .x{opacity:1}}
 </style>
 </head>
 <body class="vazia">
 <svg width="0" height="0" style="position:absolute">
-  <symbol id="s-sol" viewBox="0 0 64 64"><circle cx="32" cy="32" r="9" fill="currentColor"/><path fill="currentColor" d="M32 4l3 14h-6zM32 60l-3-14h6zM4 32l14-3v6zM60 32l-14 3v-6z"/><path fill="currentColor" opacity=".55" d="M12.2 12.2l11.3 8.5-2.8 2.8zM51.8 51.8l-11.3-8.5 2.8-2.8zM51.8 12.2l-8.5 11.3-2.8-2.8zM12.2 51.8l8.5-11.3 2.8 2.8z"/></symbol>
-
-  <symbol id="i-mais" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
-  <symbol id="i-nova" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
-  <symbol id="i-ensinar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c3 3 9 3 12 0v-5"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></symbol>
-  <symbol id="i-lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
-  <symbol id="i-copiar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
-  <symbol id="i-boa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-8a2.5 2.5 0 0 1 3 3l-1 4h6a2 2 0 0 1 2 2.3l-1.3 7A2 2 0 0 1 17.7 21H7"/></symbol>
-  <symbol id="i-refazer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></symbol>
-  <symbol id="i-busca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
-  <symbol id="i-descer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></symbol>
-  <symbol id="i-faisca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></symbol>
+  <symbol id="s-sol" viewBox="0 0 32 32"><circle cx="16" cy="16" r="6.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M16 2.5v4M16 25.5v4M2.5 16h4M25.5 16h4M6.4 6.4l2.9 2.9M22.7 22.7l2.9 2.9M6.4 25.6l2.9-2.9M22.7 9.3l2.9-2.9"/></g></symbol>
 </svg>
 
 <aside id="side">
-  <div class="marca"><svg class="sol" style="color:var(--accent)"><use href="#s-sol"/></svg><b class="serif">HEIL<i>O</i></b></div>
-  <button class="btn-nova" id="nova"><span class="mais"><svg class="ic" style="width:16px;height:16px"><use href="#i-mais"/></svg></span> Nova conversa</button>
-  <label class="busca"><svg class="ic" style="width:16px;height:16px"><use href="#i-busca"/></svg><input id="busca" type="search" placeholder="Buscar conversas" aria-label="Buscar conversas"></label>
+  <div class="marca"><svg class="sol" style="color:var(--accent)"><use href="#s-sol"/></svg><b class="serif">HEILO</b></div>
+  <button class="btn-nova" id="nova"><span class="mais">+</span> Nova conversa</button>
+  <div class="rotulo">Conversas</div>
   <div id="lista"></div>
   <div class="rodape">
-    <button class="item" id="abrir-ensinar"><svg class="ic"><use href="#i-ensinar"/></svg> Ensinar a HEILO</button>
-    <button class="item" id="abrir-revisar"><svg class="ic"><use href="#i-check"/></svg> Revisar aprendizados <span class="n" id="n-pend" hidden></span></button>
-    <button class="item" id="tema"><svg class="ic"><use href="#i-lua"/></svg> Tema claro/escuro</button>
+    <button class="item" id="abrir-ensinar">✎ Ensinar a HEILO</button>
+    <button class="item" id="abrir-revisar">✓ Revisar aprendizados <span class="n" id="n-pend" hidden></span></button>
+    <button class="item" id="tema">◐ Tema claro/escuro</button>
     <div class="modelo" id="modelo">carregando modelo…</div>
   </div>
 </aside>
-<div id="veu"></div>
 
 <main id="main">
   <div class="topo">
@@ -310,14 +177,6 @@ html,body{height:100dvh}
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg>
     </button>
     <div class="titulo-conv" id="titulo"></div>
-    <div class="pilula" title="Motor usado nas respostas"><span class="ponto"></span><select id="cerebro" title="Motor usado nas respostas">
-          <option value="auto">HEILO · Automático</option>
-          <option value="seed">Só HEILO (modelo próprio)</option>
-          <option value="teacher">Teacher (temporário)</option>
-          <option value="off">Sem modelo (só conhecimento)</option>
-          <optgroup label="Testar outra versão" id="grupo-versoes"></optgroup>
-        </select></div>
-    <button class="icone so-celular" id="nova2" aria-label="Nova conversa"><svg class="ic"><use href="#i-nova"/></svg></button>
   </div>
 
   <div id="rolagem"><div id="msgs"></div></div>
@@ -328,19 +187,24 @@ html,body{height:100dvh}
   </div>
 
   <div class="base">
-    <button id="descer" aria-label="Ir para a última mensagem"><svg class="ic"><use href="#i-descer"/></svg></button>
     <div class="caixa">
       <div id="dicas"></div>
-      <textarea id="txt" rows="1" placeholder="Pergunte ao HEILO…  (/ para comandos)"></textarea>
+      <textarea id="txt" rows="1" placeholder="Como posso ajudar? (digite / para comandos)"></textarea>
       <div class="linha">
-        <span class="dica-tecla">Enter envia · Shift+Enter quebra linha</span>
+        <select id="cerebro" title="Motor usado nas respostas">
+          <option value="auto">Automático</option>
+          <option value="seed">Só HEILO (modelo próprio)</option>
+          <option value="teacher">Teacher (temporário)</option>
+          <option value="off">Sem modelo (só conhecimento)</option>
+          <optgroup label="Testar outra versão" id="grupo-versoes"></optgroup>
+        </select>
         <div class="esp"></div>
-        <button id="enviar" disabled title="Enviar" aria-label="Enviar">
+        <button id="enviar" disabled title="Enviar (Enter)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
         </button>
       </div>
     </div>
-    <div class="chips" id="chips">
+    <div class="chips">
       <button>Que dia é hoje?</button>
       <button>Quanto é 17% de 2.380?</button>
       <button>32 mm em polegadas</button>
@@ -441,26 +305,20 @@ function elMsg(m, idx) {
   }
   d.className = "m bot" + (m.erro ? " erro" : "");
   const fonte = [nomeModelo(m.model), m.source && !/^model_|versao_teste/.test(m.source) ? m.source.replace(/^ferramenta:/, "") : ""].filter(Boolean).join(" · ");
-  d.innerHTML = `<div class="av">${SOL}</div><div class="conteudo"><div class="quem">HEILO</div><div class="corpo">${md(m.content)}</div>` +
+  d.innerHTML = `<div class="av">${SOL}</div><div class="conteudo"><div class="corpo">${md(m.content)}</div>` +
     (fonte ? `<div class="meta">${esc(fonte)}</div>` : "") +
     `<div class="acoes">
-      <button data-a="copiar" title="Copiar" aria-label="Copiar"><svg class="ic"><use href="#i-copiar"/></svg><span>Copiar</span></button>
-      ${m.model !== "comando" && m.model !== "ferramenta" && !m.erro ? `<button data-a="boa" title="Aprovar esta resposta para o treino" aria-label="Boa resposta" class="${m.aprovada ? "feito" : ""}"><svg class="ic"><use href="#i-boa"/></svg><span>${m.aprovada ? "Aprovada" : "Boa"}</span></button>
-      <button data-a="corrigir" title="Ensinar a resposta certa" aria-label="Corrigir"><svg class="ic"><use href="#i-nova"/></svg><span>Corrigir</span></button>
-      <button data-a="refazer" title="Gerar de novo" aria-label="Refazer"><svg class="ic"><use href="#i-refazer"/></svg><span>Refazer</span></button>` : ""}
+      <button data-a="copiar" title="Copiar">⧉ Copiar</button>
+      ${m.model !== "comando" && m.model !== "ferramenta" && !m.erro ? `<button data-a="boa" title="Aprovar esta resposta para o treino" class="${m.aprovada ? "feito" : ""}">👍 ${m.aprovada ? "Aprovada" : "Boa"}</button>
+      <button data-a="corrigir" title="Ensinar a resposta certa">✎ Corrigir</button>
+      <button data-a="refazer" title="Gerar de novo">↻ Refazer</button>` : ""}
     </div></div>`;
   d.dataset.idx = idx;
   return d;
 }
 function renderLista() {
   const L = $("#lista"); L.innerHTML = "";
-  const q = ($("#busca")?.value || "").trim().toLowerCase();
-  const hoje = new Date(); hoje.setHours(0, 0, 0, 0); const dia = 864e5;
-  const grupoDe = t => t >= +hoje ? "Hoje" : t >= hoje - dia ? "Ontem" : t >= hoje - 7 * dia ? "Últimos 7 dias" : "Mais antigas";
-  let ultimo = "";
-  convs.filter(c => !q || c.titulo.toLowerCase().includes(q) || c.msgs.some(m => (m.content || "").toLowerCase().includes(q))).forEach(c => {
-    const g = grupoDe(c.t || 0);
-    if (g !== ultimo) { ultimo = g; const h = document.createElement("div"); h.className = "grupo"; h.textContent = g; L.appendChild(h); }
+  convs.forEach(c => {
     const d = document.createElement("div");
     d.className = "conv" + (c.id === atual ? " ativa" : "");
     d.innerHTML = '<span></span><button class="x" title="Apagar">×</button>';
@@ -487,8 +345,6 @@ function render() {
   rolar();
 }
 function rolar() { const r = $("#rolagem"); r.scrollTop = r.scrollHeight; }
-$("#rolagem").addEventListener("scroll", () => { const r = $("#rolagem"); $("#descer").classList.toggle("on", r.scrollHeight - r.scrollTop - r.clientHeight > 240); });
-$("#descer").onclick = () => $("#rolagem").scrollTo({ top: $("#rolagem").scrollHeight, behavior: "smooth" });
 function toast(t) { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove("on"), 2600); }
 
 /* ---------------- conversa ---------------- */
@@ -509,7 +365,7 @@ async function enviar(texto, historicoFixo) {
   $("#txt").value = ""; ajustar(); salvar(); render();
   ocupado = true; $("#enviar").disabled = true;
   const pens = document.createElement("div");
-  pens.className = "m bot"; pens.innerHTML = `<div class="pensando">${SOL} <span class="brilho-txt">pensando…</span></div>`;
+  pens.className = "m bot"; pens.innerHTML = `<div class="pensando">${SOL} pensando…</div>`;
   $("#msgs").appendChild(pens); rolar();
   const hist = c.msgs.slice(0, -1).filter(m => !m.erro).map(m => ({ role: m.role, content: m.content }));
   let resp;
@@ -667,7 +523,6 @@ $("#cerebro").onchange = async e => {
 
 /* ---------------- composer ---------------- */
 const txt = $("#txt");
-const TOQUE = matchMedia("(pointer: coarse)").matches;
 function ajustar() { txt.style.height = "auto"; txt.style.height = Math.min(txt.scrollHeight, 240) + "px"; atualizarBotao(); dicas(); }
 function atualizarBotao() { $("#enviar").disabled = ocupado || !txt.value.trim(); }
 let dicaSel = 0;
@@ -691,19 +546,14 @@ txt.addEventListener("keydown", e => {
     if (e.key === "Tab" || (e.key === "Enter" && !e.shiftKey && !exato)) { e.preventDefault(); txt.value = itens[dicaSel].dataset.c + " "; ajustar(); return; }
     if (exato) D.style.display = "none";   // comando já completo: Enter envia
   }
-  if (e.key === "Enter" && !e.shiftKey && !e.isComposing && !TOQUE) { e.preventDefault(); enviar(); }
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); enviar(); }
 });
 $("#enviar").onclick = () => enviar();
-document.querySelectorAll(".chips button").forEach(b => b.onclick = () => enviar(b.textContent.trim()));
+document.querySelectorAll(".chips button").forEach(b => b.onclick = () => enviar(b.textContent));
 $("#nova").onclick = () => { atual = null; render(); txt.focus(); if (innerWidth < 760) document.body.classList.add("fechada"); };
 $("#menu").onclick = () => document.body.classList.toggle("fechada");
-$("#veu").onclick = () => document.body.classList.add("fechada");
-$("#nova2").onclick = () => $("#nova").onclick();
-$("#busca").addEventListener("input", renderLista);
-document.addEventListener("keydown", e => { if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "o") { e.preventDefault(); $("#nova").onclick(); } });
-document.querySelectorAll("#chips button").forEach(b => b.insertAdjacentHTML("afterbegin", '<svg class="ic"><use href="#i-faisca"/></svg>'));
 $("#tema").onclick = () => {
-  const r = document.documentElement, escuro = r.dataset.theme !== "light";
+  const r = document.documentElement, escuro = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   r.dataset.theme = escuro ? "light" : "dark"; try { localStorage.setItem("heilo.tema", r.dataset.theme); } catch (e) {}
 };
 try { const t = localStorage.getItem("heilo.tema"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -711,7 +561,7 @@ try { const t = localStorage.getItem("heilo.tema"); if (t) document.documentElem
 const h = new Date().getHours();
 $("#saud").textContent = (h < 5 ? "Boa noite" : h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite") + ", Hugo";
 if (innerWidth < 760) document.body.classList.add("fechada");
-render(); carregarModelo(); if (!TOQUE) txt.focus();
+render(); carregarModelo(); txt.focus();
 api("/api/revisar").then(d => contarPendentes(d.pendentes.length)).catch(() => {});
 
 /* ---------------- lembretes ---------------- */
