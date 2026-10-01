@@ -23,3 +23,6 @@ models/teacher/adapters/
 _to_delete/
 # saída do treino automático (log local)
 data/training/auto_treino_saida.txt
+# HEILO: modelos grandes vão em partes (o .pt é remontado no PC)
+models/seed/versions/v3.0/heilo_seed.pt
+models/seed/weights/heilo_seed.pt
