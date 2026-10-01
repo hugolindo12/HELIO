@@ -166,7 +166,8 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
                lote: int = 32, lr: float = 6e-4, lr_min: float = 6e-5, aquecimento: int = 500,
                tempo_max_min: Optional[float] = None, avaliar_cada: int = 500,
                salvar_cada: int = 1000, log: Log = print, acumular: int = 1,
-               minutos_alvo: Optional[float] = None) -> Dict:
+               minutos_alvo: Optional[float] = None, agenda: str = "cosseno",
+               frac_queda: float = 0.2) -> Dict:
     """Pré-treino com retomada: se `ckpt` existir, continua de onde parou.
 
     minutos_alvo=M: a agenda da taxa de aprendizado segue o TEMPO (não uma estimativa
@@ -175,7 +176,11 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
     parou com 24 min em vez de 210.
 
     acumular=k: soma o gradiente de k micro-lotes antes de cada passo (lote efetivo
-    = lote × k), para caber modelos maiores na memória da GPU."""
+    = lote × k), para caber modelos maiores na memória da GPU.
+
+    agenda="wsd": aquece a partir de `inicio_agenda` (o passo em que esta fase começou),
+    fica CONSTANTE e só cai (cosseno até lr_min) nos últimos `frac_queda` passos da fase.
+    É a agenda para continuar treinando um cérebro já treinado (Fase 2)."""
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     amp = dev == "cuda"
     tr, va = _abrir_bin(pasta_corpus, "train"), _abrir_bin(pasta_corpus, "val")
@@ -203,6 +208,14 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
     def lr_em(p):
         if p - inicio_agenda < aquecimento:
             return lr * (p - inicio_agenda + 1) / aquecimento
+        if agenda == "wsd":
+            total = max(1, passos - inicio_agenda)
+            ini_queda = total * (1 - frac_queda)
+            rel = p - inicio_agenda
+            if rel < ini_queda:
+                return lr
+            prog = min(1.0, (rel - ini_queda) / max(1, total - ini_queda))
+            return lr_min + (lr - lr_min) * 0.5 * (1 + math.cos(math.pi * prog))
         if minutos_alvo:
             prog = min(1.0, (min_antes + (time.time() - inicio) / 60) / minutos_alvo)
         else:
@@ -243,7 +256,8 @@ def pretreinar(cfg: GPTConfig, tok, pasta_corpus: Path, ckpt: Path, passos: int 
         if passo % avaliar_cada == 0 or passo == passos:
             pv = _perda_val(modelo, va, cfg.block_size, lote, dev, amp=amp)
             hist.append({"passo": passo, "perda_treino": round(media, 4), "perda_val": round(pv, 4),
-                         "ppl_val": round(math.exp(pv), 2), "min": round((time.time() - inicio) / 60, 1)})
+                         "ppl_val": round(math.exp(pv), 2), "min": round((time.time() - inicio) / 60, 1),
+                         "lr": round(opt.param_groups[0]["lr"], 8)})
             log(f"  passo {passo}/{passos} | treino {media:.3f} | val {pv:.3f} (ppl {math.exp(pv):.1f}) "
                 f"| {(time.time() - inicio) / 60:.1f} min")
         if passo % salvar_cada == 0:
