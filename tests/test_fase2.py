@@ -112,3 +112,21 @@ def test_agenda_wsd_reaquece_fica_constante_e_cai_no_fim(tmp_path):
     assert lrs[120] == pytest.approx(1e-3) and lrs[180] == pytest.approx(1e-3)   # constante
     assert lrs[190] < 1e-3 and lrs[200] == pytest.approx(1e-4, rel=0.1)        # queda só no fim
     assert res["passo"] == 200
+
+
+def test_codigo_le_parquet_direto_sem_script(monkeypatch):
+    """O repositório do github-code-clean tem um script que o `datasets` novo recusa."""
+    import sys
+    import types
+    from heilo.training import fase2
+    chamadas = {}
+
+    def falso(nome, data_files=None, split=None, streaming=None):
+        chamadas.update(nome=nome, data_files=data_files, streaming=streaming)
+        return iter([{"language": "Python", "license": "mit", "code": "x = 1\n" * 60, "path": "a.py"},
+                     {"language": "Java", "license": "mit", "code": "y" * 400, "path": "B.java"}])
+    monkeypatch.setitem(sys.modules, "datasets", types.SimpleNamespace(load_dataset=falso))
+    textos = list(fase2.textos_codigo(2, arquivos_por_parte=3))
+    assert chamadas["nome"] == "parquet" and chamadas["streaming"]
+    assert chamadas["data_files"][0] == "hf://datasets/codeparrot/github-code-clean/data/train-00003-of-00880.parquet"
+    assert len(chamadas["data_files"]) == 3 and len(textos) == 1 and textos[0].startswith("# arquivo: a.py")

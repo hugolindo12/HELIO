@@ -61,8 +61,11 @@ def textos_codigo(parte: int, arquivos_por_parte: int = 40, log: Log = print) ->
     """Código Python de licença permissiva (github-code-clean, arquivos parquet)."""
     from datasets import load_dataset
     ini = (parte - 1) * arquivos_por_parte
-    arqs = [f"data/train-{i:05d}-of-00880.parquet" for i in range(ini, min(880, ini + arquivos_por_parte))]
-    ds = load_dataset("codeparrot/github-code-clean", data_files=arqs, split="train", streaming=True)
+    # lê os parquet direto pelo leitor "parquet": o repositório ainda tem um script de carga
+    # (github-code-clean.py) que as versões novas do `datasets` recusam
+    base = "hf://datasets/codeparrot/github-code-clean/data"
+    arqs = [f"{base}/train-{i:05d}-of-00880.parquet" for i in range(ini, min(880, ini + arquivos_por_parte))]
+    ds = load_dataset("parquet", data_files=arqs, split="train", streaming=True)
     for item in ds:
         if codigo_aceito(item):
             yield f"# arquivo: {item.get('path', '')}\n{item['code']}"
